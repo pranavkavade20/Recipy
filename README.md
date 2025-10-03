@@ -69,7 +69,7 @@ To set up and run the project locally, follow these steps:
 
 Click the link below to view the full video demonstration of the **Recipy Web Application** hosted on Google Drive.
 
-[**▶️ WATCH FULL DEMO VIDEO ON GOOGLE DRIVE**]([YOUR_PUBLIC_GOOGLE_DRIVE_VIDEO_LINK])
+[**▶️ WATCH FULL DEMO VIDEO ON GOOGLE DRIVE**]([https://drive.google.com/file/d/1V2SJyqkgycLODRvdd4tYYzgDNGcB7tHx])
 
 > **IMPORTANT:** Ensure your Google Drive video file is set to "Anyone with the link can view" to guarantee access for repository visitors. Replace `[YOUR_PUBLIC_GOOGLE_DRIVE_VIDEO_LINK]` with the shareable URL of your video.
 
