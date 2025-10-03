@@ -20,6 +20,16 @@ The application is built around a set of robust features to enhance the user exp
 
 ---
 
+## 🎥 Project Demonstration
+
+### Watch the Project in Action! (Google Drive Link)
+
+Click the link below to view the full video demonstration of the **Recipy Web Application** hosted on Google Drive.
+
+[**▶️ WATCH FULL DEMO VIDEO ON GOOGLE DRIVE**](https://drive.google.com/file/d/1V2SJyqkgycLODRvdd4tYYzgDNGcB7tHx)
+
+---
+
 ## 💻 Tech Stack
 
 | Component | Technologies |
@@ -63,11 +73,5 @@ To set up and run the project locally, follow these steps:
 
 ---
 
-## 🎥 Project Demonstration
 
-### Watch the Project in Action! (Google Drive Link)
-
-Click the link below to view the full video demonstration of the **Recipy Web Application** hosted on Google Drive.
-
-[**▶️ WATCH FULL DEMO VIDEO ON GOOGLE DRIVE**](https://drive.google.com/file/d/1V2SJyqkgycLODRvdd4tYYzgDNGcB7tHx)
 
