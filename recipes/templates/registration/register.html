@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Create Your Account{% endblock %}
+{% block content %}
+<!-- Main container with full-screen background image -->
+<div class="relative min-h-screen bg-cover bg-center">
+        <!-- Centered Content Wrapper -->
+    <div class="relative flex justify-center items-center min-h-screen p-4 sm:p-6 lg:p-8">
+
+        <!-- Centered Card: Made wider for more fields (max-w-xl) -->
+        <div class="w-full max-w-xl p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl dark:shadow-xl border border-gray-200 dark:border-gray-700 text-center">
+            
+            <h1 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-2">
+                Create Your Account
+            </h1>
+
+            <p class="mt-2 text-gray-500 dark:text-gray-300 max-w-sm mx-auto">
+                Let's get you set up so you can start cooking and planning your meals!
+            </p>
+
+            <!-- Login Link -->
+            <p class="mt-4 text-sm text-gray-500 dark:text-gray-300">
+                Already have an account? 
+                <a href="{% url 'login' %}" class="text-orange-500 font-semibold hover:underline transition duration-200">
+                    Login Here
+                </a>
+            </p>
+
+            <!-- Registration Form -->
+            <form action="{% url 'register' %}" method="POST" class="grid grid-cols-1 gap-6 mt-8 md:grid-cols-2">
+                {% csrf_token %}
+                
+                <!-- First Name -->
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300 text-left">First Name</label>
+                    <input type="text" name="first_name" placeholder="Pranav" 
+                        class="block w-full px-5 py-3 text-gray-800 placeholder-gray-400 bg-gray-50 border border-gray-300 rounded-xl dark:placeholder-gray-500 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 focus:border-orange-500 dark:focus:border-orange-400 focus:ring-2 focus:ring-orange-200 focus:outline-none transition duration-200" required />
+                </div>
+
+                <!-- Last Name -->
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300 text-left">Last name</label>
+                    <input type="text" name="last_name" placeholder="Kavade" 
+                        class="block w-full px-5 py-3 text-gray-800 placeholder-gray-400 bg-gray-50 border border-gray-300 rounded-xl dark:placeholder-gray-500 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 focus:border-orange-500 dark:focus:border-orange-400 focus:ring-2 focus:ring-orange-200 focus:outline-none transition duration-200" required />
+                </div>
+
+                <!-- Username -->
+                <div>
+                    <label for="username" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300 text-left">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Pranav" 
+                        class="block w-full px-5 py-3 text-gray-800 placeholder-gray-400 bg-gray-50 border border-gray-300 rounded-xl dark:placeholder-gray-500 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 focus:border-orange-500 dark:focus:border-orange-400 focus:ring-2 focus:ring-orange-200 focus:outline-none transition duration-200" autocomplete="off" required />
+                </div>
+
+                <!-- Email address -->
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300 text-left">Email address</label>
+                    <input type="email" name="email" placeholder="pranavkavade@gmail.com" 
+                        class="block w-full px-5 py-3 text-gray-800 placeholder-gray-400 bg-gray-50 border border-gray-300 rounded-xl dark:placeholder-gray-500 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 focus:border-orange-500 dark:focus:border-orange-400 focus:ring-2 focus:ring-orange-200 focus:outline-none transition duration-200" required />
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300 text-left">Password</label>
+                    <input type="password" name="password" placeholder="Enter your password" 
+                        class="block w-full px-5 py-3 text-gray-800 placeholder-gray-400 bg-gray-50 border border-gray-300 rounded-xl dark:placeholder-gray-500 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 focus:border-orange-500 dark:focus:border-orange-400 focus:ring-2 focus:ring-orange-200 focus:outline-none transition duration-200" required />
+                </div>
+
+                <!-- Confirm password -->
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300 text-left">Confirm password</label>
+                    <input type="password" name="password2" placeholder="Confirm your password" 
+                        class="block w-full px-5 py-3 text-gray-800 placeholder-gray-400 bg-gray-50 border border-gray-300 rounded-xl dark:placeholder-gray-500 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 focus:border-orange-500 dark:focus:border-orange-400 focus:ring-2 focus:ring-orange-200 focus:outline-none transition duration-200" required />
+                </div>
+                
+                <!-- Register Button (Full width on small screens, one column span on medium/large) -->
+                <button type="submit" class="md:col-span-2 flex items-center justify-center w-full px-6 py-3 text-lg font-semibold tracking-wide text-white capitalize transition-colors duration-300 transform bg-orange-600 rounded-xl hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-300 focus:ring-opacity-50 shadow-md shadow-orange-500/50 hover:shadow-lg mt-4">
+                    Register Account
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 rtl:-scale-x-100 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                    </svg>
+                </button> 
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

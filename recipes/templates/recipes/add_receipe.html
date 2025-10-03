@@ -1,0 +1,108 @@
+{% extends "base.html" %} 
+{% block title %}Recipes{% endblock %} 
+{% block content %}
+<main class="min-h-screen py-10 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div class="max-w-3xl mx-auto shadow-2xl rounded-2xl p-6 md:p-10 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+        
+        <form method="post" enctype="multipart/form-data">
+            <div class="text-center mb-8">
+                <h2 class="text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+                    Submit Your Recipe
+                </h2>
+                <p class="text-lg text-gray-600 dark:text-gray-400 mt-2">Share your culinary creation with the community!</p>
+            </div>
+            
+            {% csrf_token %}
+            
+            <div class="space-y-6">
+                <div>
+                    <label for="id_receipe_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Recipe Name</label>
+                    {{ receipe_form.receipe_name }}
+                </div>
+                
+                <div>
+                    <label for="id_receipe_description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Recipe Description</label>
+                    {{ receipe_form.receipe_description }}
+                </div>
+                
+                <div>
+                    <label for="id_receipe_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Recipe Type</label>
+                    {{ receipe_form.receipe_type }}
+                </div>
+                
+                <div>
+                    <label for="id_receipe_image" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Recipe Image</label>
+                    {{ receipe_form.receipe_image }}
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-semibold text-orange-600 dark:text-orange-400 mt-10 mb-4 border-b border-orange-200 dark:border-gray-700 pb-2">
+                Ingredients
+            </h3>
+            
+            {{ ingredient_formset.management_form }}
+            
+            <div id="ingredients-container" class="space-y-3">
+                {% for form in ingredient_formset %}
+                <div class="ingredient-field flex items-center space-x-3">
+                    {{ form.ingredients_name }}
+                    {% if forloop.counter > ingredient_formset.initial_form_count %}
+                    <button type="button" onclick="this.closest('.ingredient-field').remove(); updateIngredientTotalForms(getTotalForms() - 1);" 
+                        class="text-red-600 hover:text-red-800 transition p-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                    </button>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            
+            <button type="button" onclick="addIngredientField()" id="add-ingredient" 
+                class="flex items-center space-x-2 mt-4 px-4 py-2 text-white bg-amber-500 rounded-xl hover:bg-amber-600 focus:ring-4 focus:outline-none focus:ring-amber-300 transition shadow-md">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-white">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                <span>Add Ingredient</span>
+            </button>
+            
+            <div class="mt-10 text-center">
+                <button type="submit" 
+                    class="w-full sm:w-auto bg-orange-600 text-white text-lg font-semibold px-10 py-3 rounded-xl hover:bg-orange-700 focus:ring-4 focus:ring-orange-300 focus:outline-none transition shadow-lg shadow-orange-500/50">
+                    Submit Recipe
+                </button>
+            </div>
+        </form>
+    </div>
+</main>
+<script>
+    // JavaScript function to add a new ingredient input field
+    function addIngredientField() {
+        const ingredientsContainer = document.getElementById("ingredients-container");
+        const ingredientCount = ingredientsContainer.children.length;
+
+        const newIngredient = document.createElement("div");
+        newIngredient.setAttribute("class", "ingredient-field");
+        newIngredient.innerHTML = `
+            <input type="text" class="mt-2 w-76 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400 dark:bg-gray-900" name="ingredients_name_${ingredientCount}" placeholder="Enter ingredient" required>
+             <button type="button" onclick="removeIngredientField(this)" 
+                            class="text-red-600 hover:text-red-800 transition">
+                            ✖
+                        </button>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg></button>
+        `;
+
+        ingredientsContainer.appendChild(newIngredient);
+    }
+
+    // JavaScript function to remove an ingredient input field
+    function removeIngredientField(button) {
+        const ingredientField = button.parentElement;
+        ingredientField.remove();
+    }
+</script>
+    
+
+
+
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Add Meal Plan{% endblock %}
+{% block content %}
+
+<main class="min-h-screen py-10 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    
+    <div class="max-w-xl mx-auto shadow-2xl rounded-2xl p-8 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+        
+        <h2 class="text-center text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-8">
+            Plan a Meal
+        </h2>
+        
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            {% for field in form %}
+                <!-- Skip hidden fields -->
+                {% if field.is_hidden %}
+                    {{ field }}
+                {% else %}
+                    <!-- Special handling for date and time fields to put them side-by-side -->
+                    {% if field.name == 'meal_date' or field.name == 'meal_time' %}
+                        <!-- This container handles the date and time row (only renders once) -->
+                        {% if field.name == 'meal_date' %}
+                        <div class="grid grid-cols-2 gap-4">
+                        {% endif %}
+                            <div class="space-y-2">
+                                <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    {{ field.label }}
+                                </label>
+                                <!-- Render the field directly (assuming widgets were updated in forms.py) -->
+                                {{ field }}
+                                
+                                {% for error in field.errors %}
+                                    <p class="text-sm text-red-600 font-semibold mt-1">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% if field.name == 'meal_time' %}
+                        </div>
+                        {% endif %}
+                    {% else %}
+                        <!-- Standard field rendering -->
+                        <div class="space-y-2">
+                            <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                {{ field.label }}
+                            </label>
+                            <!-- Render the field directly (assuming widgets were updated in forms.py) -->
+                            {{ field }}
+                            
+                            {% for error in field.errors %}
+                                <p class="text-sm text-red-600 font-semibold mt-1">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            
+            <div class="mt-8 pt-4 border-t border-gray-200 dark:border-gray-700 text-center">
+                <button type="submit" class="w-full bg-orange-600 text-white text-lg font-semibold px-5 py-3 rounded-xl hover:bg-orange-700 focus:ring-4 focus:ring-orange-300 focus:outline-none transition shadow-lg shadow-orange-500/50">
+                    Save Meal Plan
+                </button>
+            </div>
+        </form> 
+        
+        <div class="text-center mt-6">
+            <a href="{% url 'view_meal_plans' %}" class="text-sm text-gray-500 dark:text-gray-400 hover:text-orange-600 hover:underline">
+                &larr; View Existing Plans
+            </a>
+        </div>
+        
+    </div>
+</main>
+{% endblock %}

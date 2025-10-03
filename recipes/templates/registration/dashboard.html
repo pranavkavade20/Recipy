@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% block title %}RecipeBoard{% endblock %} 
+{% block content %}
+
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen py-10 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto bg-white dark:bg-gray-800 shadow-2xl rounded-2xl p-6 md:p-10">
+
+        <div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-5 mb-8">
+            <div class="flex items-center">
+                <svg class="h-10 w-10 text-orange-600 dark:text-orange-400" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  
+                    <path stroke="none" d="M0 0h24v24H0z"/>  
+                    <rect x="5" y="3" width="14" height="18" rx="2" /> 
+                    <line x1="9" y1="7" x2="15" y2="7" />  
+                    <line x1="9" y1="11" x2="15" y2="11" />  
+                    <line x1="9" y1="15" x2="13" y2="15" />
+                </svg>
+                <h1 class="ml-4 text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">Your RecipeBoard</h1>
+            </div>
+            <a href="{% url 'add_recipe' %}" class="hidden sm:inline-flex bg-orange-600 text-white text-sm font-semibold px-4 py-2 rounded-xl hover:bg-orange-700 transition duration-300 shadow-md">
+                ➕ Add New Recipe
+            </a>
+        </div>
+        
+        <h4 class="text-2xl font-semibold text-green-600 dark:text-green-400 mb-6">Recipes You've Contributed</h4>
+        
+        <div class="relative max-h-[60vh] overflow-x-auto overflow-y-auto rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg custom-scrollbar">
+            <table class="min-w-full bg-white dark:bg-gray-800 border-collapse">
+                <thead class="sticky top-0 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-sm uppercase shadow-sm">
+                    <tr>
+                        <th class="w-16 px-4 py-3 border-r border-gray-200 dark:border-gray-700 text-left">Image</th>
+                        <th class="w-1/4 px-4 py-3 border-r border-gray-200 dark:border-gray-700 text-left">Recipe Name</th>
+                        <th class="w-1/6 px-4 py-3 border-r border-gray-200 dark:border-gray-700 text-left">Type</th>
+                        <th class="px-4 py-3 text-left">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for recipe in user.recipes.all %}
+                    <tr class="border-t border-gray-200 dark:border-gray-700 odd:bg-white dark:odd:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-900 hover:bg-orange-50 dark:hover:bg-gray-700 transition-colors cursor-pointer">
+                        
+                        <td class="px-4 py-3 border-r border-gray-200 dark:border-gray-700 text-center">
+                            {% if recipe.receipe_image %}
+                            <img src="{{ recipe.receipe_image.url }}" alt="{{ recipe.receipe_name }}" class="h-12 w-12 rounded-lg object-cover mx-auto shadow-sm">
+                            {% else %}
+                            <span class="text-xs text-gray-500 dark:text-gray-400">N/A</span>
+                            {% endif %}
+                        </td>
+                        
+                        <td class="px-4 py-3 border-r border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white font-semibold">
+                            {{ recipe.receipe_name }}
+                        </td>
+                        
+                        <td class="px-4 py-3 border-r border-gray-200 dark:border-gray-700">
+                            <span class="px-3 py-1 text-xs font-semibold rounded-full 
+                                {% if recipe.receipe_type == 'Vegetarian' %} bg-green-200 text-green-800 dark:bg-green-700 dark:text-green-100
+                                {% elif recipe.receipe_type == 'Non Vegeterian' %} bg-red-200 text-red-800 dark:bg-red-700 dark:text-red-100
+                                {% else %} bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200
+                                {% endif %}">
+                                {{ recipe.receipe_type }}
+                            </span>
+                        </td>
+                        
+                        <td class="px-4 py-3 text-gray-700 dark:text-gray-300 relative">
+                            <div class="w-full truncate cursor-pointer hover-trigger" onmouseover="showModal(this)" onmouseout="hideModal(this)">
+                                {{ recipe.receipe_description }}
+                            </div>
+
+                            <div class="hover-modal hidden absolute top-0 left-full ml-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-xl p-4 rounded-lg w-96 z-50 border border-gray-300 dark:border-gray-600 transform -translate-y-1/4">
+                                <p class="text-sm max-h-48 overflow-y-auto">
+                                    {{ recipe.receipe_description }}
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="px-4 py-10 text-center text-xl font-medium text-gray-500 dark:text-gray-300">
+                            No recipes added yet. Let's start cooking!
+                            <p class="mt-4">
+                                <a href="{% url 'add_recipe' %}" class="inline-flex items-center text-orange-600 dark:text-orange-400 font-semibold hover:underline transition">
+                                    <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M11 9h4v2h-4v4h-2v-4H7V9h4V7h2v2zM10 2a8 8 0 100 16 8 8 0 000-16z"/></svg>
+                                    Add Your First Recipe Now
+                                </a>
+                            </p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                    {% if user.recipes.all %}
+                    <tr class="border-t border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-center sticky bottom-0">
+                        <td colspan="4" class="px-4 py-3">
+                            <a href="{% url 'add_recipe' %}" class="text-orange-600 dark:text-orange-400 font-semibold hover:underline transition">
+                                ➕ Add More Recipes
+                            </a>
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="mt-8 flex justify-center space-x-4">
+            <a href="{% url 'home' %}" class="bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-6 py-3 rounded-xl hover:bg-gray-400 dark:hover:bg-gray-600 font-semibold transition shadow-md">
+                Back to Home
+            </a>
+            <a href="{% url 'search_page' %}" class="bg-orange-600 text-white px-6 py-3 rounded-xl hover:bg-orange-700 transition font-semibold shadow-md shadow-orange-500/50">
+                Search Recipes
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<script>
+function showModal(element) {
+ let modal = element.nextElementSibling;
+ modal.classList.remove("hidden");
+}
+
+ function hideModal(element) {
+let modal = element.nextElementSibling;
+modal.classList.add("hidden");
+}
+</script>
+
+<style>
+.custom-scrollbar::-webkit-scrollbar {
+width: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+background: #f1f1f1; /* Light background for track */
+border-radius: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+background: #cbd5e1; /* Gray for thumb */
+border-radius: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+background: #94a3b8; /* Darker gray on hover */
+}
+      /* Dark mode scrollbar styles for dark background */
+      .dark .custom-scrollbar::-webkit-scrollbar-track {
+        background: #1f2937; /* Dark background for track */
+      }
+      .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #4b5563; /* Dark gray for thumb */
+      }
+      .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #6b7280; /* Lighter gray on hover */
+      }
+</style>
+
+{% endblock %}

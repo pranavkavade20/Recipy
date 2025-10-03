@@ -1,0 +1,284 @@
+{% extends "base.html" %}
+{% block title %}Recipe Detail{% endblock %}
+{% block content %}
+<div class="bg-gray-50 dark:bg-gray-900 transition-colors duration-500 min-h-screen pb-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div id="recipe">
+            <div class="flex justify-center items-center h-96">
+                <p class="text-2xl font-semibold text-orange-500 dark:text-orange-400 animate-pulse">Loading Recipe...</p>
+            </div>
+        </div>
+
+        <div id="recipe-videos" class="mt-16">
+            <h2 class="text-3xl font-extrabold mb-6 text-gray-900 dark:text-white border-b border-orange-500 pb-2">🎥 Video Guide</h2>
+            </div>
+
+        <h2 class="text-3xl font-extrabold mb-6 mt-16 text-gray-900 dark:text-white border-b border-orange-500 pb-2">Similar Recipes You'll Love</h2>
+        
+        <div id="similar-recipes" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            </div>
+    </div>
+
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 space-y-2">
+        </div>
+
+    <script>
+        // --- TOAST UTILITY FUNCTION (UPDATED DESIGN) ---
+        function showToast(message, type) {
+            const container = document.getElementById('toast-container');
+            const isSuccess = type === 'success';
+            const colorClass = isSuccess ? 'text-green-500 bg-green-100 dark:bg-green-800 dark:text-green-200' : 'text-red-500 bg-red-100 dark:bg-red-800 dark:text-red-200';
+            const iconPath = isSuccess ? 
+                `<path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>` :
+                `<path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z"/>`;
+
+            const toast = document.createElement('div');
+            toast.className = `flex items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow-sm dark:text-gray-400 dark:bg-gray-800 opacity-0 transform translate-x-full transition duration-300 ease-out`;
+            toast.setAttribute('role', 'alert');
+            
+            // Build the detailed HTML structure
+            toast.innerHTML = `
+                <div class="inline-flex items-center justify-center shrink-0 w-8 h-8 ${colorClass} rounded-lg">
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        ${iconPath}
+                    </svg>
+                    <span class="sr-only">${isSuccess ? 'Check icon' : 'Error icon'}</span>
+                </div>
+                <div class="ms-3 text-sm font-normal text-gray-900 dark:text-white">${message}</div>
+                <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" aria-label="Close" onclick="this.closest('.max-w-xs').remove()">
+                    <span class="sr-only">Close</span>
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                </button>
+            `;
+            
+            container.appendChild(toast);
+
+            // Animate in
+            setTimeout(() => {
+                toast.classList.remove('opacity-0', 'translate-x-full');
+                toast.classList.add('opacity-100', 'translate-x-0');
+            }, 10);
+
+            // Animate out and remove after 4 seconds
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-x-0');
+                toast.classList.add('opacity-0', 'translate-x-full');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+        
+        // --- RECIPE DATA FUNCTIONS (KEPT AS IS) ---
+        
+        // Fetch API data
+        async function fetchRecipeData() {
+            try {
+                // IMPORTANT: Keeping the hardcoded local URL as per original logic
+                const response = await fetch('http://127.0.0.1:8000/recipe/{{id}}/');
+                const data = await response.json();
+                displayRecipe(data.recipe);
+                displaySimilarRecipes(data.similar_recipes);
+                fetchRecipeVideos({{ id }}); // Fetch YouTube videos
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                document.getElementById('recipe').innerHTML = '<p class="text-red-500 text-center py-10">Failed to load recipe details. Please try again later.</p>';
+            }
+        }
+
+        // Display main recipe (UPDATED DESIGN)
+        function displayRecipe(recipe) {
+            const recipeContainer = document.getElementById('recipe');
+            recipeContainer.innerHTML = `
+           <section class="py-10">
+                <div class="text-center mb-10">
+                    <h1 class="text-5xl font-extrabold text-orange-600 dark:text-orange-400 leading-tight mb-3">
+                        ${recipe.name}
+                    </h1>
+                    <span class="inline-block px-4 py-1 text-sm font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">${recipe.diet || 'N/A'}</span>
+                    <span class="inline-block px-4 py-1 text-sm font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100 ml-2">${recipe.cuisine}</span>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                    
+                    <div class="lg:col-span-1 flex flex-col gap-6">
+                        <div class="relative rounded-2xl overflow-hidden shadow-2xl dark:shadow-none transition-transform duration-500 hover:scale-[1.01] hover:shadow-3xl">
+                             <img src="${recipe.image_url}" alt="${recipe.name}"
+                                class="w-full h-auto object-cover" />
+                        </div>
+                        
+                        <button onclick="saveFavoriteRecipe(${recipe.id})"
+                            class="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white text-lg font-bold px-6 py-4 rounded-xl shadow-lg shadow-orange-500/50 transition duration-300 transform hover:scale-[1.01]">
+                            <span class="flex items-center justify-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                    <path d="M11.645 20.91l-.007-.003-.022-.012-2.73-1.636-1.125-.664-.55-.324C7.027 18.067 5.757 17.51 4.545 16.5C3.332 15.49 2.5 14.288 2.5 13.064c0-2.915 2.138-4.992 4.136-6.191C8.272 5.568 10.15 5.006 12 5.006c1.85 0 3.728.562 5.364 1.867 2 1.199 4.136 3.276 4.136 6.191 0 1.224-.833 2.424-2.045 3.435-1.212 1.01-2.482 1.567-3.791 2.378l-.55.324-1.125.664-2.73 1.636-.022.012-.007.003-.002.001-.002.001Z" />
+                                </svg>
+                                Save This Recipe
+                            </span>
+                        </button>
+                    </div>
+
+                    <div class="lg:col-span-2 flex flex-col gap-8">
+                        
+                        <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg dark:shadow-xl border border-gray-200 dark:border-gray-700">
+                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">📖 Summary</h2>
+                            <p class="text-lg leading-relaxed text-gray-700 dark:text-gray-300">
+                                ${recipe.description}
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-6 p-6 bg-orange-50 dark:bg-gray-800 rounded-2xl shadow-inner border border-orange-100 dark:border-gray-700">
+                             <div class="text-center">
+                                <span class="block text-3xl font-extrabold text-orange-600 dark:text-orange-400">${recipe.prep_time || 'N/A'}</span>
+                                <span class="block text-sm text-gray-600 dark:text-gray-300 font-semibold mt-1">Prep Time</span>
+                             </div>
+                             <div class="text-center">
+                                <span class="block text-3xl font-extrabold text-orange-600 dark:text-orange-400">${recipe.course}</span>
+                                <span class="block text-sm text-gray-600 dark:text-gray-300 font-semibold mt-1">Course</span>
+                             </div>
+                             <div class="text-center col-span-2 sm:col-span-1">
+                                <span class="block text-3xl font-extrabold text-orange-600 dark:text-orange-400">${recipe.cuisine}</span>
+                                <span class="block text-sm text-gray-600 dark:text-gray-300 font-semibold mt-1">Cuisine</span>
+                             </div>
+                        </div>
+
+                        <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg dark:shadow-xl border border-gray-200 dark:border-gray-700">
+                            <h2 class="text-2xl font-bold text-green-600 dark:text-green-400 mb-4">🥗 Ingredients</h2>
+                            <ul class="list-disc list-inside space-y-3 pl-4 text-gray-700 dark:text-gray-300 columns-1 sm:columns-2">
+                                ${recipe.ingredients
+                                    .split(',')
+                                    .map((ingredient) => `<li class="text-lg">${ingredient.trim()}</li>`)
+                                    .join('')}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-16 bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg dark:shadow-xl border border-gray-200 dark:border-gray-700">
+                    <h2 class="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-4">📝 Step-by-Step Instructions</h2>
+                    <p class="leading-relaxed whitespace-pre-wrap text-lg text-gray-700 dark:text-gray-300">
+                        ${recipe.instructions}
+                    </p>
+                </div> 
+           </section>
+            `;
+        }
+        
+        // Display similar recipes (FIXED GRID DESIGN)
+        function displaySimilarRecipes(recipes) {
+            const similarRecipesContainer = document.getElementById('similar-recipes');
+            similarRecipesContainer.innerHTML = recipes.map(recipe => `
+                <a href="/recipe_detail/${recipe.id}" target="_blank" class="block group">
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden transform group-hover:-translate-y-1 h-full flex flex-col border border-gray-200 dark:border-gray-700">
+                        <div class="relative">
+                            <img 
+                                src="${recipe.image_url}"
+                                alt="${recipe.name}"
+                                class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105"
+                            />
+                            <span class="absolute top-4 right-4 bg-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
+                                ${recipe.diet || 'N/A'}
+                            </span>
+                        </div>
+                        <div class="p-5 flex flex-col flex-grow">
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">
+                                ${recipe.name.split(' ').slice(0, 6).join(' ')}
+                            </h3>
+                            <div class="flex items-center gap-2 text-sm mt-auto pt-2 border-t border-gray-100 dark:border-gray-700">
+                                <span class="text-gray-600 dark:text-gray-400 font-medium">${recipe.cuisine}</span>
+                                <span class="text-gray-300 dark:text-gray-600">•</span>
+                                <span class="text-orange-500 font-semibold">${recipe.course}</span>
+                            </div>
+                            <div class="mt-3">
+                                <a href="/recipe_detail/${recipe.id}" target="_blank"
+                                    class="inline-flex items-center text-sm font-semibold text-orange-600 dark:text-orange-400 hover:underline transition-colors">
+                                    View Recipe &rarr;
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            `).join('');
+        }
+
+
+        // Fetch YouTube Videos (KEPT AS IS)
+        async function fetchRecipeVideos(recipeId) {
+            try {
+                const videoContainer = document.getElementById('recipe-videos');
+        
+                // Show loading message before fetching
+                videoContainer.innerHTML += `<p class="text-gray-700 dark:text-gray-300 text-center animate-pulse mt-4">Searching for videos...</p>`;
+        
+                const response = await fetch(`/recipe_videos/${recipeId}/`);
+                const data = await response.json();
+        
+                // Check if videos exist
+                if (!data.videos || data.videos.length === 0) {
+                    videoContainer.innerHTML = `<h2 class="text-3xl font-extrabold mb-6 text-gray-900 dark:text-white border-b border-orange-500 pb-2">🎥 Video Guide</h2><p class="text-gray-700 dark:text-gray-300 text-center mt-4">No videos found for this recipe.</p>`;
+                    return;
+                }
+        
+                // Generate video elements (UPDATED DESIGN)
+                videoContainer.innerHTML = `<h2 class="text-3xl font-extrabold mb-6 text-gray-900 dark:text-white border-b border-orange-500 pb-2">🎥 Video Guide</h2>`;
+                
+                data.videos.forEach(video => {
+                    // Detect if it's a YouTube Short and adjust URL
+                    const videoUrl = video.video_id.includes("shorts") 
+                        ? video.video_id.replace("shorts/", "embed/") 
+                        : `https://www.youtube.com/embed/${video.video_id}`;
+        
+                    videoContainer.innerHTML += `
+                            <div class="mt-8 rounded-2xl overflow-hidden shadow-2xl">
+                                <iframe class="h-[260px] md:h-[540px] w-full"
+                                src="${videoUrl}"
+                                title="Recipe Video"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                                </iframe>
+                            </div>`;
+                });
+
+            } catch (error) {
+                console.error('Error fetching YouTube videos:', error);
+                document.getElementById('recipe-videos').innerHTML = `<h2 class="text-3xl font-extrabold mb-6 text-gray-900 dark:text-white border-b border-orange-500 pb-2">🎥 Video Guide</h2><p class="text-red-500 text-center mt-4">Failed to load videos. Please check your connection.</p>`;
+            }
+        }
+        
+        // Save Favorite Recipe (UPDATED TO USE TOAST)
+        async function saveFavoriteRecipe(recipeId) {
+            try {
+                const response = await fetch('/save_favorite/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCSRFToken()
+                    },
+                    body: JSON.stringify({ recipe_id: recipeId })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    showToast(data.message, 'success');
+                } else {
+                    showToast(data.error || "Failed to save recipe", 'error');
+                }
+            } catch (error) {
+                console.error("Error saving recipe:", error);
+                showToast("An error occurred. Are you logged in?", 'error');
+            }
+        }
+        
+        // Function to get CSRF token (KEPT AS IS)
+        function getCSRFToken() {
+            const cookieValue = document.cookie.match(/csrftoken=([^ ;]+)/);
+            return cookieValue ? cookieValue[1] : "";
+        }
+        
+        // Trigger API calls on page load (KEPT AS IS)
+        fetchRecipeData();
+    </script>
+</div>
+{% endblock %}

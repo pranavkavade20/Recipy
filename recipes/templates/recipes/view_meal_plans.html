@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}My Meal Plan{% endblock %}
+{% block content %}
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen py-10 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto bg-white dark:bg-gray-800 shadow-2xl rounded-2xl p-6 md:p-10">
+
+        <div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-5 mb-8">
+            <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">📅 Your Weekly Meal Plans</h2>
+            <a href="{% url 'add_meal_plan' %}" class="bg-orange-600 text-white text-sm font-semibold px-4 py-2 rounded-xl hover:bg-orange-700 transition duration-300 shadow-md">
+                ➕ Plan a New Meal
+            </a>
+        </div>
+        
+        <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg">
+            <table class="min-w-full border-collapse">
+                <thead class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-sm uppercase sticky top-0">
+                    <tr>
+                        <th class="px-4 py-3 border-r border-gray-200 dark:border-gray-700">Image</th>
+                        <th class="px-4 py-3 border-r border-gray-200 dark:border-gray-700">Recipe Name</th>
+                        <th class="px-4 py-3 border-r border-gray-200 dark:border-gray-700">Meal Date</th>
+                        <th class="px-4 py-3 border-r border-gray-200 dark:border-gray-700">Meal Type</th>
+                        <th class="px-4 py-3 border-r border-gray-200 dark:border-gray-700">Time</th>
+                        <th class="px-4 py-3">Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for plan in meal_plans %}
+                    <tr class="border-t border-gray-200 dark:border-gray-700 odd:bg-white dark:odd:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-900 hover:bg-orange-50 dark:hover:bg-gray-700 transition-colors">
+                        
+                        <td class="px-4 py-3 border-r border-gray-200 dark:border-gray-700 text-center">
+                            {% if plan.recipe.receipe_image %}
+                            <img src="{{ plan.recipe.receipe_image.url }}" alt="{{ plan.recipe.receipe_name }}" class="h-12 w-12 rounded-full object-cover border border-gray-300 dark:border-gray-700 mx-auto">
+                            {% else %}
+                            <span class="text-gray-500 dark:text-gray-400 text-xs">N/A</span>
+                            {% endif %}
+                        </td>
+                        
+                        <td class="px-4 py-3 border-r border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white font-semibold">
+                            <a href="{% url 'recipe_detail' plan.recipe.id %}" class="hover:text-orange-600 transition-colors">
+                                {{ plan.recipe.receipe_name }}
+                            </a>
+                        </td>
+                        
+                        <td class="px-4 py-3 border-r border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium">
+                            {{ plan.meal_date }}
+                        </td>
+                        
+                        <td class="px-4 py-3 border-r border-gray-200 dark:border-gray-700">
+                            <span class="px-3 py-1 text-xs font-semibold rounded-full 
+                                {% if plan.meal_type == 'Breakfast' %} bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100
+                                {% elif plan.meal_type == 'Lunch' %} bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100
+                                {% elif plan.meal_type == 'Dinner' %} bg-indigo-100 text-indigo-800 dark:bg-indigo-800 dark:text-indigo-100
+                                {% else %} bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200
+                                {% endif %}">
+                                {{ plan.meal_type }}
+                            </span>
+                        </td>
+                        
+                        <td class="px-4 py-3 border-r border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-mono">
+                            {{ plan.meal_time|default:"-" }}
+                        </td>
+                        
+                        <td class="px-4 py-3 text-gray-700 dark:text-gray-300">
+                            {{ plan.notes|default:"-" }}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="px-4 py-10 text-center text-xl font-medium text-gray-500 dark:text-gray-300">
+                            You have no meal plans scheduled yet. Let's plan your week!
+                            <p class="mt-4">
+                                <a href="{% url 'add_meal_plan' %}" class="text-orange-600 dark:text-orange-400 font-semibold hover:underline transition">
+                                    Click here to add your first meal.
+                                </a>
+                            </p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                {% if meal_plans %}
+                <tfoot>
+                    <tr class="border-t border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-center sticky bottom-0">
+                        <td colspan="6" class="px-4 py-3">
+                            <a href="{% url 'add_meal_plan' %}" class="text-orange-600 dark:text-orange-400 font-semibold hover:underline">
+                                ➕ Add Another Meal Plan
+                            </a>
+                        </td>
+                    </tr>
+                </tfoot>
+                {% endif %}
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

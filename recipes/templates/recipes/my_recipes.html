@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}My Recipes{% endblock %}
+{% block content %}
+<main class="min-h-screen py-10 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div class="max-w-7xl mx-auto">
+        
+        <h2 class="text-center dark:text-white text-4xl font-extrabold text-gray-900 tracking-tight mb-10">
+            Saved Recipes & Contributions
+        </h2>
+        
+        <form method="get" class="max-w-xl mx-auto mb-12" action="{% url 'search_user_recipes' %}"> 
+            <label for="recipe-search-input" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+            <div class="relative shadow-lg rounded-xl">
+                <div class="absolute inset-y-0 start-0 flex items-center ps-4 pointer-events-none">
+                    <svg class="w-5 h-5 text-gray-400 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                    </svg>
+                </div>
+                <input type="search" name="q" id="recipe-search-input" 
+                    class="block w-full p-4 ps-12 text-base text-gray-900 border border-gray-200 rounded-xl bg-white focus:ring-orange-500 focus:border-orange-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-orange-500 dark:focus:border-orange-500"
+                    placeholder="Find your saved or added recipe..." value="{{ query }}" required />
+                <button type="submit" class="text-white absolute end-2.5 bottom-2.5 bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-300 font-semibold rounded-lg text-sm px-5 py-2 transition-all">Search</button>
+            </div>
+        </form>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {% for recipe in recipes %}
+            <div class="group h-full">
+                <div class="overflow-hidden rounded-2xl shadow-xl bg-white dark:bg-gray-800 dark:text-white transform transition-all duration-300 group-hover:scale-[1.02] group-hover:shadow-2xl h-full flex flex-col">
+                    <a href="#" onclick="document.getElementById('modal-{{ recipe.id }}').classList.remove('hidden')" class="relative block overflow-hidden">
+                        <span class="absolute top-4 left-4 bg-orange-500 px-3 py-1 text-xs font-bold uppercase tracking-wide text-white shadow-md rounded-full">
+                            {{ recipe.receipe_type }}
+                        </span>
+                        
+                        {% if recipe.receipe_image %}
+                        <img src="{{ recipe.receipe_image.url }}" alt="{{ recipe.receipe_name }}"
+                            class="h-52 w-full object-cover rounded-t-lg transition duration-500 group-hover:scale-105" />
+                        {% else %}
+                        <div class="h-52 w-full flex items-center justify-center bg-gray-200 dark:bg-gray-700">
+                             <span class="text-gray-500 dark:text-gray-400">No Image</span>
+                        </div>
+                        {% endif %}
+                    </a>
+    
+                    <div class="relative dark:text-white dark:bg-gray-800 p-5 flex flex-col flex-grow">
+                        <h3 class="mt-1 text-xl font-bold text-gray-900 dark:text-white line-clamp-2">{{ recipe.receipe_name }}</h3>
+                        <p class="mt-2 line-clamp-3 text-gray-600 dark:text-gray-400 text-sm flex-grow">
+                            {{ recipe.receipe_description|safe|truncatewords:"15" }}
+                        </p>
+    
+                        <div class="mt-4 flex gap-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+                            <button onclick="document.getElementById('modal-{{ recipe.id }}').classList.remove('hidden')"
+                                class="w-full rounded-xl bg-orange-600 px-3 py-2 text-sm font-medium text-white shadow-md transition transform hover:bg-orange-700">
+                                Show Details
+                            </button>
+    
+                            <a href="{% url 'update_recipe' recipe.id %}"
+                                class="w-full rounded-xl bg-green-600 px-3 py-2 text-sm font-medium text-white shadow-md text-center transition transform hover:bg-green-700">
+                                Edit
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-full text-center py-10">
+                <p class="text-xl text-gray-600 dark:text-gray-300">No recipes found for your query.</p>
+                <p class="text-lg mt-3">
+                    <a href="{% url 'add_recipe' %}" class="text-orange-500 font-semibold hover:underline">Add your first recipe now!</a>
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+
+{% for recipe in recipes %}
+<div id="modal-{{ recipe.id }}" class="fixed inset-0 z-50 hidden bg-gray-900/60 backdrop-blur-sm transition-opacity duration-300">
+
+    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 dark:text-white rounded-2xl shadow-2xl p-8 w-full max-w-xl mx-4 transition-transform duration-300 ease-out scale-100">
+        
+        <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-4 mb-4">
+            <h2 class="text-2xl font-bold text-orange-600 dark:text-orange-400">{{ recipe.receipe_name }}</h2>
+            <button onclick="document.getElementById('modal-{{ recipe.id }}').classList.add('hidden')" 
+                class="text-gray-500 hover:text-gray-900 dark:hover:text-gray-300 transition p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" 
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+
+        <div class="mt-4 max-h-[70vh] overflow-y-auto pr-2">
+            
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Description:</h3>
+            <p class="text-gray-600 dark:text-gray-400 text-base leading-relaxed mb-6">{{ recipe.receipe_description }}</p>
+
+            <h4 class="text-lg font-semibold text-orange-600 dark:text-orange-400 mb-2">Ingredients:</h4>
+            <ul class="list-disc list-inside text-gray-700 dark:text-gray-300 mt-2 space-y-1 text-base columns-1 sm:columns-2">
+                {% for ingredient in recipe.ingredients.all %}
+                <li>{{ ingredient.ingredients_name }}</li>
+                {% empty %}
+                <li class="text-gray-500 dark:text-gray-400">No ingredients added for this recipe.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="mt-6 flex justify-end gap-3 border-t border-gray-200 dark:border-gray-700 pt-4">
+             <a href="{% url 'update_recipe' recipe.id %}"
+                class="px-5 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition shadow-md">
+                Edit Recipe
+            </a>
+            <button onclick="document.getElementById('modal-{{ recipe.id }}').classList.add('hidden')" 
+                class="px-5 py-2 bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 text-sm font-medium rounded-lg transition shadow-md">
+                Close
+            </button>
+        </div>
+
+    </div>
+</div>
+{% endfor %}
+
+
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
+{% endblock %}

@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block title %}Update Recipes{% endblock %}
+{% block content %}
+
+<main class="min-h-screen py-10 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div class="max-w-3xl mx-auto shadow-2xl rounded-2xl p-6 md:p-10 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+        
+        <h2 class="text-center text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-8">
+            Update Recipe
+        </h2>
+        
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+                {% for field in recipe_form %}
+                <div class="{% if field.label == 'Receipe description' or field.label == 'Receipe image' %}md:col-span-2{% endif %}">
+                    <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        {{ field.label }}
+                    </label>
+                    
+                    {{ field }}
+                    
+                    {% if field.help_text %}
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ field.help_text }}</p>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <p class="text-sm text-red-600 font-semibold mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <h3 class="text-2xl font-semibold mb-4 text-orange-600 dark:text-orange-400 border-b border-orange-200 dark:border-gray-700 pb-2">
+                Ingredients
+            </h3>
+            
+            <div id="ingredient-form-container" class="space-y-4">
+                {{ ingredient_formset.management_form }}
+                {% for form in ingredient_formset %}
+                <div class="ingredient-field p-4 border border-gray-300 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-700 shadow-sm">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                        {% for field in form %}
+                            <div class="{% if forloop.first %}md:col-span-2{% endif %}">
+                                {% if field.label != 'Id' and field.label != 'DELETE' %}
+                                    <label for="{{ field.id_for_label }}" class="sr-only">{{ field.label }}</label>
+                                    {{ field }}
+                                    {% for error in field.errors %}
+                                        <p class="text-sm text-red-600 font-semibold mt-1">{{ error }}</p>
+                                    {% endfor %}
+                                {% endif %}
+                                
+                                {% if field.label == 'Id' or field.label == 'DELETE' %}
+                                    {{ field }}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <button type="button" id="add-ingredient-button" class="flex items-center space-x-2 mt-6 px-4 py-2 text-white bg-amber-500 hover:bg-amber-600 transition rounded-xl shadow-md">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                <span>Add Another Ingredient</span>
+            </button>
+
+            <div class="flex justify-center mt-12 space-x-6">
+                <button type="submit" class="bg-green-600 hover:bg-green-700 transition text-white px-8 py-3 rounded-xl font-semibold shadow-lg shadow-green-500/50">
+                    Save Changes
+                </button>
+                <a href="{% url 'delete_recipe' recipe.id %}" class="bg-red-600 hover:bg-red-700 transition text-white px-8 py-3 rounded-xl font-semibold shadow-lg shadow-red-500/50">
+                    Delete Recipe
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('add-ingredient-button').addEventListener('click', function() {
+            const formContainer = document.getElementById('ingredient-form-container');
+            const totalForms = document.getElementById('id_ingredients-TOTAL_FORMS');
+            const currentFormCount = parseInt(totalForms.value, 10);
+
+            // Select the *last* ingredient field to clone, assuming the first one might be the unstyled prototype if rendered via loop.
+            const lastForm = formContainer.querySelector('.ingredient-field:last-child');
+            const newForm = lastForm ? lastForm.cloneNode(true) : document.createElement('div');
+            
+            if (!lastForm) {
+                 // Fallback: If no ingredient forms exist (which shouldn't happen with extra=1)
+                 console.error("No ingredient field found to clone.");
+                 return;
+            }
+
+            // Update attributes in the new form
+            const regex = new RegExp(`ingredients-(\\d+)-`, 'g');
+            newForm.innerHTML = newForm.innerHTML.replace(regex, `ingredients-${currentFormCount}-`);
+            
+            // Re-apply the class structure in case it was lost (optional cleanup)
+            newForm.className = 'ingredient-field p-4 border border-gray-300 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-700 shadow-sm';
+
+            // Clear values and update IDs/names in inputs
+            Array.from(newForm.querySelectorAll('input, textarea, select')).forEach(input => {
+                const oldId = input.id;
+                const oldName = input.name;
+
+                if (oldId && oldName) {
+                    const newIndex = currentFormCount;
+                    
+                    // Reset input values but preserve initial empty/checkbox state
+                    if (input.type !== 'hidden' && input.type !== 'checkbox') {
+                        input.value = '';
+                    } else if (input.type === 'checkbox') {
+                        input.checked = false; // Uncheck DELETE box
+                    }
+
+                    // Update name and ID
+                    input.name = oldName.replace(regex, `ingredients-${newIndex}-`);
+                    input.id = oldId.replace(regex, `ingredients-${newIndex}-`);
+                    
+                    // Clear error/help text associated with previous form
+                    let parent = input.closest('.ingredient-field');
+                    if (parent) {
+                        Array.from(parent.querySelectorAll('.text-red-600, .text-gray-500')).forEach(el => el.remove());
+                    }
+                }
+            });
+
+            // Append the new form to the container
+            formContainer.appendChild(newForm);
+
+            // Update total forms count
+            totalForms.value = currentFormCount + 1;
+        });
+    </script>
+</main>
+
+{% endblock %}

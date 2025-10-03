@@ -1,0 +1,38 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}about{% endblock %} 
+{% block content %}
+<section class="bg-gray-100 dark:bg-gray-900">
+    <div class="container px-6 py-10 mx-auto">
+        <div class="grid grid-cols-1 gap-8 mt-8 xl:mt-12 xl:gap-12 lg:grid-cols-2">
+            <div class="flex items-end overflow-hidden bg-cover rounded-lg h-96" style="background-image:url('https://plus.unsplash.com/premium_photo-1700673499834-1e44b51b4a06?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8RGlzY292ZXIlMjBOZXclMjBSZWNpcGVzfGVufDB8fDB8fHww')">
+                <div class="w-full px-8 py-4 overflow-hidden rounded-b-lg backdrop-blur-sm bg-gray-100/60 dark:bg-gray-800/60">
+                    <h2 class="mt-4 text-xl font-semibold text-gray-800 capitalize dark:text-white">Discover New Recipes</h2>
+                    <p class="mt-2 text-lg tracking-wider text-orange-500 uppercase dark:text-orange-400">Explore</p>
+                </div>
+            </div>
+  
+            <div class="flex items-end overflow-hidden bg-cover rounded-lg h-96" style="background-image:url('https://images.unsplash.com/photo-1512058564366-18510be2db19?ixlib=rb-1.2.1&auto=format&fit=crop&w=764&q=80')">
+                <div class="w-full px-8 py-4 overflow-hidden rounded-b-lg backdrop-blur-sm bg-gray-100/60 dark:bg-gray-800/60">
+                    <h2 class="mt-4 text-xl font-semibold text-gray-800 capitalize dark:text-white">Personalized Recipe Recommendations</h2>
+                    <p class="mt-2 text-lg tracking-wider text-orange-500 uppercase dark:text-orange-400">Smart AI</p>
+                </div>
+            </div>
+  
+            <div class="flex items-end overflow-hidden bg-cover rounded-lg h-96" style="background-image:url('https://images.unsplash.com/photo-1514986888952-8cd320577b68?q=80&w=2076&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')">
+                <div class="w-full px-8 py-4 overflow-hidden rounded-b-lg backdrop-blur-sm bg-gray-100/60 dark:bg-gray-800/60">
+                    <h2 class="mt-4 text-xl font-semibold text-gray-800 capitalize dark:text-white">Easy Step-by-Step Cooking</h2>
+                    <p class="mt-2 text-lg tracking-wider text-orange-500 uppercase dark:text-orange-400">Guides</p>
+                </div>
+            </div>
+  
+            <div class="flex items-end overflow-hidden bg-cover rounded-lg h-96" style="background-image:url('https://images.unsplash.com/photo-1493770348161-369560ae357d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1470&q=80')">
+                <div class="w-full px-8 py-4 overflow-hidden rounded-b-lg backdrop-blur-sm bg-gray-100/60 dark:bg-gray-800/60">
+                    <h2 class="mt-4 text-xl font-semibold text-gray-800 capitalize dark:text-white">Share & Save Your Favorites</h2>
+                    <p class="mt-2 text-lg tracking-wider text-orange-500 uppercase dark:text-orange-400">Community</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

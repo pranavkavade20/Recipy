@@ -1,0 +1,31 @@
+{% load static %}
+{% load static tailwind_tags %}
+{% tailwind_css %}
+
+{% block content %}
+<div class="fixed inset-0 bg-gray-100 dark:bg-gray-900 flex items-center justify-center">
+    <div class="bg-white dark:bg-gray-800 shadow-2xl rounded-2xl p-8 max-w-sm w-full text-center border border-gray-200 dark:border-gray-700 transform transition-transform duration-500 ease-out scale-100 hover:scale-[1.01]">
+        
+        <div class="flex justify-center items-center w-16 h-16 bg-emerald-500 rounded-full mx-auto mb-6 shadow-lg shadow-emerald-500/50">
+            <svg class="w-8 h-8 text-white fill-current" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 3.33331C10.8 3.33331 3.33337 10.8 3.33337 20C3.33337 29.2 10.8 36.6666 20 36.6666C29.2 36.6666 36.6667 29.2 36.6667 20C36.6667 10.8 29.2 3.33331 20 3.33331ZM16.6667 28.3333L8.33337 20L10.6834 17.65L16.6667 23.6166L29.3167 10.9666L31.6667 13.3333L16.6667 28.3333Z" />
+            </svg>
+        </div>
+
+        <h1 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-2">Logout Complete!</h1>
+        <p class="text-lg text-gray-600 dark:text-gray-400 mb-8">
+            You've been successfully logged out of your account.
+        </p>
+
+        <a href="{% url 'login' %}" 
+           class="w-full bg-orange-600 text-white font-semibold rounded-xl hover:bg-orange-700 transition duration-300 px-8 py-3 shadow-md shadow-orange-500/50 hover:shadow-lg inline-block">
+            Login Again
+        </a>
+        
+        <a href="{% url 'home' %}" 
+           class="mt-4 text-sm text-gray-500 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 hover:underline transition duration-200 inline-block">
+            Browse Recipes
+        </a>
+    </div>
+</div>
+{% endblock %}
