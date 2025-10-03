@@ -71,14 +71,3 @@ Click the link below to view the full video demonstration of the **Recipy Web Ap
 
 [**▶️ WATCH FULL DEMO VIDEO ON GOOGLE DRIVE**](https://drive.google.com/file/d/1V2SJyqkgycLODRvdd4tYYzgDNGcB7tHx)
 
----
-
-## 🤝 Contribution
-
-We welcome contributions from the community! If you'd like to improve the application, please refer to our `CONTRIBUTING.md` file for guidelines on submitting pull requests and reporting issues.
-
----
-
-## 📄 License
-
-*\[Insert License Information here, e.g., This project is licensed under the MIT License.]*
