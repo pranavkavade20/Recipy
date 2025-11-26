@@ -447,10 +447,6 @@ def get_saved_recipes(request):
 
     return render(request, "recipes/saved_recipes.html", context)
 
-
-
-
-
 @login_required
 @require_POST
 def remove_saved_recipe(request):
