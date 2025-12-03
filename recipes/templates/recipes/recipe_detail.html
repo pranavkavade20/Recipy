@@ -16,8 +16,8 @@
 
         <h2 class="text-3xl font-extrabold mb-6 mt-16 text-gray-900 dark:text-white border-b border-orange-500 pb-2">Similar Recipes You'll Love</h2>
         
-        <div id="similar-recipes" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            </div>
+        <div id="similar-recipes" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        </div>
     </div>
 
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 space-y-2">
@@ -165,44 +165,43 @@
             `;
         }
         
-        // Display similar recipes (FIXED GRID DESIGN)
-        function displaySimilarRecipes(recipes) {
-            const similarRecipesContainer = document.getElementById('similar-recipes');
-            similarRecipesContainer.innerHTML = recipes.map(recipe => `
-                <a href="/recipe_detail/${recipe.id}" target="_blank" class="block group">
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden transform group-hover:-translate-y-1 h-full flex flex-col border border-gray-200 dark:border-gray-700">
-                        <div class="relative">
-                            <img 
-                                src="${recipe.image_url}"
-                                alt="${recipe.name}"
-                                class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105"
-                            />
-                            <span class="absolute top-4 right-4 bg-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
-                                ${recipe.diet || 'N/A'}
-                            </span>
-                        </div>
-                        <div class="p-5 flex flex-col flex-grow">
-                            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">
-                                ${recipe.name.split(' ').slice(0, 6).join(' ')}
-                            </h3>
-                            <div class="flex items-center gap-2 text-sm mt-auto pt-2 border-t border-gray-100 dark:border-gray-700">
-                                <span class="text-gray-600 dark:text-gray-400 font-medium">${recipe.cuisine}</span>
-                                <span class="text-gray-300 dark:text-gray-600">•</span>
-                                <span class="text-orange-500 font-semibold">${recipe.course}</span>
-                            </div>
-                            <div class="mt-3">
-                                <a href="/recipe_detail/${recipe.id}" target="_blank"
-                                    class="inline-flex items-center text-sm font-semibold text-orange-600 dark:text-orange-400 hover:underline transition-colors">
-                                    View Recipe &rarr;
-                                </a>
-                            </div>
-                        </div>
+       // Display similar recipes (FIXED GRID DESIGN)
+function displaySimilarRecipes(recipes) {
+    const similarRecipesContainer = document.getElementById('similar-recipes');
+    
+    similarRecipesContainer.innerHTML = recipes.map(recipe => `
+        <a href="/recipe_detail/${recipe.id}" target="_blank" class="block group h-full">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden transform group-hover:-translate-y-1 h-full flex flex-col border border-gray-200 dark:border-gray-700">
+                <div class="relative">
+                    <img 
+                        src="${recipe.image_url}"
+                        alt="${recipe.name}"
+                        class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <span class="absolute top-4 right-4 bg-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
+                        ${recipe.diet || 'N/A'}
+                    </span>
+                </div>
+                <div class="p-5 flex flex-col flex-grow">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">
+                        ${recipe.name}
+                    </h3>
+                    
+                    <div class="flex items-center gap-2 text-sm mt-auto pt-4 border-t border-gray-100 dark:border-gray-700">
+                        <span class="text-gray-600 dark:text-gray-400 font-medium">${recipe.cuisine}</span>
+                        <span class="text-gray-300 dark:text-gray-600">•</span>
+                        <span class="text-orange-500 font-semibold">${recipe.course}</span>
                     </div>
-                </a>
-            `).join('');
-        }
-
-
+                    <div class="mt-3">
+                        <span class="inline-flex items-center text-sm font-semibold text-orange-600 dark:text-orange-400 hover:underline transition-colors">
+                            View Recipe &rarr;
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </a>
+    `).join('');
+}
         // Fetch YouTube Videos (KEPT AS IS)
         async function fetchRecipeVideos(recipeId) {
             try {
