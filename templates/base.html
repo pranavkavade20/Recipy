@@ -196,7 +196,7 @@
                 </p>
         
                 <div class="flex flex-col mx-auto lg:mx-0 my-8 space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
-                    <button id="open-button" class="group relative overflow-hidden bg-orange-600 text-white text-base font-semibold rounded-xl px-10 py-3.5 flex items-center justify-center gap-x-3 hover:bg-orange-700 transition-all duration-300 shadow-lg shadow-orange-500/50 hover:shadow-xl hover:shadow-orange-500/70 transform hover:-translate-y-0.5">
+                    <button id="open-button" class="group relative overflow-hidden bg-orange-500 text-white text-base font-semibold rounded-xl px-10 py-3.5 flex items-center justify-center gap-x-3 hover:bg-orange-600 transition-all duration-300 shadow-lg shadow-orange-400/40 hover:shadow-xl hover:shadow-orange-500/70 transform hover:-translate-y-0.5">
                         <span class="relative z-10">Get Your Recommendations</span>
                         <svg class="w-5 h-5 relative z-10" fill="currentColor" viewBox="0 0 24 24">
                            <path d="M17.133 12.632v-1.8a5.406 5.406 0 0 0-4.154-5.262.955.955 0 0 0 .021-.106V3.1a1 1 0 0 0-2 0v2.364a.955.955 0 0 0 .021.106 5.406 5.406 0 0 0-4.154 5.262v1.8C6.867 15.018 5 15.614 5 16.807 5 17.4 5 18 5.538 18h12.924C19 18 19 17.4 19 16.807c0-1.193-1.867-1.789-1.867-4.175ZM6 6a1 1 0 0 1-.707-.293l-1-1a1 1 0 0 1 1.414-1.414l1 1A1 1 0 0 1 6 6Zm-2 4H3a1 1 0 0 1 0-2h1a1 1 0 1 1 0 2Zm14-4a1 1 0 0 1-.707-1.707l1-1a1 1 0 1 1 1.414 1.414l-1 1A1 1 0 0 1 18 6Zm3 4h-1a1 1 0 1 1 0-2h1a1 1 0 1 1 0 2ZM8.823 19a3.453 3.453 0 0 0 6.354 0H8.823Z"/>
@@ -227,31 +227,6 @@
         
         {% if request.user.is_authenticated %}
             <div id="all-recipes" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                {% comment %} The Django loop below serves as a fallback or initial load if JS fails or for initial content {% endcomment %}
-                {% if recipes %} 
-                    {% for recipe in recipes|slice:":4" %} 
-                    <a href="{% url 'recipe_detail' recipe.id %}" target="_blank" class="block group">
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden transform group-hover:-translate-y-1 h-full flex flex-col">
-                          <div class="relative">
-                            <img src="{{ recipe.image_url.url }}" alt="{{ recipe.name }}" class="w-full h-52 object-cover object-center transition-transform duration-500 group-hover:scale-105" />
-                            <span class="absolute top-4 right-4 bg-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
-                              {{ recipe.diet }}
-                            </span>
-                          </div>
-                          <div class="p-5 flex flex-col flex-grow">
-                            {% with recipe.name.split|slice:":6" as words %}
-                              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">{{ words|join:" " }}</h3>
-                            {% endwith %}
-                            <div class="flex flex-wrap items-center gap-2 text-sm mt-auto pt-2 border-t border-gray-100 dark:border-gray-700">
-                              <span class="text-gray-600 dark:text-gray-400 font-medium">{{ recipe.cuisine }}</span>
-                              <span class="text-gray-300 dark:text-gray-600">•</span>
-                              <span class="text-orange-500 font-semibold">{{ recipe.course }}</span>
-                            </div>
-                          </div>
-                        </div>
-                    </a>
-                    {% endfor %}
-                {% endif %}
             </div>
         {% else %}
              <p class="text-center text-xl font-medium text-gray-500 dark:text-gray-400 py-10">
