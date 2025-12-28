@@ -17,7 +17,10 @@
                 <h1 class="ml-4 text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">Your RecipeBoard</h1>
             </div>
             <a href="{% url 'add_recipe' %}" class="hidden sm:inline-flex bg-orange-600 text-white text-sm font-semibold px-4 py-2 rounded-xl hover:bg-orange-700 transition duration-300 shadow-md">
-                ➕ Add New Recipe
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                </svg>
+                Add New Recipe
             </a>
         </div>
         
@@ -89,7 +92,10 @@
                     <tr class="border-t border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-center sticky bottom-0">
                         <td colspan="4" class="px-4 py-3">
                             <a href="{% url 'add_recipe' %}" class="text-orange-600 dark:text-orange-400 font-semibold hover:underline transition">
-                                ➕ Add More Recipes
+                                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                </svg>
+                                Add More Recipes
                             </a>
                         </td>
                     </tr>

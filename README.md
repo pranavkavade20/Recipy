@@ -1,12 +1,12 @@
-# 🍲 Recipy Web Application
+# Recipy Web Application
 
-## 🌟 Overview
+## Overview
 
 The **Recipy Web Application** is a personalized and efficient platform designed to **streamline meal planning** and **recipe discovery** based on the ingredients users already have at home. It moves beyond traditional, time-consuming recipe browsing by intelligently suggesting meals. This functionality helps users **save time**, **reduce food waste**, and discover new culinary creations.
 
 ---
 
-## ✨ Features
+## Features
 
 The application is built around a set of robust features to enhance the user experience:
 
@@ -20,17 +20,17 @@ The application is built around a set of robust features to enhance the user exp
 
 ---
 
-## 🎥 Project Demonstration
+## Project Demonstration
 
 ### Watch the Project in Action! (Google Drive Link)
 
 Click the link below to view the full video demonstration of the **Recipy Web Application** hosted on Google Drive.
 
-[**▶️ WATCH FULL DEMO VIDEO ON GOOGLE DRIVE**](https://drive.google.com/file/d/1V2SJyqkgycLODRvdd4tYYzgDNGcB7tHx)
+[**WATCH FULL DEMO VIDEO ON GOOGLE DRIVE**](https://drive.google.com/file/d/1V2SJyqkgycLODRvdd4tYYzgDNGcB7tHx)
 
 ---
 
-## 💻 Tech Stack
+## Tech Stack
 
 | Component | Technologies |
 | :--- | :--- |
@@ -41,7 +41,7 @@ Click the link below to view the full video demonstration of the **Recipy Web Ap
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 To set up and run the project locally, follow these steps:
 

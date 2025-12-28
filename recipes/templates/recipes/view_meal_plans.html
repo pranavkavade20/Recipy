@@ -5,9 +5,17 @@
     <div class="max-w-7xl mx-auto bg-white dark:bg-gray-800 shadow-2xl rounded-2xl p-6 md:p-10">
 
         <div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-5 mb-8">
-            <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">📅 Your Weekly Meal Plans</h2>
+            <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+                <svg class="w-8 h-8 inline mr-3 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                Your Weekly Meal Plans
+            </h2>
             <a href="{% url 'add_meal_plan' %}" class="bg-orange-600 text-white text-sm font-semibold px-4 py-2 rounded-xl hover:bg-orange-700 transition duration-300 shadow-md">
-                ➕ Plan a New Meal
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                </svg>
+                Plan a New Meal
             </a>
         </div>
         
@@ -82,7 +90,10 @@
                     <tr class="border-t border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-center sticky bottom-0">
                         <td colspan="6" class="px-4 py-3">
                             <a href="{% url 'add_meal_plan' %}" class="text-orange-600 dark:text-orange-400 font-semibold hover:underline">
-                                ➕ Add Another Meal Plan
+                                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                </svg>
+                                Add Another Meal Plan
                             </a>
                         </td>
                     </tr>
