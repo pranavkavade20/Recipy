@@ -7,89 +7,90 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page | Recipe@pp</title>
-    <link rel="icon" type="image/x-icon" href={% static 'images/logo.png' %}>
-    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/logo.png' %}">
     {% tailwind_css %}
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .dark .glass-nav {
+            background: rgba(17, 24, 39, 0.7);
+        }
+    </style>
 </head>
-<body class="bg-white dark:bg-gray-900 transition-colors duration-500">
+<body class="bg-stone-50 dark:bg-gray-950 text-slate-800 dark:text-slate-100 transition-colors duration-500">
 
-<nav class="sticky top-0 z-50 w-full backdrop-blur-md bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-800 transition-all duration-300">
+<nav class="sticky top-0 z-50 w-full glass-nav border-b border-stone-200 dark:border-gray-800 transition-all duration-300">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <a href="{% url 'home' %}" class="flex items-center space-x-2 rtl:space-x-reverse">
-            <div class="flex items-center justify-center rounded-xl shadow-lg">
-                <img src={% static 'images/logo.png' %} alt="Logo" class="w-8 h-8 object-cover"/>
+        
+        <a href="{% url 'home' %}" class="flex items-center space-x-3 rtl:space-x-reverse group">
+            <div class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 shadow-sm group-hover:scale-105 transition-transform">
+                 <img src="{% static 'images/logo.png' %}" alt="Logo" class="w-8 h-8 object-cover"/>
             </div>
-            <span class="self-center text-2xl font-bold whitespace-nowrap text-gray-900 dark:text-white hover:text-orange-500 transition-colors">Recipy</span>
+            <span class="self-center text-2xl font-bold whitespace-nowrap bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent dark:from-orange-400 dark:to-red-400">
+                Recipy
+            </span>
         </a>
 
-        <div class="flex items-center md:order-2 space-x-3 rtl:space-x-reverse">
-            <div class="flex items-center space-x-2 sm:space-x-4">
-                {% if request.user.is_authenticated %}
-                <a href="{% url 'get_saved_recipes' %}" class="relative text-gray-700 transition-colors duration-300 transform dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <svg class="w-7 h-7" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12.01 6.001C6.5 1 1 8 5.782 13.001L12.011 20l6.23-7C23 8 17.5 1 12.01 6.002Z"/>
-                    </svg>
-                    {% if count > 0 %}
-                    <span class="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-medium px-1.5 rounded-full ring-2 ring-white dark:ring-gray-900">
-                        {{ count }}
-                    </span>
-                    {% endif %}
-                </a>
+        <div class="flex items-center md:order-2 space-x-2 md:space-x-4 rtl:space-x-reverse">
+            
+            {% if request.user.is_authenticated %}
+            <a href="{% url 'get_saved_recipes' %}" class="relative group p-2 text-slate-600 dark:text-slate-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
+                <svg class="w-6 h-6 transition-transform group-hover:scale-110" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                </svg>
+                {% if count > 0 %}
+                <span class="absolute top-0 right-0 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full border-2 border-white dark:border-gray-900">
+                    {{ count }}
+                </span>
                 {% endif %}
+            </a>
+            {% endif %}
 
-                <button id="theme-toggle" type="button" class="text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-300 dark:focus:ring-orange-600 rounded-lg text-sm p-2.5 transition-colors">
-                    <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
-                    <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
-                </button>
+            <button id="theme-toggle" type="button" class="p-2 text-slate-500 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-200 dark:focus:ring-gray-700 transition-colors">
+                <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+            </button>
 
-                <button type="button" class="flex text-sm bg-gray-200 dark:bg-gray-700 rounded-full md:me-0 focus:ring-4 focus:ring-orange-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
-                    <span class="sr-only">Open user menu</span>
-                    <svg class="w-10 h-10 text-gray-800 dark:text-white p-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                        <path fill-rule="evenodd" d="M12 20a7.966 7.966 0 0 1-5.002-1.756l.002.001v-.683c0-1.794 1.492-3.25 3.333-3.25h3.334c1.84 0 3.333 1.456 3.333 3.25v.683A7.966 7.966 0 0 1 12 20ZM2 12C2 6.477 6.477 2 12 2s10 4.477 10 10c0 5.5-4.44 9.963-9.932 10h-.138C6.438 21.962 2 17.5 2 12Zm10-5c-1.84 0-3.333 1.455-3.333 3.25S10.159 13.5 12 13.5c1.84 0 3.333-1.455 3.333-3.25S13.841 7 12 7Z" clip-rule="evenodd"/>
-                    </svg>
-                </button>
-            </div>
+            <button type="button" class="flex text-sm bg-orange-100 rounded-full md:me-0 focus:ring-4 focus:ring-orange-200 dark:focus:ring-gray-600 dark:bg-gray-700" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
+                <span class="sr-only">Open user menu</span>
+                <div class="w-10 h-10 rounded-full flex items-center justify-center text-orange-600 dark:text-orange-400 font-bold text-lg">
+                    {% if request.user.is_authenticated %}
+                        {{ request.user.username|slice:":1"|upper }}
+                    {% else %}
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    {% endif %}
+                </div>
+            </button>
 
-            <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-xl shadow-lg dark:bg-gray-700 dark:divide-gray-600 min-w-48" id="user-dropdown">
+            <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-xl shadow-2xl dark:bg-gray-800 dark:divide-gray-700 min-w-[200px] border border-gray-100 dark:border-gray-700" id="user-dropdown">
                 {% if request.user.is_authenticated %}
-                <div class="px-4 py-3">
-                    <span class="block text-sm font-semibold text-gray-900 dark:text-white">{{ request.user.username }}</span>
+                <div class="px-4 py-3 bg-gray-50 dark:bg-gray-700/50 rounded-t-xl">
+                    <span class="block text-sm font-bold text-gray-900 dark:text-white">{{ request.user.username }}</span>
                     <span class="block text-sm text-gray-500 truncate dark:text-gray-400">{{ request.user.email }}</span>
                 </div>
                 <ul class="py-2" aria-labelledby="user-menu-button">
-                    <li>
-                        <a href="{% url 'password_change' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white transition-colors">
-                            Reset Password
-                        </a>
-                    </li>
+                    <li><a href="{% url 'password_change' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 dark:hover:bg-gray-700 dark:text-gray-200">Reset Password</a></li>
                     <li>
                         <form method="post" action="{% url 'logout' %}">
                             {% csrf_token %}
-                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 font-semibold hover:bg-red-50 dark:hover:bg-gray-600 transition-colors">
-                                Logout
-                            </button>
+                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-gray-700 font-medium">Logout</button>
                         </form>
                     </li>
                 </ul>
                 {% else %}
-                <ul class="py-2" aria-labelledby="user-menu-button">
-                    <li>
-                        <a href="{% url 'login'%}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white transition-colors">
-                            Login
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'register'%}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white transition-colors">
-                            Register
-                        </a>
-                    </li>
+                <ul class="py-2">
+                    <li><a href="{% url 'login'%}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 dark:hover:bg-gray-700 dark:text-gray-200">Login</a></li>
+                    <li><a href="{% url 'register'%}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 dark:hover:bg-gray-700 dark:text-gray-200">Register</a></li>
                 </ul>
                 {% endif %}
             </div>
 
-            <button data-collapse-toggle="navbar-user" type="button"
-                class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-                aria-controls="navbar-user" aria-expanded="false">
+            <button data-collapse-toggle="navbar-user" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-user" aria-expanded="false">
                 <span class="sr-only">Open main menu</span>
                 <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15" />
@@ -98,94 +99,34 @@
         </div>
 
         <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
-            <ul class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-transparent dark:bg-gray-800 md:dark:bg-transparent dark:border-gray-700">
+            <ul class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-transparent dark:bg-gray-800 md:dark:bg-transparent">
                 <li>
-                    <a href="{% url 'home' %}" class="flex items-center gap-2 py-2 px-3 text-gray-900 rounded md:p-0 dark:text-white hover:text-orange-600 dark:hover:text-orange-500 transition-colors" aria-current="page">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                        </svg>
-                        Home
-                    </a>
+                    <a href="{% url 'home' %}" class="block py-2 px-3 text-white bg-orange-600 rounded md:bg-transparent md:text-orange-600 md:p-0 md:dark:text-orange-500 font-bold" aria-current="page">Home</a>
                 </li>
                 {% if request.user.is_authenticated %}
                 <li>
-                    <a href="{% url 'search_page' %}" class="flex items-center gap-2 py-2 px-3 text-gray-900 rounded md:p-0 dark:text-white hover:text-orange-600 dark:hover:text-orange-500 transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                        </svg>
-                        Search
-                    </a>
+                    <a href="{% url 'search_page' %}" class="block py-2 px-3 text-slate-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-orange-600 md:p-0 dark:text-white md:dark:hover:text-orange-500 transition-colors">Search</a>
                 </li>
-                {%endif%}
+                {% endif %}
                 <li>
-                    <a href="{% url 'dashboard' %}" class="flex items-center gap-2 py-2 px-3 text-gray-900 rounded md:p-0 dark:text-white hover:text-orange-600 dark:hover:text-orange-500 transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                        </svg>
-                        RecipeBoard
-                    </a>
+                    <a href="{% url 'dashboard' %}" class="block py-2 px-3 text-slate-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-orange-600 md:p-0 dark:text-white md:dark:hover:text-orange-500 transition-colors">RecipeBoard</a>
                 </li>
                 <li>
-                    <button id="states-button" data-dropdown-toggle="dropdown-states"
-                        class="flex items-center gap-2 py-2 px-3 text-gray-900 rounded md:p-0 dark:text-white hover:text-orange-600 dark:hover:text-orange-500 transition-colors"
-                        type="button">
-                        <span class="text-base font-medium">RecipeMenu</span>
-                        <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
-                        </svg>
+                    <button id="states-button" data-dropdown-toggle="dropdown-states" class="flex items-center justify-between w-full py-2 px-3 text-slate-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-orange-600 md:p-0 dark:text-white md:dark:hover:text-orange-500 transition-colors">
+                        Menu 
+                        <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" /></svg>
                     </button>
-                    <div id="dropdown-states" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-lg w-48 dark:bg-gray-700">
+                    <div id="dropdown-states" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-xl w-52 dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
                         <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="states-button">
-                            <li>
-                                <a href="{% url 'view_meal_plans'%}" type="button" class="inline-flex w-full px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white transition-colors">
-                                    <div class="inline-flex items-center">
-                                        <svg class="w-5 h-5 me-2 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.3" d="M15 4h3a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3m0 3h6m-3 5h3m-6 0h.01M12 16h3m-6 0h.01M10 3v4h4V3h-4Z"/>
-                                        </svg>
-                                        View Meals
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{% url 'my_recipes'%}" type="button" class="inline-flex w-full px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white transition-colors">
-                                    <div class="inline-flex items-center">
-                                        <svg class="w-5 h-5 me-2 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.3" d="M5 19V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v13H7a2 2 0 0 0-2 2Zm0 0a2 2 0 0 0 2 2h12M9 3v14m7 0v4"/>
-                                        </svg>
-                                        Saved Recipes
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{% url 'add_recipe'%}" type="button" class="inline-flex w-full px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white transition-colors">
-                                    <div class="inline-flex items-center">
-                                        <svg class="w-5 h-5 me-2 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.3" d="M12 7.757v8.486M7.757 12h8.486M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-                                        </svg>
-                                        <span>Add recipe</span>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{% url 'add_meal_plan'%}" type="button" class="inline-flex w-full px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white transition-colors">
-                                    <div class="inline-flex items-center">
-                                        <svg class="w-5 h-5 me-2 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.3" d="M12 7.757v8.486M7.757 12h8.486M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-                                        </svg>
-                                        <span>Add meal</span>
-                                    </div>
-                                </a>
-                            </li>
+                            <li><a href="{% url 'view_meal_plans'%}" class="block px-4 py-2 hover:bg-orange-50 dark:hover:bg-gray-700">View Meals</a></li>
+                            <li><a href="{% url 'my_recipes'%}" class="block px-4 py-2 hover:bg-orange-50 dark:hover:bg-gray-700">Saved Recipes</a></li>
+                            <li><a href="{% url 'add_recipe'%}" class="block px-4 py-2 hover:bg-orange-50 dark:hover:bg-gray-700">Add Recipe</a></li>
+                            <li><a href="{% url 'add_meal_plan'%}" class="block px-4 py-2 hover:bg-orange-50 dark:hover:bg-gray-700">Add Meal Plan</a></li>
                         </ul>
                     </div>
                 </li>
                 <li>
-                    <a href="{% url 'about' %}" class="flex items-center gap-2 py-2 px-3 text-gray-900 rounded md:p-0 dark:text-white hover:text-orange-600 dark:hover:text-orange-500 transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                        About
-                    </a>
+                    <a href="{% url 'about' %}" class="block py-2 px-3 text-slate-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-orange-600 md:p-0 dark:text-white md:dark:hover:text-orange-500 transition-colors">About</a>
                 </li>
             </ul>
         </div>
@@ -193,107 +134,118 @@
 </nav>
 
 {% block content %}
-<main class="min-h-[80vh] pt-4">
+<main class="min-h-[80vh] pt-6 md:pt-10">
     <section class="container mx-auto px-4 sm:px-6 lg:px-8 mb-20">
-        <div class="relative w-full flex flex-col-reverse lg:flex-row items-center justify-between h-auto py-10 lg:py-20 bg-gray-50 dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden">
+        <div class="relative w-full flex flex-col-reverse lg:flex-row items-center justify-between py-12 lg:py-24 px-6 lg:px-12 bg-white dark:bg-gray-800/50 rounded-[2.5rem] shadow-2xl shadow-orange-500/10 overflow-hidden border border-white/20">
             
-            <div class="lg:w-1/2 flex flex-col relative z-20 text-center lg:text-left p-6 lg:p-12 animate-fadeInLeft">
+            <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+                <div class="absolute -top-40 -left-40 w-96 h-96 bg-orange-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+                <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-green-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+            </div>
+
+            <div class="lg:w-1/2 flex flex-col relative z-20 text-center lg:text-left mt-10 lg:mt-0">
+                <div class="inline-flex items-center justify-center lg:justify-start gap-2 mb-6">
+                    <span class="px-3 py-1 text-xs font-semibold tracking-wider text-orange-600 uppercase bg-orange-100 rounded-full dark:bg-orange-900/30 dark:text-orange-400">#1 Food App</span>
+                </div>
                 
-                <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white lg:text-6xl leading-tight tracking-tight mb-4">
-                    Cook <span class="text-orange-500">Delicious</span>. Eat <span class="text-green-500">Healthy</span>.
+                <h1 class="text-5xl font-extrabold text-slate-900 dark:text-white lg:text-7xl leading-tight tracking-tight mb-6">
+                    Cook <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">Delicious</span>.<br>
+                    Eat <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-500">Healthy</span>.
                 </h1>
         
-                <p class="max-w-2xl mx-auto lg:mx-0 mt-3 text-lg text-gray-600 dark:text-gray-300 md:text-xl animate-fadeIn delay-200">
-                    Discover thousands of recipes, plan your meals, and track your nutrition with ease. Your next favorite meal is just a search away.
+                <p class="max-w-xl mx-auto lg:mx-0 text-lg text-slate-600 dark:text-slate-300 md:text-xl leading-relaxed">
+                    Unlock a world of flavors. Personalize your meal plans, track nutrition, and discover recipes tailored just for you.
                 </p>
         
-                <div class="flex flex-col mx-auto lg:mx-0 my-8 space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
-                    <button id="open-button" class="group relative overflow-hidden bg-orange-500 text-white text-base font-semibold rounded-xl px-10 py-3.5 flex items-center justify-center gap-x-3 hover:bg-orange-600 transition-all duration-300 shadow-lg shadow-orange-400/40 hover:shadow-xl hover:shadow-orange-500/70 transform hover:-translate-y-0.5">
-                        <span class="relative z-10">Get Your Recommendations</span>
-                        <svg class="w-5 h-5 relative z-10" fill="currentColor" viewBox="0 0 24 24">
-                           <path d="M17.133 12.632v-1.8a5.406 5.406 0 0 0-4.154-5.262.955.955 0 0 0 .021-.106V3.1a1 1 0 0 0-2 0v2.364a.955.955 0 0 0 .021.106 5.406 5.406 0 0 0-4.154 5.262v1.8C6.867 15.018 5 15.614 5 16.807 5 17.4 5 18 5.538 18h12.924C19 18 19 17.4 19 16.807c0-1.193-1.867-1.789-1.867-4.175ZM6 6a1 1 0 0 1-.707-.293l-1-1a1 1 0 0 1 1.414-1.414l1 1A1 1 0 0 1 6 6Zm-2 4H3a1 1 0 0 1 0-2h1a1 1 0 1 1 0 2Zm14-4a1 1 0 0 1-.707-1.707l1-1a1 1 0 1 1 1.414 1.414l-1 1A1 1 0 0 1 18 6Zm3 4h-1a1 1 0 1 1 0-2h1a1 1 0 1 1 0 2ZM8.823 19a3.453 3.453 0 0 0 6.354 0H8.823Z"/>
-                        </svg>
+                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mt-10">
+                    <button id="open-button" class="w-full sm:w-auto px-8 py-4 text-base font-bold text-white transition-all duration-300 bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl hover:shadow-lg hover:shadow-orange-500/40 hover:-translate-y-1 focus:ring-4 focus:ring-orange-300 dark:focus:ring-orange-800 flex items-center justify-center gap-2">
+                        Get Recommendations
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     </button>
+                    <a href="#all-recipes" class="w-full sm:w-auto px-8 py-4 text-base font-bold text-slate-700 dark:text-white transition-all duration-300 bg-white dark:bg-gray-700 border border-slate-200 dark:border-gray-600 rounded-2xl hover:bg-slate-50 dark:hover:bg-gray-600 hover:shadow-lg flex items-center justify-center">
+                        Browse Menu
+                    </a>
                 </div>
             </div>
             
-            <div class="lg:w-1/2 w-full h-80 lg:h-[30rem] xl:h-[34rem] rounded-2xl overflow-hidden relative shadow-2xl lg:shadow-none lg:p-4">
-                <video class="w-full h-full object-cover rounded-2xl transform group-hover:scale-105 transition-transform duration-500" autoplay loop muted playsinline>
-                    <source src="{% static 'videos/background.mp4' %}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-                <div class="absolute inset-0 bg-black/10 rounded-2xl"></div>
+            <div class="lg:w-1/2 w-full lg:pl-10">
+                <div class="relative rounded-3xl overflow-hidden shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500 border-4 border-white dark:border-gray-700">
+                     <video class="w-full h-auto object-cover aspect-[4/3]" autoplay loop muted playsinline>
+                        <source src="{% static 'videos/background.mp4' %}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none"></div>
+                </div>
             </div>
         </div>
     </section>
     
-    <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white lg:text-4xl">
-                Latest <span class="text-orange-500">Recipes</span>
-            </h2>
-            <p class="mt-3 text-lg text-gray-600 dark:text-gray-300">
-                Discover the freshest flavors and most popular dishes added by our community.
-            </p>
+    <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="flex flex-col md:flex-row items-end justify-between mb-10 gap-4">
+            <div class="text-left">
+                <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white lg:text-4xl">
+                    Latest <span class="text-orange-500 underline decoration-wavy decoration-orange-300 underline-offset-4">Recipes</span>
+                </h2>
+                <p class="mt-2 text-lg text-slate-600 dark:text-slate-400">Fresh from the kitchen to your screen.</p>
+            </div>
+            {% if request.user.is_authenticated %}
+            <a href="{% url 'search_page' %}" class="text-orange-600 font-semibold hover:text-orange-700 flex items-center gap-1 group">
+                View All 
+                <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
+            {% endif %}
         </div>
         
         {% if request.user.is_authenticated %}
             <div id="all-recipes" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             </div>
         {% else %}
-             <p class="text-center text-xl font-medium text-gray-500 dark:text-gray-400 py-10">
-                <a href="{% url 'login' %}" class="text-orange-500 hover:underline font-semibold">Login</a> to view the latest recipes and personalized recommendations!
-            </p>
+             <div class="flex flex-col items-center justify-center py-20 bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-stone-100 dark:border-gray-700">
+                <div class="p-4 bg-orange-50 rounded-full mb-4 dark:bg-orange-900/20">
+                    <svg class="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white">Content Locked</h3>
+                <p class="text-gray-500 dark:text-gray-400 mt-2 mb-6 text-center max-w-md">Please log in to view the latest recipes, save your favorites, and get personalized recommendations.</p>
+                <a href="{% url 'login' %}" class="px-6 py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-lg transition-colors shadow-lg shadow-orange-500/30">Login Now</a>
+            </div>
         {% endif %}
     </section>
 
-    <section class="bg-gray-50 dark:bg-gray-800 py-16 mt-10">
+    <section class="bg-white dark:bg-gray-900/50 py-20 mt-10 border-t border-stone-100 dark:border-gray-800">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white lg:text-4xl">
-                    Explore Our Amazing <span class="text-orange-500">Features</span>
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-orange-600 font-bold tracking-wider uppercase text-sm">Why Choose Us</span>
+                <h2 class="mt-2 text-3xl font-extrabold text-slate-900 dark:text-white lg:text-4xl">
+                    More than just a <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-500">Recipe Book</span>
                 </h2>
-                <p class="mt-3 text-lg text-gray-600 dark:text-gray-300">
-                    Tools that make cooking and meal planning a breeze.
+                <p class="mt-4 text-lg text-slate-600 dark:text-slate-400">
+                    We provide the tools you need to elevate your cooking game.
                 </p>
             </div>
             
-            <div class="grid grid-cols-1 gap-8 xl:gap-12 md:grid-cols-2 xl:grid-cols-3">
-                
-                <div class="flex flex-col items-center p-8 space-y-4 text-center bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 hover:shadow-xl transition duration-300 group">
-                    <span class="inline-block p-4 text-white bg-orange-500 rounded-full dark:bg-orange-600 transition duration-300 group-hover:scale-110">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                        </svg>
-                    </span>
-                    <h3 class="text-xl font-bold text-gray-900 capitalize dark:text-white">Easy Recipe Search</h3>
-                    <p class="text-gray-500 dark:text-gray-400">
-                        Find recipes instantly with powerful search filters based on ingredients, categories, and cuisine types.
-                    </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+                <div class="group p-8 bg-stone-50 dark:bg-gray-800 rounded-3xl hover:bg-white dark:hover:bg-gray-750 transition-all duration-300 hover:shadow-xl hover:-translate-y-2 border border-transparent hover:border-stone-100 dark:hover:border-gray-700">
+                    <div class="w-14 h-14 bg-orange-100 dark:bg-orange-900/30 rounded-2xl flex items-center justify-center text-orange-600 mb-6 group-hover:scale-110 transition-transform">
+                        <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">Smart Search</h3>
+                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">Filter by ingredients you already have, cuisine type, or dietary restrictions instantly.</p>
                 </div>
         
-                <div class="flex flex-col items-center p-8 space-y-4 text-center bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 hover:shadow-xl transition duration-300 group">
-                    <span class="inline-block p-4 text-white bg-orange-500 rounded-full dark:bg-orange-600 transition duration-300 group-hover:scale-110">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                        </svg>
-                    </span>
-                    <h3 class="text-xl font-bold text-gray-900 capitalize dark:text-white">AI-Powered Recommendations</h3>
-                    <p class="text-gray-500 dark:text-gray-400">
-                        Get personalized recipe suggestions based on your dietary preferences and past searches.
-                    </p>
+                <div class="group p-8 bg-stone-50 dark:bg-gray-800 rounded-3xl hover:bg-white dark:hover:bg-gray-750 transition-all duration-300 hover:shadow-xl hover:-translate-y-2 border border-transparent hover:border-stone-100 dark:hover:border-gray-700">
+                    <div class="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/30 rounded-2xl flex items-center justify-center text-emerald-600 mb-6 group-hover:scale-110 transition-transform">
+                        <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">AI Chef</h3>
+                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">Our recommendation engine learns what you like and suggests meals you'll love.</p>
                 </div>
         
-                <div class="flex flex-col items-center p-8 space-y-4 text-center bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 hover:shadow-xl transition duration-300 group">
-                    <span class="inline-block p-4 text-white bg-orange-500 rounded-full dark:bg-orange-600 transition duration-300 group-hover:scale-110">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                        </svg>
-                    </span>
-                    <h3 class="text-xl font-bold text-gray-900 capitalize dark:text-white">Step-by-Step Instructions</h3>
-                    <p class="text-gray-500 dark:text-gray-400">
-                        Enjoy easy-to-follow step-by-step instructions with images for hassle-free cooking.
-                    </p>
+                <div class="group p-8 bg-stone-50 dark:bg-gray-800 rounded-3xl hover:bg-white dark:hover:bg-gray-750 transition-all duration-300 hover:shadow-xl hover:-translate-y-2 border border-transparent hover:border-stone-100 dark:hover:border-gray-700">
+                    <div class="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center text-blue-600 mb-6 group-hover:scale-110 transition-transform">
+                        <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">Easy Instructions</h3>
+                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">Clear, step-by-step guides with visuals make cooking complex dishes simple.</p>
                 </div>
             </div>
         </div>
@@ -301,57 +253,59 @@
     
     <section>
         <div class="relative z-50 hidden" id="slide-over" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
-            <div class="fixed inset-0 bg-gray-900/75 dark:bg-gray-900/90 transition-opacity opacity-0" id="backdrop" aria-hidden="true"></div>
+            <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity opacity-0" id="backdrop" aria-hidden="true"></div>
             
             <div class="fixed inset-0 overflow-hidden">
                 <div class="absolute inset-0 overflow-hidden">
                     <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
                         <div class="pointer-events-auto w-screen max-w-md transform translate-x-full transition ease-in-out duration-500 sm:duration-700" id="panel">
                             <div class="flex h-full flex-col overflow-y-scroll bg-white dark:bg-gray-800 shadow-2xl">
-                                <div class="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
-                                    <div class="flex items-start justify-between border-b border-gray-200 dark:border-gray-700 pb-3">
-                                        <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100" id="slide-over-title">Recommended Recipes</h2>
-                                        <div class="ml-3 flex h-7 items-center">
-                                            <button type="button" id="close-button" class="relative -m-2 p-2 text-gray-400 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                                                <span class="absolute -inset-0.5"></span>
-                                                <span class="sr-only">Close panel</span>
-                                                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                                                </svg>
-                                            </button>
-                                        </div>
+                                <div class="px-4 py-6 sm:px-6 bg-orange-50 dark:bg-gray-900 border-b border-orange-100 dark:border-gray-700">
+                                    <div class="flex items-center justify-between">
+                                        <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100" id="slide-over-title">Recommended For You</h2>
+                                        <button type="button" id="close-button" class="text-gray-400 hover:text-gray-500 focus:outline-none">
+                                            <span class="sr-only">Close panel</span>
+                                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                            </svg>
+                                        </button>
                                     </div>
-                                    <div class="mt-8">
-                                        <div class="flow-root">
-                                            <ul role="list" class="-my-6 divide-y divide-gray-200 dark:divide-gray-700">
-                                                {% for recipe in recommended_recipes %}
-                                                <li class="flex py-6 group hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg p-2 transition-colors">
-                                                    <div class="size-24 shrink-0 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-600 shadow-md">
-                                                        <img src="{{ recipe.image_url.url }}" alt="{{ recipe.name }}" class="size-full object-cover group-hover:scale-105 transition-transform duration-300">
-                                                    </div>
-                                                    <div class="ml-4 flex flex-1 flex-col justify-between">
-                                                        <div>
-                                                            <div class="flex justify-between text-base font-medium text-gray-900 dark:text-gray-100">
-                                                                <h3>
-                                                                    <a href="{% url 'recipe_detail' recipe.id %}" class="hover:text-orange-500 transition-colors">{{ recipe.name }}</a>
-                                                                </h3>
-                                                            </div>
-                                                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ recipe.cuisine }}</p>
+                                </div>
+
+                                <div class="flex-1 overflow-y-auto p-4 sm:p-6">
+                                    <ul role="list" class="space-y-4">
+                                        {% for recipe in recommended_recipes %}
+                                        <li class="group bg-white dark:bg-gray-700 rounded-xl border border-gray-100 dark:border-gray-600 shadow-sm hover:shadow-md transition-all overflow-hidden">
+                                            <div class="flex p-3">
+                                                <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg">
+                                                    <img src="{{ recipe.image_url.url }}" alt="{{ recipe.name }}" class="h-full w-full object-cover object-center group-hover:scale-110 transition-transform duration-500">
+                                                </div>
+                                                <div class="ml-4 flex flex-1 flex-col justify-between">
+                                                    <div>
+                                                        <div class="flex justify-between">
+                                                            <h3 class="text-base font-bold text-gray-900 dark:text-white">
+                                                                <a href="{% url 'recipe_detail' recipe.id %}">
+                                                                    <span class="absolute inset-0"></span>
+                                                                    {{ recipe.name }}
+                                                                </a>
+                                                            </h3>
                                                         </div>
-                                                        <div class="flex items-center justify-between text-sm ">
-                                                            <p class="text-gray-600 dark:text-gray-300 font-semibold">{{ recipe.course }}</p>
-                                                            <div class="flex">
-                                                                <a href="{% url 'recipe_detail' recipe.id %}" class="font-medium text-orange-600 dark:text-orange-400 hover:text-orange-500 dark:hover:text-orange-300 transition-colors">View Recipe &rarr;</a>
-                                                            </div>
-                                                        </div>
+                                                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-300 line-clamp-1">{{ recipe.description|default:"A delicious meal awaiting you." }}</p>
                                                     </div>
-                                                </li>
-                                                {% empty %}
-                                                <p class="text-gray-500 dark:text-gray-400 text-center py-10">No recommendations available yet. Try searching for a few recipes first!</p>
-                                                {% endfor %}
-                                            </ul>
+                                                    <div class="flex items-center justify-between text-xs mt-2">
+                                                        <span class="inline-flex items-center rounded-md bg-orange-50 px-2 py-1 font-medium text-orange-700 ring-1 ring-inset ring-orange-600/10 dark:bg-orange-900/30 dark:text-orange-400">{{ recipe.cuisine }}</span>
+                                                        <span class="text-orange-600 dark:text-orange-400 font-semibold group-hover:translate-x-1 transition-transform">&rarr;</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        {% empty %}
+                                        <div class="flex flex-col items-center justify-center h-64 text-center">
+                                            <svg class="w-12 h-12 text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                            <p class="text-gray-500 dark:text-gray-400">Search for some recipes to get recommendations!</p>
                                         </div>
-                                    </div>
+                                        {% endfor %}
+                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -363,24 +317,42 @@
 </main>
 {% endblock %}
 
-<footer class="bg-gray-100 dark:bg-gray-900/90 border-t border-gray-200 dark:border-gray-800">
-    <div class="container mx-auto p-4 md:flex md:items-center md:justify-between md:p-6">
-        <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2025 <a href="#" class="hover:underline text-orange-500 font-semibold">Recipe™</a>. All Rights Reserved.
-        </span>
-        <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0 space-x-4 md:space-x-6">
-            <li>
-                <a href="{% url 'about' %}" class="hover:underline transition-colors">About</a>
-            </li>
-            <li>
-                <a href="#" class="hover:underline transition-colors">Privacy Policy</a>
-            </li>
-            <li>
-                <a href="#" class="hover:underline transition-colors">Licensing</a>
-            </li>
-            <li>
-                <a href="#" class="hover:underline transition-colors">Contact</a>
-            </li>
-        </ul>
+<footer class="bg-white dark:bg-gray-950 border-t border-stone-200 dark:border-gray-800 mt-12">
+    <div class="container mx-auto p-8">
+        <div class="md:flex md:justify-between">
+            <div class="mb-6 md:mb-0">
+                <a href="{% url 'home' %}" class="flex items-center space-x-3">
+                    <img src="{% static 'images/logo.png' %}" class="h-8 w-8" alt="Logo" />
+                    <span class="self-center text-2xl font-bold whitespace-nowrap text-slate-800 dark:text-white">Recipy</span>
+                </a>
+                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 max-w-xs">Making home cooking accessible, healthy, and fun for everyone.</p>
+            </div>
+            <div class="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
+                <div>
+                    <h2 class="mb-4 text-sm font-semibold text-gray-900 uppercase dark:text-white">Resources</h2>
+                    <ul class="text-gray-500 dark:text-gray-400 font-medium space-y-2">
+                        <li><a href="{% url 'home' %}" class="hover:text-orange-600 transition-colors">Home</a></li>
+                        <li><a href="{% url 'about' %}" class="hover:text-orange-600 transition-colors">About</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h2 class="mb-4 text-sm font-semibold text-gray-900 uppercase dark:text-white">Legal</h2>
+                    <ul class="text-gray-500 dark:text-gray-400 font-medium space-y-2">
+                        <li><a href="#" class="hover:text-orange-600 transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-orange-600 transition-colors">Terms &amp; Conditions</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-800 lg:my-8" />
+        <div class="sm:flex sm:items-center sm:justify-between">
+            <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2025 <a href="#" class="hover:underline text-orange-600">Recipy™</a>. All Rights Reserved.</span>
+            <div class="flex mt-4 space-x-5 sm:justify-center sm:mt-0">
+                <a href="#" class="text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 8 19"><path fill-rule="evenodd" d="M6.135 3H8V0H6.135a4.147 4.147 0 0 0-4.142 4.142V6H0v3h2v9.938h3V9h2.021l.592-3H5V3.591A.6.6 0 0 1 5.592 3h.543Z" clip-rule="evenodd"/></svg>
+                </a>
+            </div>
+        </div>
     </div>
 </footer>
 

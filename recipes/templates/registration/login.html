@@ -1,62 +1,57 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Login{% endblock %}
+{% block title %}Login | Recipy{% endblock %}
+
 {% block content %}
-<div class="bg-white dark:bg-gray-900 min-h-screen">
-    
-    <div class="flex justify-center items-center min-h-screen">
+<main class="min-h-screen flex items-center justify-center p-4 bg-stone-50 dark:bg-gray-950 transition-colors duration-500 relative overflow-hidden">
 
-        <div class="flex justify-center items-center w-full max-w-lg lg:max-w-none lg:w-1/3 p-6 sm:p-12">
-            <div class="flex-1 max-w-md w-full p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl dark:shadow-xl border border-gray-200 dark:border-gray-700">
-                <div class="text-center">
-                    
-                    <div class="flex justify-center mx-auto mb-6">
-                        <div class="flex items-center justify-center rounded-2xl shadow-xl p-2 bg-white dark:bg-gray-800">
-                            <img src={% static 'images/logo.png' %} alt="Logo" class="w-12 h-12 object-cover" />
-                        </div>
-                    </div> 
+    <div class="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-orange-200 dark:bg-orange-900/20 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+    <div class="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-red-200 dark:bg-red-900/20 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
 
-                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Welcome Back!</h1>
-                    <p class="mt-2 text-gray-500 dark:text-gray-300">Sign in to access your personalized recipe board.</p>
+    <div class="w-full max-w-md relative z-10">
+        <div class="bg-white dark:bg-gray-900 shadow-2xl rounded-[2.5rem] p-8 md:p-12 border border-stone-100 dark:border-gray-800">
+            
+            <div class="text-center mb-10">
+                <a href="{% url 'home' %}" class="inline-block mb-6">
+                    <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-orange-500/30 transform -rotate-6">
+                        <svg class="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                    </div>
+                </a>
+                <h1 class="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-2">Welcome Back!</h1>
+                <p class="text-gray-500 dark:text-gray-400">Sign in to continue your culinary journey.</p>
+            </div>
+
+            <form action="{% url 'login' %}" method="POST" class="space-y-6">
+                {% csrf_token %}
+                
+                <div class="space-y-2">
+                    <label for="username" class="block text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" 
+                        class="w-full px-4 py-3.5 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none placeholder-gray-400" required />
                 </div>
 
-                <div class="mt-10">
-                    <form action="{% url 'login' %}" method="POST">
-                        {% csrf_token %}
-                        
-                        <div class="mb-6">
-                            <label for="username" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Username</label>
-                            <input type="text" id="username" name="username" placeholder="Your username" 
-                                class="block w-full px-5 py-3 text-gray-800 placeholder-gray-400 bg-gray-50 border border-gray-300 rounded-xl dark:placeholder-gray-500 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 focus:border-orange-500 dark:focus:border-orange-400 focus:ring-2 focus:ring-orange-200 focus:outline-none transition duration-200" required />
-                        </div>
-
-                        <div class="mt-6 mb-8">
-                            <div class="flex justify-between mb-2">
-                                <label for="password" class="text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
-                                <a href="{% url 'password_reset' %}" class="text-sm text-orange-500 hover:text-orange-600 hover:underline transition duration-200">Forgot password?</a>
-                            </div>
-
-                            <input type="password" name="password" id="password" placeholder="Your Password" 
-                                class="block w-full px-5 py-3 text-gray-800 placeholder-gray-400 bg-gray-50 border border-gray-300 rounded-xl dark:placeholder-gray-500 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 focus:border-orange-500 dark:focus:border-orange-400 focus:ring-2 focus:ring-orange-200 focus:outline-none transition duration-200" required />
-                        </div>
-
-                        <div>
-                            <button type="submit" 
-                                class="w-full px-4 py-3 tracking-wide text-white text-lg font-semibold transition-colors duration-300 transform bg-orange-600 rounded-xl hover:bg-orange-700 focus:outline-none focus:bg-orange-700 shadow-md shadow-orange-500/50 hover:shadow-lg">
-                                Login
-                            </button>
-                        </div>
-                    </form>
-
-                    <p class="mt-6 text-base text-center text-gray-500 dark:text-gray-400">
-                        Don't have an account yet? 
-                        <a href="{% url 'register' %}" class="text-orange-500 font-semibold hover:underline transition duration-200">
-                            Register Now
-                        </a>.
-                    </p>
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                        <label for="password" class="block text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide">Password</label>
+                        <a href="{% url 'password_reset' %}" class="text-sm font-semibold text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 hover:underline transition-colors">Forgot password?</a>
+                    </div>
+                    <input type="password" id="password" name="password" placeholder="••••••••" 
+                        class="w-full px-4 py-3.5 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none placeholder-gray-400" required />
                 </div>
+
+                <button type="submit" 
+                    class="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white text-lg font-bold py-3.5 rounded-xl shadow-lg shadow-orange-500/30 transform hover:-translate-y-0.5 transition-all duration-200">
+                    Sign In
+                </button>
+            </form>
+
+            <div class="mt-8 text-center">
+                <p class="text-gray-500 dark:text-gray-400">
+                    Don't have an account? 
+                    <a href="{% url 'register' %}" class="font-bold text-orange-600 dark:text-orange-400 hover:underline transition-colors">Register Now</a>
+                </p>
             </div>
         </div>
     </div>
-</div>
+</main>
 {% endblock %}

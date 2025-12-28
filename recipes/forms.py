@@ -19,33 +19,25 @@ class UserRegistrationForm(forms.ModelForm):
             raise forms.ValidationError('Password don\'t match')
         return cd['password2']
 
-from django import forms
-from django.forms.models import inlineformset_factory
-# Assuming Receipe and Ingredients models are correctly imported
-
 class ReceipeForm(forms.ModelForm):
     class Meta:
         model = Receipe
         fields = ['receipe_name', 'receipe_description', 'receipe_type', 'receipe_image']
         widgets = {
-            # Receipe Name
             'receipe_name': forms.TextInput(attrs={
-                'class': 'block w-full px-4 py-3 text-gray-800 placeholder-gray-400 bg-gray-50 border border-gray-300 rounded-xl dark:placeholder-gray-500 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 focus:border-orange-500 dark:focus:border-orange-400 focus:ring-2 focus:ring-orange-200 focus:outline-none transition duration-200'
+                'class': 'w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none placeholder-gray-400',
+                'placeholder': 'e.g. Spicy Chicken Curry'
             }),
-            # Receipe Description
             'receipe_description': forms.Textarea(attrs={
-                'class': 'block w-full px-4 py-3 text-gray-800 placeholder-gray-400 bg-gray-50 border border-gray-300 rounded-xl dark:placeholder-gray-500 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 focus:border-orange-500 dark:focus:border-orange-400 focus:ring-2 focus:ring-orange-200 focus:outline-none transition duration-200',
-                'rows': 4
+                'class': 'w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none placeholder-gray-400',
+                'rows': 4,
+                'placeholder': 'Describe the taste, history, or inspiration...'
             }),
-            # Receipe Type (Select)
             'receipe_type': forms.Select(attrs={
-                # Note: Changed to w-full for better form flow and added shadow
-                'class': 'block w-full px-4 py-3 text-gray-800 bg-gray-50 border border-gray-300 rounded-xl dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none transition duration-200 shadow-sm'
+                'class': 'w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none cursor-pointer'
             }),
-            # Receipe Image
             'receipe_image': forms.ClearableFileInput(attrs={
-                # Using modern file input styling
-                'class': 'block w-full text-sm text-gray-900 border border-gray-300 rounded-xl cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 p-3 transition duration-200'
+                'class': 'block w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-orange-50 file:text-orange-600 hover:file:bg-orange-100 dark:file:bg-orange-900/30 dark:file:text-orange-400 cursor-pointer'
             }),
         }
 
@@ -54,10 +46,10 @@ IngredientFormSet = inlineformset_factory(
     Ingredients,
     fields=('ingredients_name',),
     widgets={
-        # Ingredients Name (TextInput)
         'ingredients_name': forms.TextInput(attrs={
-            # Consistent styling with other text inputs
-            'class': 'block w-full px-4 py-3 text-gray-800 placeholder-gray-400 bg-gray-50 border border-gray-300 rounded-xl dark:placeholder-gray-500 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 focus:border-orange-500 dark:focus:border-orange-400 focus:ring-2 focus:ring-orange-200 focus:outline-none transition duration-200'
+            # We style this to look like a clean list item
+            'class': 'flex-grow w-full px-4 py-3 rounded-xl bg-stone-50 dark:bg-gray-800 border border-stone-200 dark:border-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none',
+            'placeholder': 'Enter ingredient (e.g. 2 cups Rice)'
         }),
     },
     extra=1,
@@ -70,56 +62,69 @@ class MealPlannerForm(forms.ModelForm):
         model = MealPlanner
         fields = ['recipe', 'meal_date', 'meal_time', 'meal_type', 'notes']
         widgets = {
-            # Recipe (Select) - Wide, rounded, and uses accent focus
+            # Recipe Select
             'recipe': forms.Select(attrs={
-                'class': 'block w-full px-4 py-3 text-gray-800 bg-gray-50 border border-gray-300 rounded-xl dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none transition duration-200 shadow-sm'
+                'class': 'w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none cursor-pointer shadow-sm'
             }),
             
-            # Meal Date (DateInput) - Wide, rounded, and type="date"
+            # Meal Date (DateInput)
             'meal_date': forms.DateInput(attrs={
                 'type': 'date',  
-                'class': 'block w-full px-4 py-3 text-gray-800 bg-gray-50 border border-gray-300 rounded-xl dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none transition duration-200'
+                'class': 'w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none cursor-pointer'
             }),
             
-            # Meal Time (TimeInput) - Wide, rounded, and type="time"
+            # Meal Time (TimeInput)
             'meal_time': forms.TimeInput(attrs={
                 'type': 'time', 
-                'class': 'block w-full px-4 py-3 text-gray-800 bg-gray-50 border border-gray-300 rounded-xl dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none transition duration-200'
+                'class': 'w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none cursor-pointer'
             }),
             
-            # Meal Type (Select) - Wide, rounded, and uses accent focus
+            # Meal Type (Select)
             'meal_type': forms.Select(attrs={ 
-                'class': 'block w-full px-4 py-3 text-gray-800 bg-gray-50 border border-gray-300 rounded-xl dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none transition duration-200 shadow-sm', 
+                'class': 'w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none cursor-pointer shadow-sm', 
             }),
 
-            # Notes (Textarea) - Wide, rounded, and uses accent focus
+            # Notes (Textarea)
             'notes': forms.Textarea(attrs={
-                'class': 'block w-full px-4 py-3 text-gray-800 bg-gray-50 border border-gray-300 rounded-xl dark:placeholder-gray-500 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none transition duration-200',
-                'rows': 4  # Reduced rows for a cleaner look
+                'class': 'w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none resize-none placeholder-gray-400',
+                'rows': 3,
+                'placeholder': 'Add notes (e.g. "Prepare ingredients night before")'
             }),
         }
 
+from django import forms
 
+# Form for the "Forgot Password" page (Email only)
+class PasswordResetForm(forms.Form):
+    email = forms.EmailField(
+        label="Email Address",
+        widget=forms.EmailInput(attrs={
+            'class': 'w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none placeholder-gray-400',
+            'placeholder': 'Enter your registered email'
+        })
+    )
+
+# Form for the actual "Change Password" page
 class PasswordChangeForm(forms.Form):
     old_password = forms.CharField(
+        label="Old Password",
         widget=forms.PasswordInput(attrs={
-            'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 ',
+            'class': 'w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none placeholder-gray-400',
             'placeholder': 'Enter your old password',
-        }),
-        label="Old Password"
+        })
     )
     new_password1 = forms.CharField(
+        label="New Password",
         widget=forms.PasswordInput(attrs={
-            'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400',
+            'class': 'w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none placeholder-gray-400',
             'placeholder': 'Enter your new password',
-        }),
-        label="New Password"
+        })
     )
     new_password2 = forms.CharField(
+        label="Confirm New Password",
         widget=forms.PasswordInput(attrs={
-            'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400',
+            'class': 'w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none placeholder-gray-400',
             'placeholder': 'Confirm your new password',
-        }),
-        label="Confirm New Password"
+        })
     )
 

@@ -1,38 +1,83 @@
 {% extends "base.html" %} 
 {% load static %}
-{% block title %}about{% endblock %} 
+{% block title %}About Us | Recipy{% endblock %} 
+
 {% block content %}
-<section class="bg-gray-100 dark:bg-gray-900">
-    <div class="container px-6 py-10 mx-auto">
-        <div class="grid grid-cols-1 gap-8 mt-8 xl:mt-12 xl:gap-12 lg:grid-cols-2">
-            <div class="flex items-end overflow-hidden bg-cover rounded-lg h-96" style="background-image:url('https://plus.unsplash.com/premium_photo-1700673499834-1e44b51b4a06?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8RGlzY292ZXIlMjBOZXclMjBSZWNpcGVzfGVufDB8fDB8fHww')">
-                <div class="w-full px-8 py-4 overflow-hidden rounded-b-lg backdrop-blur-sm bg-gray-100/60 dark:bg-gray-800/60">
-                    <h2 class="mt-4 text-xl font-semibold text-gray-800 capitalize dark:text-white">Discover New Recipes</h2>
-                    <p class="mt-2 text-lg tracking-wider text-orange-500 uppercase dark:text-orange-400">Explore</p>
-                </div>
-            </div>
-  
-            <div class="flex items-end overflow-hidden bg-cover rounded-lg h-96" style="background-image:url('https://images.unsplash.com/photo-1512058564366-18510be2db19?ixlib=rb-1.2.1&auto=format&fit=crop&w=764&q=80')">
-                <div class="w-full px-8 py-4 overflow-hidden rounded-b-lg backdrop-blur-sm bg-gray-100/60 dark:bg-gray-800/60">
-                    <h2 class="mt-4 text-xl font-semibold text-gray-800 capitalize dark:text-white">Personalized Recipe Recommendations</h2>
-                    <p class="mt-2 text-lg tracking-wider text-orange-500 uppercase dark:text-orange-400">Smart AI</p>
-                </div>
-            </div>
-  
-            <div class="flex items-end overflow-hidden bg-cover rounded-lg h-96" style="background-image:url('https://images.unsplash.com/photo-1514986888952-8cd320577b68?q=80&w=2076&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')">
-                <div class="w-full px-8 py-4 overflow-hidden rounded-b-lg backdrop-blur-sm bg-gray-100/60 dark:bg-gray-800/60">
-                    <h2 class="mt-4 text-xl font-semibold text-gray-800 capitalize dark:text-white">Easy Step-by-Step Cooking</h2>
-                    <p class="mt-2 text-lg tracking-wider text-orange-500 uppercase dark:text-orange-400">Guides</p>
-                </div>
-            </div>
-  
-            <div class="flex items-end overflow-hidden bg-cover rounded-lg h-96" style="background-image:url('https://images.unsplash.com/photo-1493770348161-369560ae357d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1470&q=80')">
-                <div class="w-full px-8 py-4 overflow-hidden rounded-b-lg backdrop-blur-sm bg-gray-100/60 dark:bg-gray-800/60">
-                    <h2 class="mt-4 text-xl font-semibold text-gray-800 capitalize dark:text-white">Share & Save Your Favorites</h2>
-                    <p class="mt-2 text-lg tracking-wider text-orange-500 uppercase dark:text-orange-400">Community</p>
-                </div>
-            </div>
-        </div>
+<main class="min-h-screen bg-stone-50 dark:bg-gray-950 transition-colors duration-500 py-16 px-4 sm:px-6 lg:px-8">
+    
+    <div class="max-w-4xl mx-auto text-center mb-16">
+        <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-6">
+            Crafting Culinary <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">Experiences</span>
+        </h1>
+        <p class="text-lg md:text-xl text-gray-600 dark:text-gray-400 leading-relaxed max-w-2xl mx-auto">
+            Recipy isn't just a cookbook; it's your smart kitchen companion. We blend technology with taste to bring you a personalized cooking journey.
+        </p>
     </div>
-</section>
+
+    <div class="container mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+            
+            <div class="group relative h-96 w-full overflow-hidden rounded-[2.5rem] shadow-2xl transition-all hover:shadow-orange-500/20">
+                <img src="https://plus.unsplash.com/premium_photo-1700673499834-1e44b51b4a06?w=800&auto=format&fit=crop&q=80" 
+                     alt="Discover New Recipes" 
+                     class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
+                
+                <div class="absolute bottom-6 left-6 right-6 p-6 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg transform transition-transform duration-500 group-hover:-translate-y-2">
+                    <p class="text-xs font-bold tracking-widest text-orange-400 uppercase mb-2">Explore</p>
+                    <h2 class="text-2xl font-bold text-white">Discover New Recipes</h2>
+                </div>
+            </div>
+            
+            <div class="group relative h-96 w-full overflow-hidden rounded-[2.5rem] shadow-2xl transition-all hover:shadow-orange-500/20">
+                <img src="https://images.unsplash.com/photo-1512058564366-18510be2db19?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+                     alt="Personalized Recommendations" 
+                     class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
+                
+                <div class="absolute bottom-6 left-6 right-6 p-6 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg transform transition-transform duration-500 group-hover:-translate-y-2">
+                    <p class="text-xs font-bold tracking-widest text-orange-400 uppercase mb-2">Smart AI</p>
+                    <h2 class="text-2xl font-bold text-white">Personalized Recommendations</h2>
+                </div>
+            </div>
+
+            <div class="group relative h-96 w-full overflow-hidden rounded-[2.5rem] shadow-2xl transition-all hover:shadow-orange-500/20">
+                <img src="https://images.unsplash.com/photo-1514986888952-8cd320577b68?q=80&w=800&auto=format&fit=crop" 
+                     alt="Step-by-Step Cooking" 
+                     class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
+                
+                <div class="absolute bottom-6 left-6 right-6 p-6 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg transform transition-transform duration-500 group-hover:-translate-y-2">
+                    <p class="text-xs font-bold tracking-widest text-orange-400 uppercase mb-2">Guides</p>
+                    <h2 class="text-2xl font-bold text-white">Easy Step-by-Step Cooking</h2>
+                </div>
+            </div>
+
+            <div class="group relative h-96 w-full overflow-hidden rounded-[2.5rem] shadow-2xl transition-all hover:shadow-orange-500/20">
+                <img src="https://images.unsplash.com/photo-1493770348161-369560ae357d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+                     alt="Community" 
+                     class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
+                
+                <div class="absolute bottom-6 left-6 right-6 p-6 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg transform transition-transform duration-500 group-hover:-translate-y-2">
+                    <p class="text-xs font-bold tracking-widest text-orange-400 uppercase mb-2">Community</p>
+                    <h2 class="text-2xl font-bold text-white">Share & Save Your Favorites</h2>
+                </div>
+            </div>
+
+        </div>
+        
+        <div class="mt-20 text-center">
+            <a href="{% url 'search_page' %}" class="inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white transition-all bg-orange-600 rounded-2xl hover:bg-orange-700 hover:shadow-xl hover:shadow-orange-500/30 transform hover:-translate-y-1">
+                Start Exploring
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
+        </div>
+        
+    </div>
+</main>
 {% endblock %}

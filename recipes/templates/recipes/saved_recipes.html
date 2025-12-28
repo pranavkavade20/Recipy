@@ -1,86 +1,134 @@
 {% extends "base.html" %}
-{% block title %}Saved Recipes{% endblock %}
+{% block title %}Saved Recipes | Recipy{% endblock %}
+
 {% block content %}
-<section class="min-h-screen py-10 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+<section class="min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-stone-50 dark:bg-gray-950 transition-colors duration-500">
     <div class="max-w-7xl mx-auto">
         
-        <h2 class="text-center text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-10">
-            Your Favorite Recipes
-        </h2>
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-4">
+                Your <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">Favorite Collection</span>
+            </h2>
+            <p class="text-lg text-gray-500 dark:text-gray-400">
+                A curated list of dishes you love.
+            </p>
+        </div>
         
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {% if saved_recipes %}
                 {% for recipe in saved_recipes %}
-                <div id="recipe-{{ recipe.id }}" class="group h-full">
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform group-hover:scale-[1.02] h-full flex flex-col border border-gray-200 dark:border-gray-700">
+                <div id="recipe-{{ recipe.id }}" class="group h-full flex flex-col transition-all duration-500 ease-in-out">
+                    <div class="relative bg-white dark:bg-gray-900 rounded-[2rem] shadow-sm border border-stone-100 dark:border-gray-800 overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 h-full flex flex-col">
                         
-                        <a href="{% url 'recipe_detail' recipe.id %}" target="_blank" class="relative block overflow-hidden">
-                            <img class="object-cover h-52 w-full transition duration-500 group-hover:scale-110" 
-                                src="{{ recipe.image_url.url }}" alt="{{ recipe.name }}" />
+                        <a href="{% url 'recipe_detail' recipe.id %}" class="relative h-56 overflow-hidden block">
+                            {% if recipe.image_url %}
+                            <img src="{{ recipe.image_url.url }}" alt="{{ recipe.name }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
+                            {% else %}
+                            <div class="w-full h-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-400">
+                                <span class="text-xs font-bold uppercase">No Image</span>
+                            </div>
+                            {% endif %}
                             
-                            <span class="absolute top-4 right-4 px-3 py-1 text-xs font-bold rounded-full bg-green-600 text-white shadow-md">
-                                {{ recipe.diet|default:"N/A" }}
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
+                            
+                            <span class="absolute top-4 right-4 px-2.5 py-1 rounded-lg text-xs font-bold backdrop-blur-md shadow-sm border border-white/20 text-white
+                                {% if 'Non' in recipe.diet %} bg-red-500/90
+                                {% elif 'Veg' in recipe.diet %} bg-emerald-500/90
+                                {% else %} bg-orange-500/90 {% endif %}">
+                                {{ recipe.diet|default:"Standard" }}
                             </span>
                         </a>
 
-                        <div class="p-5 flex flex-col flex-grow">
-                            <h2 class="text-xl font-bold text-gray-900 dark:text-white line-clamp-2 mb-2">
-                                {% with recipe.name.split as words %}
-                                    {{ words|slice:":6"|join:" " }}
-                                {% endwith %}
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
+                                <a href="{% url 'recipe_detail' recipe.id %}">
+                                    {{ recipe.name }}
+                                </a>
                             </h2>
                             
-                            <div class="flex items-center gap-2 text-sm mt-auto pt-2 border-t border-gray-100 dark:border-gray-700">
-                                <span class="font-medium text-gray-600 dark:text-gray-400">{{ recipe.cuisine }}</span>
-                                <span class="text-gray-300 dark:text-gray-600">•</span>
-                                <span class="font-semibold text-orange-500">{{ recipe.course }}</span>
+                            <div class="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400 mb-6 border-b border-gray-100 dark:border-gray-800 pb-4">
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                    {{ recipe.cuisine }}
+                                </div>
+                                <span class="text-gray-300 dark:text-gray-700">•</span>
+                                <span class="font-semibold text-orange-500 bg-orange-50 dark:bg-orange-900/20 px-2 py-0.5 rounded text-xs">
+                                    {{ recipe.course }}
+                                </span>
                             </div>
 
-                            <div class="mt-4">
-                                <form onsubmit="event.preventDefault(); removeRecipe({{ recipe.id }})">
-                                    <input type="hidden" name="recipe_id" value="{{ recipe.id }}">
-                                    
-                                    <button type="submit" 
-                                        class="w-full flex justify-center items-center gap-2 text-red-600 bg-red-50 hover:bg-red-100 dark:bg-red-900/50 dark:hover:bg-red-900 transition duration-300 font-semibold py-2 rounded-xl shadow-sm">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
-                                            <path fill-rule="evenodd" d="M16.5 4.478a.75.75 0 0 0-1.06-.02L12 7.218 8.56 4.458a.75.75 0 0 0-1.06 1.06L10.94 12l-3.44 3.44a.75.75 0 1 0 1.06 1.06L12 13.06l3.44 3.44a.75.75 0 1 0 1.06-1.06L13.06 12l3.44-3.44a.75.75 0 0 0 .02-1.06Z" clip-rule="evenodd" />
-                                        </svg>
-                                        Remove from Favorites
-                                    </button>
-                                </form>
+                            <div class="mt-auto grid grid-cols-2 gap-3">
+                                <a href="{% url 'recipe_detail' recipe.id %}" class="flex items-center justify-center px-4 py-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-bold text-sm hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                                    View
+                                </a>
+                                <button onclick="removeRecipe({{ recipe.id }})" class="flex items-center justify-center px-4 py-2.5 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 font-bold text-sm hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors group/btn">
+                                    <span class="mr-2">Remove</span>
+                                    <svg class="w-4 h-4 transition-transform group-hover/btn:rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
                 {% endfor %}
             {% else %}
-                <div class="col-span-full py-20">
-                    <p class="text-xl text-gray-600 dark:text-gray-300 text-center">
-                        You haven't saved any recipes yet!
+                <div class="col-span-full flex flex-col items-center justify-center py-20 text-center animate-fade-in">
+                    <div class="w-24 h-24 bg-stone-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-6 shadow-inner">
+                        <svg class="w-10 h-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">No favorites yet</h3>
+                    <p class="text-gray-500 dark:text-gray-400 mb-8 max-w-sm mx-auto">
+                        Save recipes you want to cook later by clicking the heart icon on any recipe page.
                     </p>
-                    <p class="text-lg mt-3 text-center">
-                        <a href="{% url 'search_page' %}" class="text-orange-600 font-semibold hover:underline">
-                            Start searching for recipes now.
-                        </a>
-                    </p>
+                    <a href="{% url 'search_page' %}" class="inline-flex items-center px-8 py-3.5 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl shadow-lg shadow-orange-500/30 transition-all hover:-translate-y-0.5">
+                        Discover Recipes
+                    </a>
                 </div>
             {% endif %}
         </div>
     </div>
 </section>
 
+<div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 pointer-events-none"></div>
+
 <script>
-    // Utility to get CSRF token from the cookie (safest method for AJAX)
+    // --- 1. TOAST UTILITY ---
+    function showToast(message, type) {
+        const container = document.getElementById('toast-container');
+        const isSuccess = type === 'success';
+        
+        const toast = document.createElement('div');
+        toast.className = `pointer-events-auto flex items-center w-full max-w-sm p-4 rounded-2xl shadow-2xl transform transition-all duration-300 translate-y-10 opacity-0 border bg-white dark:bg-gray-800 text-gray-800 dark:text-white ${isSuccess ? 'border-green-100 dark:border-green-900/30' : 'border-red-100 dark:border-red-900/30'}`;
+        
+        const icon = isSuccess 
+            ? `<div class="flex-shrink-0 w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center text-green-500"><svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div>`
+            : `<div class="flex-shrink-0 w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center text-red-500"><svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></div>`;
+
+        toast.innerHTML = `${icon}<div class="ml-3 text-sm font-medium flex-1">${message}</div>`;
+        container.appendChild(toast);
+
+        requestAnimationFrame(() => toast.classList.remove('translate-y-10', 'opacity-0'));
+        setTimeout(() => { toast.classList.add('translate-y-10', 'opacity-0'); setTimeout(() => toast.remove(), 300); }, 4000);
+    }
+
+    // --- 2. LOGIC ---
     function getCSRFToken() {
-        const cookieValue = document.cookie.split('; ').find(row => row.startsWith('csrftoken'));
-        return cookieValue ? cookieValue.split('=')[1] : null;
+        const cookieValue = document.cookie.match(/csrftoken=([^ ;]+)/);
+        return cookieValue ? cookieValue[1] : "";
     }
 
     function removeRecipe(recipeId) {
         const csrfToken = getCSRFToken();
         if (!csrfToken) {
-            alert("Error: CSRF token not found. Please log in again.");
+            showToast("Error: Please log in again.", "error");
             return;
+        }
+
+        // Optimistic UI: animate card out immediately
+        const card = document.getElementById(`recipe-${recipeId}`);
+        if(card) {
+            card.style.transform = 'scale(0.9) opacity(0)';
         }
 
         fetch("{% url 'remove_saved_recipe' %}", {
@@ -91,48 +139,37 @@
             },
             body: JSON.stringify({ recipe_id: recipeId }),
         })
-        .then(response => {
-            // FIX: Ensure the 404/error response is parsed as JSON if possible
-            if (!response.ok) {
-                // If it's a 404, the body might not be JSON, but we try to parse it.
-                // The backend fix ensures non-2xx responses include a JSON error.
-                return response.json().then(errorData => {
-                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
-                }).catch(() => {
-                    // Fallback for non-JSON error (e.g., raw 404 HTML page)
-                    throw new Error(`HTTP error! Status: ${response.status}. Please check your backend URL configuration.`);
-                });
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                // FIX: Remove the card from the DOM
-                const recipeElement = document.getElementById(`recipe-${recipeId}`);
-                if (recipeElement) {
-                    recipeElement.remove();
-                }
-
-                // Update counts (optional, assumes elements exist)
-                const countElement = document.getElementById("saved-recipe-count");
-                const badgeElement = document.getElementById("saved-recipe-badge");
+        .then(response => response.json().then(data => ({ status: response.status, body: data })))
+        .then(({ status, body }) => {
+            if (body.success) {
+                // Remove element after animation
+                setTimeout(() => {
+                    if (card) card.remove();
+                    
+                    // Check if grid is empty to show empty state (optional simple check)
+                    const grid = document.querySelector('.grid');
+                    if (grid && grid.children.length === 0) {
+                        location.reload(); // Reload to show empty state template
+                    }
+                }, 300);
                 
-                if (countElement) countElement.innerText = data.count;
-                if (badgeElement) badgeElement.innerText = data.count;
+                showToast("Recipe removed from favorites.", "success");
                 
-                // Alert the user
-                // alert(data.message); // Commented out to prevent excessive alerts, but helpful for debugging
+                // Update nav counts if they exist
+                const countEls = document.querySelectorAll("#saved-recipe-count, #saved-recipe-badge");
+                countEls.forEach(el => el.innerText = body.count);
 
             } else {
-                // This handles the JsonResponse with success: false
-                alert(data.error || "Failed to remove recipe.");
+                // Revert animation on failure
+                if(card) card.style.transform = 'none';
+                showToast(body.error || "Failed to remove recipe.", "error");
             }
         })
         .catch(error => {
-            console.error("Error removing recipe:", error);
-            alert(`An error occurred. Check the console for details.`);
+            console.error("Error:", error);
+            if(card) card.style.transform = 'none';
+            showToast("Connection error.", "error");
         });
     }
 </script>
-    
 {% endblock %}

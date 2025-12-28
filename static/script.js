@@ -59,32 +59,38 @@ function fetchRecipes() {
             function createRecipeCard(recipe) {
                 return `
                    <a href="/recipe_detail/${recipe.id}" target="_blank" class="block group">
-                        <div class="relative overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform group-hover:-translate-y-1 h-full flex flex-col bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
-                            <div class="relative">
-                                <img src="${recipe.image_url}" alt="${recipe.name}" class="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105" />
-                                <span class="absolute top-4 right-4 px-3 py-1 text-xs font-bold rounded-full bg-green-600 text-white shadow-md">
+                                            <div class="group relative overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform group-hover:-translate-y-1 h-full flex flex-col bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
+                            
+                            <div class="relative h-48 w-full flex-shrink-0 overflow-hidden">
+                                <img 
+                                    src="${recipe.image_url}" 
+                                    alt="${recipe.name}" 
+                                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                                />
+                                <span class="absolute top-4 right-4 px-3 py-1 text-xs font-bold rounded-full bg-green-600 text-white shadow-md z-10">
                                     ${recipe.diet}
                                 </span>
                             </div>
                             
                             <div class="p-5 flex flex-col flex-grow">
-                                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">
-                                    ${recipe.name.split(' ').slice(0, 6).join(' ')}
+                                
+                                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 h-[3.5rem] leading-7">
+                                    ${recipe.name}
                                 </h3>
 
-                                <div class="flex flex-wrap items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                                <div class="flex flex-wrap items-center gap-2 text-sm text-gray-600 dark:text-gray-400 mb-4">
                                     <span class="font-medium">${recipe.cuisine}</span>
                                     <span class="text-gray-300 dark:text-gray-600">•</span>
                                     <span class="font-semibold text-orange-500">${recipe.course}</span>
                                 </div>
 
-                                <div class="flex items-center justify-between mt-4 pt-2 border-t border-gray-100 dark:border-gray-700">
+                                <div class="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
                                     <span class="flex items-center gap-1 text-sm font-semibold text-gray-700 dark:text-gray-300">
-                
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                         ${recipe.prep_time}
                                     </span>
                                     
-                                    <span class="text-orange-500 hover:text-orange-600 font-bold transition-colors">
+                                    <span class="text-orange-500 hover:text-orange-600 font-bold transition-colors cursor-pointer text-sm">
                                         View Recipe &rarr;
                                     </span>
                                 </div>
