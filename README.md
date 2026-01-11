@@ -26,7 +26,7 @@ The application is built around a set of robust features to enhance the user exp
 
 Click the link below to view the full video demonstration of the **Recipy Web Application** hosted on Google Drive.
 
-[**WATCH FULL DEMO VIDEO ON GOOGLE DRIVE**](https://drive.google.com/file/d/1V2SJyqkgycLODRvdd4tYYzgDNGcB7tHx)
+[**WATCH FULL DEMO VIDEO ON GOOGLE DRIVE**](https://drive.google.com/file/d/11ir8zZiosqaJmlcg60Uft2iT2djzGUlA/preview)
 
 ---
 
