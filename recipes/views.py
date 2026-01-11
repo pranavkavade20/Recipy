@@ -25,7 +25,7 @@ from .forms import *
 from .models import Receipe, Ingredients, Recipe, UserRecipeActivity
 from .forms import ReceipeForm, IngredientFormSet
 from .serializers import RecipeSerializer, UserRecipeActivitySerializer
-
+from decouple import config
 
 
 @login_required
@@ -489,8 +489,8 @@ def get_recipe_videos(request, recipe_id):
     search_query = recipe.name + " recipe"
 
     youtube_url = "https://www.googleapis.com/youtube/v3/search"
-    
-    api_key = os.getenv("YOUTUBE_API_KEY")
+   
+    api_key = config('YOUTUBE_API_KEY')
     if not api_key:
         return JsonResponse({"error": "API Key not found"}, status=500)
 

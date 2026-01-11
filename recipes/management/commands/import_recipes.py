@@ -50,7 +50,7 @@ class Command(BaseCommand):
                     recipe = Recipe(
                         name=row.get('name', '').strip(),
                         # Populating the ImageField with the sequential file path
-                        image=local_image_path, 
+                        image_url=local_image_path, 
                         description=row.get('description', '').strip(),
                         cuisine=row.get('cuisine', '').strip(),
                         course=row.get('course', '').strip(),

@@ -11,8 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
-from dotenv import load_dotenv
-
+from decouple import config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -90,11 +89,19 @@ WSGI_APPLICATION = 'RecipeAssistant.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv("DATABASE_NAME"),
-        'USER': 'root',
-        'PASSWORD': os.getenv("DATABASE_PASSWORD"),
-        'HOST': 'localhost',  # Or the IP address/hostname of your MySQL server
-        'PORT': '3306',      # Default MySQL port
+        # No default provided here; app will crash if DATABASE_NAME is missing (safer for prod)
+        'NAME': config('DATABASE_NAME'),
+        
+        # Uses 'root' if DATABASE_USER is not in the .env file
+        'USER': config('DATABASE_USER', default='root'),
+        
+        'PASSWORD': config('DATABASE_PASSWORD'),
+        
+        # Uses 'localhost' if DATABASE_HOST is not set
+        'HOST': config('DATABASE_HOST', default='localhost'),
+        
+        # Uses '3306' if missing. cast=str ensures it stays a string (Django expects string for port)
+        'PORT': config('DATABASE_PORT', default='3306', cast=str),
     }
 }
 
@@ -157,9 +164,4 @@ LOGOUT_URL = 'logout'
 EMAIL_BACKEND ='django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST="smtop.gmail.com"
 
-
-#Load Youtube API Key
-load_dotenv()  # Load environment variables from .env file
-
-YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
 
