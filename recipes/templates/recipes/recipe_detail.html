@@ -95,7 +95,7 @@
         // 2. VIDEO LOGIC (Fixes Error 153 & Separates Shorts)
         // ==========================================
         
-        // Helper: Extract Clean Video ID from any YouTube URL format
+       // Helper: Extract Clean Video ID
         function getVideoId(input) {
             if (!input) return null;
             if (input.includes('v=')) return input.split('v=')[1].split('&')[0];
@@ -105,17 +105,19 @@
             return input; 
         }
 
-        // Helper: Detect Shorts
         function isShortVideo(input) {
             return input.includes("/shorts/");
         }
 
-        // Helper: Generate Secure Embed URL with Origin (Fixes Error 153)
+        // --- FIX IS HERE ---
         function getSecureEmbedUrl(videoId) {
-            return `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`;
+            // 1. Get the current domain (e.g., http://127.0.0.1:8000)
+            const origin = window.location.origin;
+            // 2. Add 'origin' and 'enablejsapi' to the URL
+            return `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&origin=${origin}&enablejsapi=1`;
         }
 
-       // --- UPDATED VIDEO FETCHING LOGIC (FULL SIZE) ---
+       // --- UPDATED VIDEO FETCHING LOGIC ---
     async function fetchRecipeVideos(recipeId) {
         const section = document.getElementById('video-section');
         const longContainer = document.getElementById('long-videos-container');
@@ -140,37 +142,40 @@
                 const watchUrl = `https://www.youtube.com/watch?v=${videoId}`;
                 
                 if (isShortVideo(video.video_id)) {
-                    // --- SHORTS LAYOUT (Vertical) ---
                     hasShort = true;
                     shortsHTML += `
                         <div class="snap-center shrink-0 w-[240px] md:w-auto flex flex-col gap-3">
                             <div class="bg-black rounded-3xl overflow-hidden shadow-xl border-4 border-gray-800 group relative aspect-[9/16]">
                                 <iframe class="absolute inset-0 w-full h-full"
-                                    src="${embedUrl}" title="YouTube Short" frameborder="0"
+                                    src="${embedUrl}" 
+                                    title="YouTube Short" 
+                                    frameborder="0"
+                                    referrerpolicy="strict-origin-when-cross-origin"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                     allowfullscreen>
                                 </iframe>
                             </div>
-                            <a href="${watchUrl}" target="_blank" class="w-full py-2 bg-white dark:bg-gray-800 rounded-xl text-xs font-bold text-gray-600 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 transition-colors flex items-center justify-center gap-1 shadow-sm border border-gray-100 dark:border-gray-700">
-                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                            <a href="${watchUrl}" target="_blank" class="w-full py-2 bg-white dark:bg-gray-800 rounded-xl text-xs font-bold text-gray-600 dark:text-gray-300 hover:bg-red-50 hover:text-red-600 transition-colors flex items-center justify-center gap-1 shadow-sm border border-gray-100 dark:border-gray-700">
                                 Open in YouTube
                             </a>
                         </div>`;
                 } else {
-                    // --- LONG VIDEO LAYOUT (Full Width Cinematic) ---
                     hasLong = true;
+                    // Added referrerpolicy below
                     longVideosHTML += `
                         <div class="flex flex-col gap-4 w-full">
                             <div class="bg-black rounded-3xl overflow-hidden shadow-2xl border border-gray-200 dark:border-gray-800 group aspect-video relative w-full">
                                 <iframe class="absolute inset-0 w-full h-full"
-                                    src="${embedUrl}" title="Recipe Video" frameborder="0"
+                                    src="${embedUrl}" 
+                                    title="Recipe Video" 
+                                    frameborder="0"
+                                    referrerpolicy="strict-origin-when-cross-origin"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                     allowfullscreen>
                                 </iframe>
                             </div>
                             <div class="flex justify-end">
                                 <a href="${watchUrl}" target="_blank" class="inline-flex items-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-red-500/30 transition-all hover:-translate-y-0.5">
-                                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
                                     Watch on YouTube
                                 </a>
                             </div>
@@ -186,7 +191,6 @@
                 shortGrid.innerHTML = shortsHTML;
                 shortContainer.classList.remove('hidden');
             }
-            
             if (hasLong || hasShort) {
                 section.classList.remove('hidden');
             }

@@ -483,45 +483,56 @@ def remove_saved_recipe(request):
     # 2. FIX: Return JsonResponse for AJAX success
     return JsonResponse({"success": True, "count": new_count, "message": "Recipe removed successfully!"})
 
+# views.py
+import requests
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from decouple import config
+from .models import Recipe
 
 def get_recipe_videos(request, recipe_id):
-    recipe = Recipe.objects.get(id=recipe_id)  
-    search_query = recipe.name + " recipe"
+    recipe = get_object_or_404(Recipe, id=recipe_id)
+    # Adding 'shorts' helps find vertical content, but normal videos work too
+    search_query = f"{recipe.name} recipe shorts"
 
     youtube_url = "https://www.googleapis.com/youtube/v3/search"
-   
-    api_key = config('YOUTUBE_API_KEY')
+    api_key = config('YOUTUBE_API_KEY', default=None)
+
     if not api_key:
         return JsonResponse({"error": "API Key not found"}, status=500)
 
     params = {
         "part": "snippet",
         "q": search_query,
-        "key": api_key,  
-        "maxResults": 1,  
+        "key": api_key,
+        "maxResults": 2,
         "type": "video"
     }
 
-    response = requests.get(youtube_url, params=params)
-    if response.status_code != 200:
-        return JsonResponse({"error": "YouTube API request failed"}, status=response.status_code)
+    try:
+        response = requests.get(youtube_url, params=params)
+        
+        if response.status_code != 200:
+            return JsonResponse({"error": "YouTube API error"}, status=response.status_code)
 
-    data = response.json()
-    
-    video_data = []
-    for item in data.get("items", []):
-        video_data.append({
-            "title": item["snippet"]["title"],
-            "video_id": item["id"]["videoId"],
-            "thumbnail": item["snippet"]["thumbnails"]["medium"]["url"]
-        })
+        data = response.json()
+        video_data = []
+        
+        for item in data.get("items", []):
+            # Try to get the highest resolution thumbnail available
+            thumbnails = item["snippet"]["thumbnails"]
+            thumbnail_url = thumbnails.get("high", thumbnails.get("medium", {})).get("url")
+            
+            video_data.append({
+                "title": item["snippet"]["title"],
+                "video_id": item["id"]["videoId"],
+                "thumbnail": thumbnail_url
+            })
 
-    return JsonResponse({"videos": video_data})
+        return JsonResponse({"videos": video_data})
 
-
-
-
-
+    except requests.exceptions.RequestException as e:
+        return JsonResponse({"error": str(e)}, status=500)
 
 
 
