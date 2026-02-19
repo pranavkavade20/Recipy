@@ -12,7 +12,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST # Ensure UserRecipeActivity model is imported from your models file
 
 # Python modules
-import json, os, requests,faiss
+import json, requests,faiss
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -28,7 +28,6 @@ from .serializers import RecipeSerializer, UserRecipeActivitySerializer
 from decouple import config
 
 
-@login_required
 def home(request):
     favorite_recipes = UserRecipeActivity.objects.filter(
         user=request.user, action='favorite'
@@ -483,12 +482,6 @@ def remove_saved_recipe(request):
     # 2. FIX: Return JsonResponse for AJAX success
     return JsonResponse({"success": True, "count": new_count, "message": "Recipe removed successfully!"})
 
-# views.py
-import requests
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
-from decouple import config
-from .models import Recipe
 
 def get_recipe_videos(request, recipe_id):
     recipe = get_object_or_404(Recipe, id=recipe_id)

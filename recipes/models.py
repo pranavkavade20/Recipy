@@ -48,11 +48,8 @@ class MealPlanner(models.Model):
     def __str__(self):
         return f"{self.recipe.receipe_name} - {self.meal_type} on {self.meal_date}"
 
-# In your app's models.py
-
 class Recipe(models.Model):
     name = models.CharField(max_length=255)
-    # Changed to ImageField, which stores the path relative to MEDIA_ROOT
     image_url = models.ImageField(upload_to='recipe/') 
     description = models.TextField()
     cuisine = models.CharField(max_length=100)
