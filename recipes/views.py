@@ -40,7 +40,7 @@ def home(request):
     if favorite_recipes:
         all_recipes = list(Recipe.objects.all())
         if not all_recipes:
-            return render(request, 'base.html', {
+            return render(request, 'home.html', {
                 'section': 'home',
                 'recommended_recipes': [],
             })
@@ -76,7 +76,7 @@ def home(request):
         # Map indices back to recipes
         recommended_recipes = [recipe_map[recipe_ids[i]] for i in similar_indices][:5]
 
-    return render(request, 'base.html', {
+    return render(request, 'home.html', {
         'section': 'home',
         'recommended_recipes': recommended_recipes,
     })
