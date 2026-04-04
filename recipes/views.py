@@ -29,9 +29,11 @@ from decouple import config
 
 
 def home(request):
-    favorite_recipes = UserRecipeActivity.objects.filter(
-        user=request.user, action='favorite'
-    ).values_list('recipe', flat=True)
+    favorite_recipes = []
+    if request.user.is_authenticated:
+        favorite_recipes = UserRecipeActivity.objects.filter(
+            user=request.user, action='favorite'
+        ).values_list('recipe', flat=True)
 
     recommended_recipes = []
 
