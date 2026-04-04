@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page | Recipe@pp</title>
-    <link rel="icon" type="image/x-icon" href="{% static 'images/logo.png' %}">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f97316'/><text x='50' y='70' font-family='sans-serif' font-weight='900' font-size='65' fill='white' text-anchor='middle'>R</text></svg>">
     {% tailwind_css %}
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -80,13 +80,11 @@
 <nav class="sticky top-0 z-50 w-full glass-nav border-b border-stone-200 dark:border-gray-800 transition-all duration-300">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         
-        <a href="{% url 'home' %}" class="flex items-center space-x-3 rtl:space-x-reverse group">
-            <div class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 shadow-sm group-hover:scale-105 transition-transform">
-                 <img src="{% static 'images/logo.png' %}" alt="Logo" class="w-8 h-8 object-cover"/>
-            </div>
-            <span class="self-center text-2xl font-bold whitespace-nowrap bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent dark:from-orange-400 dark:to-red-400">
+        <a href="{% url 'home' %}" class="flex items-center gap-1.5 group">
+            <span class="self-center text-3xl font-black tracking-tight whitespace-nowrap bg-gradient-to-r from-orange-600 to-rose-600 bg-clip-text text-transparent dark:from-orange-400 dark:to-rose-400 transform transition-transform group-hover:scale-105">
                 Recipy
             </span>
+            <span class="w-2.5 h-2.5 rounded-full bg-gradient-to-tr from-orange-500 to-rose-500 mb-4 animate-pulse shadow-sm"></span>
         </a>
 
         <div class="flex items-center md:order-2 space-x-2 md:space-x-4 rtl:space-x-reverse">
@@ -270,8 +268,8 @@
 
                     <!-- Floating Badge 2 -->
                     <div class="absolute -right-6 bottom-16 z-30 glass-badge px-4 py-3 rounded-2xl flex items-center gap-3 animate-float-delayed hidden sm:flex">
-                        <div class="w-11 h-11 bg-orange-100 dark:bg-orange-500/20 rounded-xl flex items-center justify-center text-orange-600 overflow-hidden shrink-0">
-                             <img src="{% static 'images/logo.png' %}" class="w-7 h-7 object-cover" alt="icon">
+                        <div class="w-11 h-11 bg-gradient-to-br from-orange-100 to-rose-100 dark:from-orange-500/20 dark:to-rose-500/20 rounded-xl flex items-center justify-center text-orange-600 dark:text-orange-400 overflow-hidden shrink-0 shadow-inner">
+                             <span class="font-black text-2xl tracking-tighter">R</span>
                         </div>
                         <div>
                             <div class="text-[10px] text-gray-500 dark:text-gray-400 font-bold tracking-widest uppercase">New Feature</div>
@@ -424,9 +422,11 @@
     <div class="container mx-auto p-8">
         <div class="md:flex md:justify-between">
             <div class="mb-6 md:mb-0">
-                <a href="{% url 'home' %}" class="flex items-center space-x-3">
-                    <img src="{% static 'images/logo.png' %}" class="h-8 w-8" alt="Logo" />
-                    <span class="self-center text-2xl font-bold whitespace-nowrap text-slate-800 dark:text-white">Recipy</span>
+                <a href="{% url 'home' %}" class="flex items-center gap-1.5 group">
+                    <span class="self-center text-3xl font-black tracking-tight whitespace-nowrap bg-gradient-to-r from-orange-600 to-rose-600 bg-clip-text text-transparent dark:from-orange-400 dark:to-rose-400">
+                        Recipy
+                    </span>
+                    <span class="w-2.5 h-2.5 rounded-full bg-gradient-to-tr from-orange-500 to-rose-500 mb-4 group-hover:animate-pulse shadow-sm"></span>
                 </a>
                 <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 max-w-xs">Making home cooking accessible, healthy, and fun for everyone.</p>
             </div>
