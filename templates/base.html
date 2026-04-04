@@ -20,6 +20,59 @@
         .dark .glass-nav {
             background: rgba(17, 24, 39, 0.7);
         }
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .animate-blob {
+            animation: blob 8s infinite ease-in-out;
+        }
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+            animation-delay: 4s;
+        }
+        .animate-fade-up {
+            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        .delay-400 { animation-delay: 400ms; }
+        
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .glass-badge {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        .dark .glass-badge {
+            background: rgba(30, 41, 59, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        .animate-float-delayed {
+            animation: float 6s ease-in-out infinite;
+            animation-delay: 3s;
+        }
     </style>
 </head>
 <body class="bg-stone-50 dark:bg-gray-950 text-slate-800 dark:text-slate-100 transition-colors duration-500">
@@ -135,46 +188,96 @@
 
 {% block content %}
 <main class="min-h-[80vh] pt-6 md:pt-10">
-    <section class="container mx-auto px-4 sm:px-6 lg:px-8 mb-20">
-        <div class="relative w-full flex flex-col-reverse lg:flex-row items-center justify-between py-12 lg:py-24 px-6 lg:px-12 bg-white dark:bg-gray-800/50 rounded-[2.5rem] shadow-2xl shadow-orange-500/10 overflow-hidden border border-white/20">
+    <section class="container mx-auto px-4 sm:px-6 lg:px-8 mb-24 mt-6">
+        <div class="relative w-full flex flex-col-reverse lg:flex-row items-center justify-between py-16 lg:py-24 px-6 lg:px-16 bg-white dark:bg-gray-800/40 rounded-[3rem] shadow-[0_20px_50px_-12px_rgba(249,115,22,0.15)] overflow-hidden border border-stone-100 dark:border-gray-700/50">
             
-            <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
-                <div class="absolute -top-40 -left-40 w-96 h-96 bg-orange-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-                <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-green-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+            <!-- Animated Background Blobs -->
+            <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+                <div class="absolute -top-40 -left-20 w-[30rem] h-[30rem] bg-orange-300 dark:bg-orange-600 rounded-full mix-blend-multiply filter blur-3xl opacity-40 dark:opacity-20 animate-blob"></div>
+                <div class="absolute top-20 right-20 w-96 h-96 bg-rose-300 dark:bg-rose-600 rounded-full mix-blend-multiply filter blur-3xl opacity-40 dark:opacity-20 animate-blob animation-delay-2000"></div>
+                <div class="absolute -bottom-40 left-1/3 w-96 h-96 bg-emerald-300 dark:bg-emerald-600 rounded-full mix-blend-multiply filter blur-3xl opacity-40 dark:opacity-20 animate-blob animation-delay-4000"></div>
             </div>
 
-            <div class="lg:w-1/2 flex flex-col relative z-20 text-center lg:text-left mt-10 lg:mt-0">
-                <div class="inline-flex items-center justify-center lg:justify-start gap-2 mb-6">
-                    <span class="px-3 py-1 text-xs font-semibold tracking-wider text-orange-600 uppercase bg-orange-100 rounded-full dark:bg-orange-900/30 dark:text-orange-400">#1 Food App</span>
+            <!-- Text Content -->
+            <div class="lg:w-1/2 flex flex-col relative z-20 text-center lg:text-left mt-16 lg:mt-0">
+                <div class="inline-flex items-center justify-center lg:justify-start gap-2 mb-6 animate-fade-up delay-100">
+                    <span class="px-4 py-1.5 text-xs font-bold tracking-widest text-orange-600 uppercase bg-orange-100/80 rounded-full dark:bg-orange-500/20 dark:text-orange-400 backdrop-blur-sm border border-orange-200 dark:border-orange-500/30 flex items-center gap-2 shadow-sm">
+                        <span class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
+                        Next-Gen Recipe Platform
+                    </span>
                 </div>
                 
-                <h1 class="text-5xl font-extrabold text-slate-900 dark:text-white lg:text-7xl leading-tight tracking-tight mb-6">
-                    Cook <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">Delicious</span>.<br>
-                    Eat <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-500">Healthy</span>.
+                <h1 class="text-6xl font-black text-slate-900 dark:text-white lg:text-[4.5rem] xl:text-[5rem] leading-[1.1] tracking-tight mb-8 animate-fade-up delay-200">
+                    Cook <span class="relative inline-block text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-rose-500 z-10">Delicious.
+                        <svg class="absolute -bottom-2 left-0 w-full h-4 text-orange-400/40 -z-10 hidden sm:block" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 50 10 100 5" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>
+                    </span><br>
+                    Live <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-500">Healthy.</span>
                 </h1>
         
-                <p class="max-w-xl mx-auto lg:mx-0 text-lg text-slate-600 dark:text-slate-300 md:text-xl leading-relaxed">
-                    Unlock a world of flavors. Personalize your meal plans, track nutrition, and discover recipes tailored just for you.
+                <p class="max-w-xl mx-auto lg:mx-0 text-lg text-slate-600 dark:text-slate-300 md:text-xl leading-relaxed mb-10 animate-fade-up delay-300">
+                    Unlock a world of exquisite flavors. Get personalized AI meal plans, track nutrition dynamically, and discover curated recipes tailored to your lifestyle.
                 </p>
         
-                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mt-10">
-                    <button id="open-button" class="w-full sm:w-auto px-8 py-4 text-base font-bold text-white transition-all duration-300 bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl hover:shadow-lg hover:shadow-orange-500/40 hover:-translate-y-1 focus:ring-4 focus:ring-orange-300 dark:focus:ring-orange-800 flex items-center justify-center gap-2">
-                        Get Recommendations
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-5 animate-fade-up delay-400">
+                    <button id="open-button" class="group w-full sm:w-auto px-8 py-4 text-base font-bold text-white transition-all duration-300 bg-gradient-to-r from-orange-500 to-rose-500 rounded-2xl hover:shadow-[0_10px_30px_-5px_rgba(249,115,22,0.5)] hover:-translate-y-1 focus:ring-4 focus:ring-orange-300 dark:focus:ring-orange-800 flex items-center justify-center gap-3">
+                        <span>Get Recommendations</span>
+                        <div class="bg-white/20 p-1.5 rounded-lg flex items-center transition-colors group-hover:bg-white/30">
+                            <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg>
+                        </div>
                     </button>
-                    <a href="#all-recipes" class="w-full sm:w-auto px-8 py-4 text-base font-bold text-slate-700 dark:text-white transition-all duration-300 bg-white dark:bg-gray-700 border border-slate-200 dark:border-gray-600 rounded-2xl hover:bg-slate-50 dark:hover:bg-gray-600 hover:shadow-lg flex items-center justify-center">
+                    <a href="#all-recipes" class="group w-full sm:w-auto px-8 py-4 text-base font-bold text-slate-700 dark:text-white transition-all duration-300 bg-white dark:bg-gray-800 border-2 border-stone-200 dark:border-gray-700 rounded-2xl hover:bg-stone-50 md:hover:bg-transparent dark:hover:bg-gray-750 hover:border-orange-200 dark:hover:border-orange-500/50 hover:shadow-lg hover:-translate-y-1 flex items-center justify-center gap-2">
                         Browse Menu
+                        <svg class="w-5 h-5 text-gray-400 group-hover:text-orange-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                     </a>
+                </div>
+                
+                <div class="mt-12 flex items-center gap-4 lg:justify-start justify-center animate-fade-up delay-400">
+                    <div class="flex -space-x-3">
+                        <img class="w-10 h-10 rounded-full border-2 border-white dark:border-gray-800 object-cover" src="https://i.pravatar.cc/100?img=9" alt="User 1">
+                        <img class="w-10 h-10 rounded-full border-2 border-white dark:border-gray-800 object-cover" src="https://i.pravatar.cc/100?img=5" alt="User 2">
+                        <img class="w-10 h-10 rounded-full border-2 border-white dark:border-gray-800 object-cover" src="https://i.pravatar.cc/100?img=12" alt="User 3">
+                        <div class="w-10 h-10 rounded-full border-2 border-white dark:border-gray-800 bg-orange-100 dark:bg-orange-900/50 flex items-center justify-center text-xs font-bold text-orange-600 dark:text-orange-300 z-10">
+                            +10k
+                        </div>
+                    </div>
+                    <div class="text-sm font-medium text-gray-500 dark:text-gray-400"><span class="font-bold text-orange-600 dark:text-orange-400">Join 10,000+</span> happy cooks</div>
                 </div>
             </div>
             
-            <div class="lg:w-1/2 w-full lg:pl-10">
-                <div class="relative rounded-3xl overflow-hidden shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500 border-4 border-white dark:border-gray-700">
-                     <video class="w-full h-auto object-cover aspect-[4/3]" autoplay loop muted playsinline>
-                        <source src="{% static 'videos/background.mp4' %}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none"></div>
+            <!-- Video/Image Showcase -->
+            <div class="lg:w-1/2 w-full lg:pl-12 relative animate-fade-up delay-200">
+                <div class="relative w-full max-w-lg mx-auto mt-10 lg:mt-0">
+                    <!-- Glow effect behind video -->
+                    <div class="absolute -inset-2 bg-gradient-to-r from-orange-400 via-rose-400 to-orange-500 rounded-[3rem] blur-2xl opacity-40 animate-pulse"></div>
+                    
+                    <!-- Main Video Container -->
+                    <div class="relative rounded-[2.5rem] overflow-hidden shadow-2xl z-10 border-[6px] border-white/80 dark:border-gray-800/80 backdrop-blur-sm group">
+                        <video class="w-full h-auto object-cover aspect-[4/3] transform transition-transform duration-1000 group-hover:scale-[1.03]" autoplay loop muted playsinline>
+                            <source src="{% static 'videos/background.mp4' %}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900/50 via-transparent to-transparent pointer-events-none transition-opacity duration-500 group-hover:opacity-30"></div>
+                    </div>
+
+                    <!-- Floating Badge 1 -->
+                    <div class="absolute -left-6 top-10 z-30 glass-badge px-4 py-3 rounded-2xl flex items-center gap-3 animate-float hidden sm:flex">
+                        <div class="text-2xl bg-orange-100/50 dark:bg-gray-800 p-2 rounded-xl">🌟</div>
+                        <div>
+                            <div class="text-[10px] text-gray-500 dark:text-gray-400 font-bold tracking-widest uppercase">Top Rated</div>
+                            <div class="text-sm font-black text-gray-900 dark:text-white">4.9/5 Average</div>
+                        </div>
+                    </div>
+
+                    <!-- Floating Badge 2 -->
+                    <div class="absolute -right-6 bottom-16 z-30 glass-badge px-4 py-3 rounded-2xl flex items-center gap-3 animate-float-delayed hidden sm:flex">
+                        <div class="w-11 h-11 bg-orange-100 dark:bg-orange-500/20 rounded-xl flex items-center justify-center text-orange-600 overflow-hidden shrink-0">
+                             <img src="{% static 'images/logo.png' %}" class="w-7 h-7 object-cover" alt="icon">
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-gray-500 dark:text-gray-400 font-bold tracking-widest uppercase">New Feature</div>
+                            <div class="text-sm font-black text-gray-900 dark:text-white">AI Meal Plans</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
