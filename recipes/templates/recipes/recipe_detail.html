@@ -212,7 +212,7 @@
                 
                 displayRecipe(data.recipe);
                 displaySimilarRecipes(data.similar_recipes);
-                fetchRecipeVideos({{ id }}); 
+                fetchRecipeVideos("{{ id }}"); 
             } catch (error) {
                 console.error('Error fetching data:', error);
                 document.getElementById('recipe').innerHTML = `
