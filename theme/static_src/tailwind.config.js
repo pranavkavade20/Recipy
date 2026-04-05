@@ -45,8 +45,17 @@ module.exports = {
     ],
     darkMode: 'class',
     theme: {
-        extend: {},
-    
+        extend: {
+            colors: {
+                primary: '#F97316',    // Citrus Orange
+                accent: '#FBBF24',     // Honey Yellow
+                success: '#22C55E',    // Basil Green
+                base: '#1E293B',       // Slate Blue
+            },
+            fontFamily: {
+                sans: ['Poppins', 'system-ui', 'sans-serif'],
+            }
+        },
     },
     plugins: [
         /**
@@ -57,10 +66,6 @@ module.exports = {
         require('@tailwindcss/forms'),
         require('@tailwindcss/typography'),
         require('@tailwindcss/aspect-ratio'),
-    ],
-    plugins: [
         require('flowbite/plugin')
     ]
-    
-
 }

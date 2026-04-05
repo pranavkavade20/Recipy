@@ -39,6 +39,28 @@ themeToggleBtns.forEach(btn => {
 
 
 // --- Dynamic Feed Loading ---
+window.toggleHeart = function(btn) {
+    const icon = btn.querySelector('.heart-icon');
+    if (icon.getAttribute('fill') === 'none') {
+        icon.setAttribute('fill', 'currentColor');
+        icon.classList.add('text-primary', 'scale-125');
+        btn.classList.add('bg-white', 'text-primary', 'border-white', 'shadow-lg');
+        btn.classList.remove('bg-white/20', 'text-white', 'border-white/30');
+        if (typeof Toastify !== 'undefined') {
+            Toastify({ 
+                text: "Recipe saved!", 
+                duration: 2000, 
+                style: { background: "#1E293B", color: "#fff", borderRadius: "100px", border: "1px solid #F97316"} 
+            }).showToast();
+        }
+    } else {
+        icon.setAttribute('fill', 'none');
+        icon.classList.remove('text-primary', 'scale-125');
+        btn.classList.remove('bg-white', 'text-primary', 'border-white', 'shadow-lg');
+        btn.classList.add('bg-white/20', 'text-white', 'border-white/30');
+    }
+};
+
 function fetchRecipes() {
     fetch('http://127.0.0.1:8000/recipes/')
         .then(response => response.json())
@@ -48,10 +70,10 @@ function fetchRecipes() {
 
             function createRecipeCard(recipe) {
                 return `
-                    <a href="/recipe_detail/${recipe.id}" target="_blank" onclick="handleRecipeClick('${recipe.id}')" class="group block outline-none">
-                        <div class="relative glass-panel bg-white dark:bg-[#121212] rounded-[2rem] overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(249,115,22,0.3)] border border-gray-100 dark:border-white/5 h-full flex flex-col">
+                    <a href="/recipe_detail/${recipe.id}" target="_blank" onclick="handleRecipeClick('${recipe.id}')" class="group block outline-none h-full">
+                        <div class="relative glass-panel bg-white dark:bg-[#121212] rounded-[2rem] overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-20px_rgba(249,115,22,0.4)] border border-gray-100 dark:border-white/5 h-full flex flex-col">
                             
-                            <div class="relative h-64 w-full overflow-hidden bg-gray-200 dark:bg-gray-800">
+                            <div class="relative h-72 w-full overflow-hidden bg-slate-200 dark:bg-base">
                                 <img 
                                     src="${recipe.image_url}" 
                                     alt="${recipe.name}" 
@@ -61,32 +83,36 @@ function fetchRecipes() {
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-70 group-hover:opacity-90 transition-opacity duration-300"></div>
                                 
                                 <div class="absolute top-4 left-4 flex gap-2 z-10">
-                                    <span class="px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full bg-black/40 backdrop-blur-md text-white border border-white/20">
+                                    <span class="px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full bg-success/90 backdrop-blur-md text-white shadow-sm border border-white/20">
                                         ${recipe.diet}
                                     </span>
                                 </div>
 
+                                <button onclick="event.preventDefault(); window.toggleHeart(this);" class="absolute top-4 right-4 p-2.5 rounded-full bg-white/20 backdrop-blur-md text-white border border-white/30 hover:bg-white hover:text-primary transition-all duration-300 focus:outline-none z-30 group/heart hover:scale-110 hover:shadow-lg">
+                                    <svg class="w-5 h-5 heart-icon transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                                </button>
+
                                 <div class="absolute bottom-4 right-4 translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-out z-20">
-                                    <div class="w-14 h-14 rounded-full bg-orange-500 flex items-center justify-center text-white shadow-lg shadow-orange-500/50 hover:scale-110 transition-transform">
-                                        <svg class="w-6 h-6 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                    <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/40 hover:scale-110 transition-transform">
+                                        <svg class="w-5 h-5 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                                     </div>
                                 </div>
                             </div>
                             
                             <div class="p-6 flex flex-col flex-grow relative z-10">
-                                <h3 class="text-xl font-black text-gray-900 dark:text-white mb-2 line-clamp-2 leading-snug group-hover:text-orange-500 transition-colors">
+                                <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2 line-clamp-2 leading-snug group-hover:text-primary transition-colors">
                                     ${recipe.name}
                                 </h3>
 
-                                <div class="flex flex-wrap items-center gap-2 text-xs font-bold text-gray-500 dark:text-gray-400 mb-4 uppercase tracking-wider">
+                                <div class="flex flex-wrap items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400 mb-4 uppercase tracking-wider">
                                     <span>${recipe.cuisine}</span>
-                                    <span class="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-600"></span>
-                                    <span class="text-orange-500">${recipe.course}</span>
+                                    <span class="w-1 h-1 rounded-full bg-slate-300 dark:bg-white/20"></span>
+                                    <span class="text-accent">${recipe.course}</span>
                                 </div>
 
-                                <div class="mt-auto pt-4 border-t border-gray-100 dark:border-white/5 flex items-center justify-between">
-                                    <span class="flex items-center gap-1.5 text-sm font-bold text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-white/5 px-3 py-1 rounded-full">
-                                        <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <div class="mt-auto pt-4 border-t border-slate-100 dark:border-white/5 flex items-center justify-between">
+                                    <span class="flex items-center gap-1.5 text-sm font-bold text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-white/5 px-3 py-1 rounded-full">
+                                        <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                         ${recipe.prep_time}
                                     </span>
                                 </div>
@@ -98,6 +124,7 @@ function fetchRecipes() {
 
             const allRecipesContainer = document.getElementById('all-recipes');
             if (allRecipesContainer) {
+                // Remove skeleton and inject elements
                 allRecipesContainer.innerHTML = allRecipes.map(recipe => createRecipeCard(recipe)).join('');
             }
 
@@ -108,6 +135,10 @@ function fetchRecipes() {
         })
         .catch(error => {
             console.error('Error fetching data:', error);
+            const allRecipesContainer = document.getElementById('all-recipes');
+            if (allRecipesContainer) {
+                allRecipesContainer.innerHTML = '<div class="col-span-full text-center py-12 text-slate-500">Failed to load recommendations. Please try again.</div>';
+            }
         });
 }
 

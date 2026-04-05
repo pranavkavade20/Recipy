@@ -2,36 +2,36 @@
 {% block title %}Recipe Detail | Recipy{% endblock %}
 
 {% block content %}
-<div class="bg-stone-50 dark:bg-gray-950 transition-colors duration-500 min-h-screen pb-20">
+<div class="bg-slate-50 dark:bg-base transition-colors duration-500 min-h-screen pb-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
 
         <div id="recipe" class="animate-fade-in">
             <div class="flex flex-col justify-center items-center min-h-[50vh] space-y-4">
-                <div class="w-16 h-16 border-4 border-orange-200 border-t-orange-600 rounded-full animate-spin"></div>
-                <p class="text-xl font-medium text-gray-500 dark:text-gray-400 animate-pulse">Preparing ingredients...</p>
+                <div class="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+                <p class="text-xl font-medium text-slate-500 dark:text-slate-400 animate-pulse">Preparing ingredients...</p>
             </div>
         </div>
 
      <div id="video-section" class="mt-16 md:mt-24 hidden space-y-16">
             
             <div id="long-videos-container" class="hidden">
-                <div class="flex items-center gap-3 mb-8 border-b border-stone-200 dark:border-gray-800 pb-4">
+                <div class="flex items-center gap-3 mb-8 border-b border-slate-200 dark:border-white/10 pb-4">
                     <div class="p-2 bg-red-100 dark:bg-red-900/30 rounded-xl text-red-600">
                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
                     </div>
-                    <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white">Video Guide</h2>
+                    <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white">Video Guide</h2>
                 </div>
                 <div id="long-videos-grid" class="flex flex-col gap-16">
                     </div>
             </div>
 
             <div id="shorts-container" class="hidden">
-                <div class="flex items-center gap-3 mb-8 border-b border-stone-200 dark:border-gray-800 pb-4">
-                    <div class="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-xl text-orange-600">
+                <div class="flex items-center gap-3 mb-8 border-b border-slate-200 dark:border-white/10 pb-4">
+                    <div class="p-2 bg-primary/20 rounded-xl text-primary">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     </div>
                     <div>
-                        <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white">Quick Tips & Shorts</h2>
+                        <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white">Quick Tips & Shorts</h2>
                     </div>
                 </div>
                 <div id="shorts-grid" class="flex overflow-x-auto pb-6 gap-6 md:grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 snap-x scroll-smooth no-scrollbar">
@@ -40,9 +40,9 @@
         </div>
 
         <div class="mt-16 md:mt-24">
-            <div class="flex items-center justify-between mb-8 border-b border-stone-200 dark:border-gray-800 pb-4">
-                <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-                    You Might Also <span class="text-orange-600">Love</span>
+            <div class="flex items-center justify-between mb-8 border-b border-slate-200 dark:border-white/10 pb-4">
+                <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                    You Might Also <span class="text-primary">Love</span>
                 </h2>
             </div>
             
@@ -73,10 +73,10 @@
             const isSuccess = type === 'success';
             
             const toast = document.createElement('div');
-            toast.className = `pointer-events-auto flex items-center w-full max-w-sm p-4 rounded-2xl shadow-2xl transform transition-all duration-300 translate-y-10 opacity-0 border bg-white dark:bg-gray-800 text-gray-800 dark:text-white ${isSuccess ? 'border-green-100 dark:border-green-900/30' : 'border-red-100 dark:border-red-900/30'}`;
+            toast.className = `pointer-events-auto flex items-center w-full max-w-sm p-4 rounded-2xl shadow-2xl transform transition-all duration-300 translate-y-10 opacity-0 border bg-white dark:bg-gray-800 text-slate-800 dark:text-white border-slate-200 dark:border-white/10`;
             
             const icon = isSuccess 
-                ? `<div class="flex-shrink-0 w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center text-green-500"><svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div>`
+                ? `<div class="flex-shrink-0 w-10 h-10 bg-success/20 rounded-full flex items-center justify-center text-success"><svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div>`
                 : `<div class="flex-shrink-0 w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center text-red-500"><svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></div>`;
 
             toast.innerHTML = `${icon}<div class="ml-3 text-sm font-medium flex-1">${message}</div>`;
@@ -228,7 +228,7 @@
 
         function displayRecipe(recipe) {
             const recipeContainer = document.getElementById('recipe');
-            const dietColor = recipe.diet && recipe.diet.includes('Non') ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300' : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300';
+            const dietColor = recipe.diet && recipe.diet.includes('Non') ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300' : 'bg-success/20 text-success';
             
             recipeContainer.innerHTML = `
                 <div class="flex flex-col lg:flex-row gap-8 lg:gap-12 mb-12">
@@ -237,14 +237,14 @@
                             <img src="${recipe.image_url}" alt="${recipe.name}" class="w-full h-auto object-cover transform transition-transform duration-700 group-hover:scale-105" />
                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
                             <div class="absolute bottom-6 left-6 flex flex-wrap gap-2">
-                                <span class="px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider bg-white/90 backdrop-blur text-gray-900 shadow-lg">${recipe.course}</span>
-                                <span class="px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider bg-orange-500 text-white shadow-lg">${recipe.cuisine}</span>
+                                <span class="px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider bg-white/90 backdrop-blur text-slate-900 shadow-lg">${recipe.course}</span>
+                                <span class="px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider bg-primary text-white shadow-lg">${recipe.cuisine}</span>
                             </div>
                         </div>
                         <div class="mt-6">
-                            <button onclick="saveFavoriteRecipe(${recipe.id})" class="w-full relative group overflow-hidden rounded-2xl bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold text-lg py-4 px-8 shadow-xl transition-all hover:-translate-y-1">
-                                <span class="relative z-10 flex items-center justify-center gap-2">
-                                    <svg class="w-6 h-6 text-orange-500" fill="currentColor" viewBox="0 0 24 24"><path d="M11.645 20.91l-.007-.003-.022-.012-2.73-1.636-1.125-.664-.55-.324C7.027 18.067 5.757 17.51 4.545 16.5C3.332 15.49 2.5 14.288 2.5 13.064c0-2.915 2.138-4.992 4.136-6.191C8.272 5.568 10.15 5.006 12 5.006c1.85 0 3.728.562 5.364 1.867 2 1.199 4.136 3.276 4.136 6.191 0 1.224-.833 2.424-2.045 3.435-1.212 1.01-2.482 1.567-3.791 2.378l-.55.324-1.125.664-2.73 1.636-.022.012-.007.003-.002.001-.002.001Z" /></svg>
+                            <button onclick="saveFavoriteRecipe(${recipe.id})" class="w-full relative group overflow-hidden rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-lg py-4 px-8 shadow-xl transition-all hover:-translate-y-1 focus:ring-4 focus:ring-primary/50">
+                                <span class="relative z-10 flex items-center justify-center gap-2 group-hover:scale-105 transition-transform">
+                                    <svg class="w-6 h-6 text-primary group-hover:animate-ping" fill="currentColor" viewBox="0 0 24 24"><path d="M11.645 20.91l-.007-.003-.022-.012-2.73-1.636-1.125-.664-.55-.324C7.027 18.067 5.757 17.51 4.545 16.5C3.332 15.49 2.5 14.288 2.5 13.064c0-2.915 2.138-4.992 4.136-6.191C8.272 5.568 10.15 5.006 12 5.006c1.85 0 3.728.562 5.364 1.867 2 1.199 4.136 3.276 4.136 6.191 0 1.224-.833 2.424-2.045 3.435-1.212 1.01-2.482 1.567-3.791 2.378l-.55.324-1.125.664-2.73 1.636-.022.012-.007.003-.002.001-.002.001Z" /></svg>
                                     Save to Favorites
                                 </span>
                             </button>
@@ -252,31 +252,31 @@
                     </div>
                     <div class="w-full lg:w-1/2 flex flex-col justify-center">
                         <div class="flex items-center gap-3 mb-4"><span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${dietColor}">${recipe.diet || 'Standard'}</span></div>
-                        <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-6 leading-tight">${recipe.name}</h1>
-                        <p class="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-8 border-l-4 border-orange-500 pl-4 bg-orange-50 dark:bg-gray-900/50 py-2 rounded-r-lg">${recipe.description}</p>
+                        <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-6 leading-tight">${recipe.name}</h1>
+                        <p class="text-lg text-slate-600 dark:text-slate-300 leading-relaxed mb-8 border-l-4 border-primary pl-4 bg-primary/10 py-3 rounded-r-lg shadow-sm">${recipe.description}</p>
                         <div class="grid grid-cols-2 gap-4">
-                            <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-stone-100 dark:border-gray-700 flex items-center gap-3">
+                            <div class="bg-white dark:bg-white/5 p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-white/10 flex items-center gap-3 transition-transform hover:-translate-y-1">
                                 <div class="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-500"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div>
-                                <div><p class="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase">Prep Time</p><p class="font-bold text-gray-900 dark:text-white">${recipe.prep_time || '30 mins'}</p></div>
+                                <div><p class="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase">Prep Time</p><p class="font-bold text-slate-900 dark:text-white">${recipe.prep_time || '30 mins'}</p></div>
                             </div>
-                            <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-stone-100 dark:border-gray-700 flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full bg-green-50 dark:bg-green-900/20 flex items-center justify-center text-green-500"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg></div>
-                                <div><p class="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase">Servings</p><p class="font-bold text-gray-900 dark:text-white">4 People</p></div>
+                            <div class="bg-white dark:bg-white/5 p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-white/10 flex items-center gap-3 transition-transform hover:-translate-y-1">
+                                <div class="w-10 h-10 rounded-full bg-success/20 flex items-center justify-center text-success"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg></div>
+                                <div><p class="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase">Servings</p><p class="font-bold text-slate-900 dark:text-white">4 People</p></div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
                     <div class="lg:col-span-1">
-                        <div class="bg-white dark:bg-gray-800 rounded-[2rem] shadow-xl border border-stone-100 dark:border-gray-700 overflow-hidden sticky top-24">
-                            <div class="bg-orange-50 dark:bg-gray-700/50 p-6 border-b border-orange-100 dark:border-gray-600"><h3 class="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2"><svg class="w-5 h-5 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>Ingredients</h3></div>
-                            <div class="p-6"><ul class="space-y-4">${recipe.ingredients.split(',').map(ing => `<li class="flex items-start gap-3 text-gray-700 dark:text-gray-300"><svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg><span class="text-base">${ing.trim()}</span></li>`).join('')}</ul></div>
+                        <div class="bg-white dark:bg-[#121212] rounded-[2rem] shadow-xl border border-slate-100 dark:border-white/10 overflow-hidden sticky top-24">
+                            <div class="bg-primary/10 dark:bg-primary/20 p-6 border-b border-primary/20"><h3 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2"><svg class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>Ingredients</h3></div>
+                            <div class="p-6"><ul class="space-y-4">${recipe.ingredients.split(',').map(ing => `<li class="flex items-start gap-3 text-slate-700 dark:text-slate-300"><svg class="w-5 h-5 text-success flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg><span class="text-base">${ing.trim()}</span></li>`).join('')}</ul></div>
                         </div>
                     </div>
                     <div class="lg:col-span-2">
-                        <div class="bg-white dark:bg-gray-800 rounded-[2rem] shadow-sm border border-stone-100 dark:border-gray-700 p-8 md:p-10">
-                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3"><span class="flex items-center justify-center w-10 h-10 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-600"><svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg></span>Instructions</h3>
-                            <div class="prose prose-lg dark:prose-invert max-w-none text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-line">${recipe.instructions}</div>
+                        <div class="bg-white dark:bg-[#121212] rounded-[2rem] shadow-sm border border-slate-100 dark:border-white/10 p-8 md:p-10 mb-8">
+                            <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3"><span class="flex items-center justify-center w-10 h-10 rounded-full bg-primary/20 text-primary"><svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg></span>Instructions</h3>
+                            <div class="prose prose-lg dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">${recipe.instructions}</div>
                         </div>
                     </div>
                 </div>`;
@@ -289,10 +289,10 @@
                 return;
             }
             container.innerHTML = recipes.map(recipe => {
-                let badgeClass = "bg-orange-500/90";
+                let badgeClass = "bg-primary/90";
                 if (recipe.diet && recipe.diet.includes("Non")) badgeClass = "bg-red-500/90";
-                else if (recipe.diet && recipe.diet.includes("Veg")) badgeClass = "bg-emerald-500/90";
-                return `<a href="/recipe_detail/${recipe.id}" class="block group h-full"><div class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-stone-100 dark:border-gray-700 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full flex flex-col"><div class="relative h-48 overflow-hidden"><img src="${recipe.image_url}" alt="${recipe.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" /><div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div><span class="absolute top-3 right-3 px-2.5 py-1 rounded-lg text-xs font-bold backdrop-blur-md shadow-sm border border-white/20 text-white ${badgeClass}">${recipe.diet || 'Recipe'}</span></div><div class="p-5 flex flex-col flex-grow"><h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2 leading-tight group-hover:text-orange-600 transition-colors line-clamp-2">${recipe.name}</h3><div class="mt-auto pt-3 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between text-sm"><div class="flex items-center text-gray-500 dark:text-gray-400"><svg class="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>${recipe.cuisine}</div><span class="font-semibold text-orange-600 bg-orange-50 dark:bg-orange-900/20 px-2 py-1 rounded-md">${recipe.course}</span></div></div></div></a>`;
+                else if (recipe.diet && recipe.diet.includes("Veg")) badgeClass = "bg-success/90 text-white";
+                return `<a href="/recipe_detail/${recipe.id}" class="block group h-full"><div class="bg-white dark:bg-[#121212] rounded-[2rem] border border-slate-100 dark:border-white/5 overflow-hidden hover:-translate-y-2 hover:shadow-[0_20px_40px_-20px_rgba(249,115,22,0.4)] transition-all duration-500 h-full flex flex-col"><div class="relative h-72 overflow-hidden"><img src="${recipe.image_url}" alt="${recipe.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" /><div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-70 group-hover:opacity-90"></div><span class="absolute top-4 left-4 px-3 py-1 rounded-full text-[10px] uppercase tracking-widest font-black backdrop-blur-md shadow-sm border border-white/20 text-white ${badgeClass}">${recipe.diet || 'Recipe'}</span></div><div class="p-6 flex flex-col flex-grow relative z-10"><h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2 leading-snug group-hover:text-primary transition-colors line-clamp-2">${recipe.name}</h3><div class="mt-auto pt-4 border-t border-slate-100 dark:border-white/5 flex items-center justify-between"><div class="flex items-center text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400"><svg class="w-4 h-4 mr-1.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>${recipe.cuisine}</div><span class="font-bold text-xs uppercase text-accent bg-accent/10 px-3 py-1 rounded-full">${recipe.course}</span></div></div></div></a>`;
             }).join('');
         }
 

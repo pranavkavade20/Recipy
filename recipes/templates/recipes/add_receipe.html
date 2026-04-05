@@ -2,21 +2,21 @@
 {% block title %}Add Recipe | Recipy{% endblock %} 
 
 {% block content %}
-<main class="min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-stone-50 dark:bg-gray-950 transition-colors duration-500">
+<main class="min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-slate-50 dark:bg-base transition-colors duration-500">
     <div class="max-w-4xl mx-auto">
         
         <div class="text-center mb-12">
-            <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-4">
-                Submit Your <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">Recipe</span>
+            <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-4">
+                Submit Your <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Recipe</span>
             </h2>
-            <p class="text-lg text-gray-500 dark:text-gray-400">
+            <p class="text-lg text-slate-500 dark:text-slate-400">
                 Share your culinary creation with the community!
             </p>
         </div>
 
-        <div class="bg-white dark:bg-gray-900 shadow-2xl rounded-[2.5rem] p-8 md:p-12 border border-stone-100 dark:border-gray-800 relative overflow-hidden">
+        <div class="bg-white dark:bg-[#121212] shadow-2xl rounded-[2.5rem] p-8 md:p-12 border border-slate-100 dark:border-white/5 relative overflow-hidden">
             
-            <div class="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-orange-50 dark:bg-orange-900/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-primary/10 dark:bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
 
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
@@ -44,9 +44,9 @@
                     </div>
                 </div>
 
-                <div class="border-t border-gray-100 dark:border-gray-800 pt-10">
-                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600">
+                <div class="border-t border-slate-100 dark:border-white/5 pt-10">
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-success/20 text-success">
                             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
                         </span>
                         Ingredients
@@ -71,15 +71,15 @@
                     </div>
                     
                     <button type="button" onclick="addIngredientField()" id="add-ingredient" 
-                        class="mt-6 flex items-center justify-center w-full md:w-auto px-6 py-3 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl text-gray-500 hover:text-orange-600 hover:border-orange-300 hover:bg-orange-50 dark:hover:bg-gray-800 transition-all font-bold text-sm">
+                        class="mt-6 flex items-center justify-center w-full md:w-auto px-6 py-3 border-2 border-dashed border-slate-300 dark:border-white/10 rounded-xl text-slate-500 hover:text-primary hover:border-primary/40 hover:bg-primary/5 dark:hover:bg-white/5 transition-all font-bold text-sm">
                         <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                         Add Another Ingredient
                     </button>
                 </div>
                 
-                <div class="mt-12 pt-8 border-t border-gray-100 dark:border-gray-800 flex justify-center md:justify-end">
+                <div class="mt-12 pt-8 border-t border-slate-100 dark:border-white/5 flex justify-center md:justify-end">
                     <button type="submit" 
-                        class="w-full md:w-auto px-10 py-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white text-lg font-bold rounded-xl shadow-lg shadow-orange-500/30 transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2">
+                        class="w-full md:w-auto px-10 py-4 bg-primary hover:bg-primary/90 text-white text-lg font-bold rounded-xl shadow-lg shadow-primary/30 outline-none focus:ring-4 focus:ring-primary/50 transform hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2">
                         <span>Publish Recipe</span>
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg>
                     </button>
@@ -103,7 +103,7 @@
             <div class="flex-grow">
                 <input type="text" 
                     name="ingredients_name_${ingredientCount}" 
-                    class="flex-grow w-full px-4 py-3 rounded-xl bg-stone-50 dark:bg-gray-800 border border-stone-200 dark:border-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none" 
+                    class="flex-grow w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-[#1f1f1f] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" 
                     placeholder="Enter ingredient" required>
             </div>
             <button type="button" onclick="removeIngredientField(this)" 
