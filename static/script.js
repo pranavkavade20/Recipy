@@ -1,148 +1,150 @@
-//Theme Toggler Functionality
-var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+/**
+ * 🎨 Premium App UI JavaScript
+ * Handles Theming, Dynamic Feed Loading, and Interactions
+ */
 
-// Change the icons inside the button based on previous settings
-if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-    themeToggleLightIcon.classList.remove('hidden');
-} else {
-    themeToggleDarkIcon.classList.remove('hidden');
-}
+// --- Theme Toggler Logic (Bulletproof Class-based logic) ---
+const themeToggleBtns = document.querySelectorAll('.theme-toggle-btn');
+const themeToggleDarkIcons = document.querySelectorAll('.theme-toggle-dark-icon');
+const themeToggleLightIcons = document.querySelectorAll('.theme-toggle-light-icon');
 
-var themeToggleBtn = document.getElementById('theme-toggle');
-
-themeToggleBtn.addEventListener('click', function () {
-
-    // toggle icons inside button
-    themeToggleDarkIcon.classList.toggle('hidden');
-    themeToggleLightIcon.classList.toggle('hidden');
-
-    // if set via local storage previously
-    if (localStorage.getItem('color-theme')) {
-        if (localStorage.getItem('color-theme') === 'light') {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('color-theme', 'dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('color-theme', 'light');
-        }
-
-        // if NOT set via local storage previously
-    } else {
-        if (document.documentElement.classList.contains('dark')) {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('color-theme', 'light');
-        } else {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('color-theme', 'dark');
-        }
-    }
-});
-
-// On page load or when changing themes, best to add inline in `head` to avoid FOUC
+// Initialize theme on load
 if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
     document.documentElement.classList.add('dark');
+    themeToggleLightIcons.forEach(icon => icon.classList.remove('hidden'));
 } else {
-    document.documentElement.classList.remove('dark')
+    document.documentElement.classList.remove('dark');
+    themeToggleDarkIcons.forEach(icon => icon.classList.remove('hidden'));
 }
 
-// Fetch recipes from the API
+function toggleTheme() {
+    // Toggle icons visually across all buttons
+    themeToggleDarkIcons.forEach(icon => icon.classList.toggle('hidden'));
+    themeToggleLightIcons.forEach(icon => icon.classList.toggle('hidden'));
+
+    // Toggle HTML class and save
+    if (document.documentElement.classList.contains('dark')) {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('color-theme', 'light');
+    } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('color-theme', 'dark');
+    }
+}
+
+// Attach event listener to ALL theme buttons
+themeToggleBtns.forEach(btn => {
+    btn.addEventListener('click', toggleTheme);
+});
+
+
+// --- Dynamic Feed Loading ---
 function fetchRecipes() {
     fetch('http://127.0.0.1:8000/recipes/')
         .then(response => response.json())
         .then(data => {
-            // Extract all recipes and similar recipes
-            const allRecipes = data.all_recipes;
-            const similarRecipes = data.similar_recipes;
+            const allRecipes = data.all_recipes || [];
+            const similarRecipes = data.similar_recipes || [];
 
-            // Function to create recipe cards
             function createRecipeCard(recipe) {
                 return `
-                   <a href="/recipe_detail/${recipe.id}" target="_blank" class="block group">
-                                            <div class="group relative overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform group-hover:-translate-y-1 h-full flex flex-col bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
+                    <a href="/recipe_detail/${recipe.id}" target="_blank" onclick="handleRecipeClick('${recipe.id}')" class="group block outline-none">
+                        <div class="relative glass-panel bg-white dark:bg-[#121212] rounded-[2rem] overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(249,115,22,0.3)] border border-gray-100 dark:border-white/5 h-full flex flex-col">
                             
-                            <div class="relative h-48 w-full flex-shrink-0 overflow-hidden">
+                            <div class="relative h-64 w-full overflow-hidden bg-gray-200 dark:bg-gray-800">
                                 <img 
                                     src="${recipe.image_url}" 
                                     alt="${recipe.name}" 
-                                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                                    loading="lazy"
+                                    class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                                 />
-                                <span class="absolute top-4 right-4 px-3 py-1 text-xs font-bold rounded-full bg-green-600 text-white shadow-md z-10">
-                                    ${recipe.diet}
-                                </span>
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-70 group-hover:opacity-90 transition-opacity duration-300"></div>
+                                
+                                <div class="absolute top-4 left-4 flex gap-2 z-10">
+                                    <span class="px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full bg-black/40 backdrop-blur-md text-white border border-white/20">
+                                        ${recipe.diet}
+                                    </span>
+                                </div>
+
+                                <div class="absolute bottom-4 right-4 translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-out z-20">
+                                    <div class="w-14 h-14 rounded-full bg-orange-500 flex items-center justify-center text-white shadow-lg shadow-orange-500/50 hover:scale-110 transition-transform">
+                                        <svg class="w-6 h-6 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                    </div>
+                                </div>
                             </div>
                             
-                            <div class="p-5 flex flex-col flex-grow">
-                                
-                                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 h-[3.5rem] leading-7">
+                            <div class="p-6 flex flex-col flex-grow relative z-10">
+                                <h3 class="text-xl font-black text-gray-900 dark:text-white mb-2 line-clamp-2 leading-snug group-hover:text-orange-500 transition-colors">
                                     ${recipe.name}
                                 </h3>
 
-                                <div class="flex flex-wrap items-center gap-2 text-sm text-gray-600 dark:text-gray-400 mb-4">
-                                    <span class="font-medium">${recipe.cuisine}</span>
-                                    <span class="text-gray-300 dark:text-gray-600">•</span>
-                                    <span class="font-semibold text-orange-500">${recipe.course}</span>
+                                <div class="flex flex-wrap items-center gap-2 text-xs font-bold text-gray-500 dark:text-gray-400 mb-4 uppercase tracking-wider">
+                                    <span>${recipe.cuisine}</span>
+                                    <span class="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-600"></span>
+                                    <span class="text-orange-500">${recipe.course}</span>
                                 </div>
 
-                                <div class="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
-                                    <span class="flex items-center gap-1 text-sm font-semibold text-gray-700 dark:text-gray-300">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <div class="mt-auto pt-4 border-t border-gray-100 dark:border-white/5 flex items-center justify-between">
+                                    <span class="flex items-center gap-1.5 text-sm font-bold text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-white/5 px-3 py-1 rounded-full">
+                                        <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                         ${recipe.prep_time}
-                                    </span>
-                                    
-                                    <span class="text-orange-500 hover:text-orange-600 font-bold transition-colors cursor-pointer text-sm">
-                                        View Recipe &rarr;
                                     </span>
                                 </div>
                             </div>
                         </div>
                     </a>
-                    `;
+                `;
             }
 
-            // Insert all recipes into the 'all-recipes' section
             const allRecipesContainer = document.getElementById('all-recipes');
-            allRecipesContainer.innerHTML = '';
-            allRecipes.forEach(recipe => {
-                allRecipesContainer.innerHTML += createRecipeCard(recipe);
-            });
+            if (allRecipesContainer) {
+                allRecipesContainer.innerHTML = allRecipes.map(recipe => createRecipeCard(recipe)).join('');
+            }
 
-            // Insert similar recipes into the 'similar-recipes' section
             const similarRecipesContainer = document.getElementById('similar-recipes');
-            similarRecipesContainer.innerHTML = '';
-            similarRecipes.forEach(recipe => {
-                similarRecipesContainer.innerHTML += createRecipeCard(recipe);
-            });
+            if (similarRecipesContainer) {
+                similarRecipesContainer.innerHTML = similarRecipes.map(recipe => createRecipeCard(recipe)).join('');
+            }
         })
         .catch(error => {
             console.error('Error fetching data:', error);
         });
 }
 
-// Handle recipe click and make API call
 function handleRecipeClick(recipeId) {
-    // Show the toast message using Toastify
-    Toastify({
-        text: "You clicked this recipe!",
-        duration: 3000,  // Display for 3 seconds
-        close: true,  // Show close button
-        gravity: "bottom",  // Position at the bottom
-        position: "right",  // Position at the right
-        backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)", // Greenish color
-    }).showToast();
+    if (typeof Toastify !== 'undefined') {
+        Toastify({
+            text: "Loading recipe...",
+            duration: 3000,
+            close: false,
+            gravity: "bottom", 
+            position: "center", 
+            style: {
+                background: "rgba(255, 255, 255, 0.1)",
+                backdropFilter: "blur(16px)",
+                WebkitBackdropFilter: "blur(16px)",
+                color: "#fff",
+                borderRadius: "100px",
+                padding: "12px 24px",
+                fontSize: "14px",
+                fontWeight: "700",
+                boxShadow: "0 10px 40px rgba(0,0,0,0.5)",
+                border: "1px solid rgba(255,255,255,0.1)",
+                marginBottom: "80px"
+            }
+        }).showToast();
+    }
 
-    // Call the API with the recipe ID
     fetch(`http://127.0.0.1:8000/activity/?recipe_id=${recipeId}`)
         .then(response => response.json())
         .then(data => {
-            console.log('Activity recorded for recipe:', recipeId);
-            console.log('API response:', data);
-            fetchRecipes();
+            console.log('Activity tracked:', recipeId);
         })
         .catch(error => {
             console.error('Error calling activity API:', error);
         });
 }
+
 fetchRecipes();
 
 const openButton = document.getElementById("open-button");
@@ -151,14 +153,16 @@ const slideOver = document.getElementById("slide-over");
 const backdrop = document.getElementById("backdrop");
 const panel = document.getElementById("panel");
 
-openButton.addEventListener("click", () => {
+openButton?.addEventListener("click", () => {
     slideOver.classList.remove("hidden");
-    backdrop.classList.remove("opacity-0");
-    panel.classList.remove("translate-x-full");
+    requestAnimationFrame(() => {
+        backdrop.classList.remove("opacity-0");
+        panel.classList.remove("translate-x-full");
+    });
 });
 
-closeButton.addEventListener("click", () => {
+closeButton?.addEventListener("click", () => {
     backdrop.classList.add("opacity-0");
     panel.classList.add("translate-x-full");
-    setTimeout(() => slideOver.classList.add("hidden"), 500);
+    setTimeout(() => slideOver.classList.add("hidden"), 500); 
 });
