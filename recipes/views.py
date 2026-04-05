@@ -487,8 +487,8 @@ def remove_saved_recipe(request):
 
 def get_recipe_videos(request, recipe_id):
     recipe = get_object_or_404(Recipe, id=recipe_id)
-    # Adding 'shorts' helps find vertical content, but normal videos work too
-    search_query = f"{recipe.name} recipe shorts"
+    # Fetch standard recipe videos
+    search_query = f"{recipe.name} recipe"
 
     youtube_url = "https://www.googleapis.com/youtube/v3/search"
     api_key = config('YOUTUBE_API_KEY', default=None)
@@ -496,33 +496,50 @@ def get_recipe_videos(request, recipe_id):
     if not api_key:
         return JsonResponse({"error": "API Key not found"}, status=500)
 
-    params = {
+    # Standard videos
+    params_long = {
         "part": "snippet",
-        "q": search_query,
+        "q": f"{recipe.name} recipe",
         "key": api_key,
-        "maxResults": 2,
+        "maxResults": 1,
+        "type": "video"
+    }
+    
+    # Shorts
+    params_short = {
+        "part": "snippet",
+        "q": f"{recipe.name} recipe shorts",
+        "key": api_key,
+        "maxResults": 5,
         "type": "video"
     }
 
     try:
-        response = requests.get(youtube_url, params=params)
-        
-        if response.status_code != 200:
-            return JsonResponse({"error": "YouTube API error"}, status=response.status_code)
-
-        data = response.json()
         video_data = []
         
-        for item in data.get("items", []):
-            # Try to get the highest resolution thumbnail available
-            thumbnails = item["snippet"]["thumbnails"]
-            thumbnail_url = thumbnails.get("high", thumbnails.get("medium", {})).get("url")
-            
-            video_data.append({
-                "title": item["snippet"]["title"],
-                "video_id": item["id"]["videoId"],
-                "thumbnail": thumbnail_url
-            })
+        # Fetch standard video
+        res_long = requests.get(youtube_url, params=params_long)
+        if res_long.status_code == 200:
+            for item in res_long.json().get("items", []):
+                thumbnails = item["snippet"]["thumbnails"]
+                thumbnail_url = thumbnails.get("high", thumbnails.get("medium", {})).get("url")
+                video_data.append({
+                    "title": item["snippet"]["title"],
+                    "video_id": item["id"]["videoId"],
+                    "thumbnail": thumbnail_url
+                })
+                
+        # Fetch shorts
+        res_short = requests.get(youtube_url, params=params_short)
+        if res_short.status_code == 200:
+            for item in res_short.json().get("items", []):
+                thumbnails = item["snippet"]["thumbnails"]
+                thumbnail_url = thumbnails.get("high", thumbnails.get("medium", {})).get("url")
+                video_data.append({
+                    "title": item["snippet"]["title"],
+                    "video_id": f"/shorts/{item['id']['videoId']}", # Append /shorts/ so frontend detects it
+                    "thumbnail": thumbnail_url
+                })
 
         return JsonResponse({"videos": video_data})
 

@@ -111,10 +111,7 @@
 
         // --- FIX IS HERE ---
         function getSecureEmbedUrl(videoId) {
-            // 1. Get the current domain (e.g., http://127.0.0.1:8000)
-            const origin = window.location.origin;
-            // 2. Add 'origin' and 'enablejsapi' to the URL
-            return `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&origin=${origin}&enablejsapi=1`;
+            return `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`;
         }
 
        // --- UPDATED VIDEO FETCHING LOGIC ---
@@ -144,8 +141,8 @@
                 if (isShortVideo(video.video_id)) {
                     hasShort = true;
                     shortsHTML += `
-                        <div class="snap-center shrink-0 w-[240px] md:w-auto flex flex-col gap-3">
-                            <div class="bg-black rounded-3xl overflow-hidden shadow-xl border-4 border-gray-800 group relative aspect-[9/16]">
+                        <div class="snap-center shrink-0 flex flex-col gap-3" style="width: 240px;">
+                            <div class="bg-black rounded-3xl overflow-hidden shadow-xl border-4 border-gray-800 group relative" style="aspect-ratio: 9/16;">
                                 <iframe class="absolute inset-0 w-full h-full"
                                     src="${embedUrl}" 
                                     title="YouTube Short" 
@@ -164,7 +161,7 @@
                     // Added referrerpolicy below
                     longVideosHTML += `
                         <div class="flex flex-col gap-4 w-full">
-                            <div class="bg-black rounded-3xl overflow-hidden shadow-2xl border border-gray-200 dark:border-gray-800 group aspect-video relative w-full">
+                            <div class="bg-black rounded-3xl overflow-hidden shadow-2xl border border-gray-200 dark:border-gray-800 group relative w-full" style="aspect-ratio: 16/9;">
                                 <iframe class="absolute inset-0 w-full h-full"
                                     src="${embedUrl}" 
                                     title="Recipe Video" 
@@ -206,7 +203,7 @@
         async function fetchRecipeData() {
             try {
                 // Ensure this URL matches your backend route
-                const response = await fetch('http://127.0.0.1:8000/recipe/{{id}}/');
+                const response = await fetch('/recipe/{{id}}/');
                 if (!response.ok) throw new Error('Network response was not ok');
                 const data = await response.json();
                 
