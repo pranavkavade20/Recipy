@@ -2,134 +2,159 @@
 {% block title %}Search Recipes | Recipy{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-slate-50 dark:bg-base transition-colors duration-500 pb-20 overflow-x-hidden">
-    
-    <div class="relative pt-8 pb-12 md:pt-16 md:pb-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-[#121212] border-b border-slate-100 dark:border-white/5 rounded-b-[2.5rem] md:rounded-b-[3.5rem] shadow-sm z-20">
+<div class="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-500 pb-20 overflow-x-hidden">
+
+    <div
+        class="relative pt-12 pb-16 md:pt-16 md:pb-24 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-white/5 shadow-sm z-20 overflow-hidden">
+        <div
+            class="absolute top-0 left-1/4 w-96 h-96 bg-yellow-400/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob pointer-events-none">
+        </div>
+        <div
+            class="absolute bottom-0 right-1/4 w-96 h-96 bg-green-500/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob pointer-events-none">
+        </div>
+
         <div class="container mx-auto max-w-4xl text-center relative z-10">
-            
-            <h2 class="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-3 md:mb-4 tracking-tight leading-tight">
-                Find Your <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Perfect Meal</span>
+
+            <h2
+                class="text-4xl md:text-6xl font-black text-[#00012A] dark:text-white mb-4 tracking-tighter uppercase leading-none">
+                Find Your <span class="text-orange-500 block sm:inline">Perfect Meal</span>
             </h2>
-            <p class="text-base md:text-lg text-slate-500 dark:text-slate-400 mb-8 md:mb-10 max-w-xl mx-auto">
+            <p class="text-base md:text-lg text-slate-500 dark:text-slate-400 mb-10 max-w-xl mx-auto font-medium">
                 Search by ingredient, dish name, or dietary preference.
             </p>
 
-            <div class="relative max-w-2xl mx-auto group">
-                <div class="absolute -inset-1 bg-gradient-to-r from-primary to-accent rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
-                
-                <form method="get" action="." class="relative">
-                    <div class="relative flex items-center bg-white dark:bg-[#121212] rounded-2xl shadow-xl transition-transform transform group-hover:scale-[1.01]">
-                        <div class="absolute inset-y-0 left-0 flex items-center pl-4 md:pl-6 pointer-events-none">
-                            <i data-lucide="search" class="w-5 h-5 md:w-6 md:h-6 text-slate-400"></i>
-                        </div>
-                        
-                        <input type="search" 
-                               id="search-input" 
-                               name="q" 
-                               class="block w-full py-4 pl-12 pr-28 md:py-5 md:pl-16 md:pr-32 text-base md:text-lg text-slate-900 bg-transparent border-none rounded-2xl focus:ring-0 placeholder-slate-400 dark:text-white dark:placeholder-slate-500 truncate" 
-                               placeholder="What are you craving?" 
-                               autocomplete="off" 
-                               value="{{ request.GET.q }}"
-                               required />
-                        
-                        <div class="absolute right-1.5 bottom-1.5 md:right-2.5 md:bottom-2.5">
-                            <button type="submit" class="bg-primary hover:bg-primary/90 text-white font-bold rounded-xl text-sm px-4 py-2.5 md:px-6 md:py-3 transition-colors shadow-md shadow-primary/30">
-                                Search
-                            </button>
-                        </div>
+            <div class="relative max-w-3xl mx-auto z-20">
+                <form method="get" action="." class="relative w-full">
+                    <div
+                        class="flex items-center bg-white dark:bg-slate-800 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)] border border-slate-100 dark:border-white/10 p-1.5 sm:p-2 pl-4 sm:pl-6 transition-transform transform hover:scale-[1.01] focus-within:ring-4 focus-within:ring-orange-500/20">
+                        <i data-lucide="search" class="w-5 h-5 sm:w-6 sm:h-6 text-slate-400 shrink-0"></i>
+
+                        <input type="search" id="search-input" name="q"
+                            class="w-full py-3 sm:py-4 px-3 sm:px-4 text-base sm:text-lg text-[#00012A] dark:text-white bg-transparent border-none rounded-full focus:ring-0 placeholder-slate-400 font-medium"
+                            placeholder="What are you craving?" autocomplete="off" value="{{ request.GET.q }}"
+                            required />
+
+                        <button type="submit"
+                            class="bg-[#4F4AD7] hover:bg-[#3d38bf] dark:bg-orange-500 dark:hover:bg-orange-600 text-white font-bold rounded-full text-sm sm:text-base px-5 sm:px-8 py-3 sm:py-4 transition-colors shadow-lg shrink-0">
+                            Search
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
-
-        <div class="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 w-48 h-48 md:w-64 md:h-64 bg-primary/20 dark:bg-primary/10 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
-        <div class="absolute bottom-0 right-0 translate-x-1/3 translate-y-1/3 w-64 h-64 md:w-96 md:h-96 bg-accent/20 dark:bg-accent/10 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
     </div>
 
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 -mt-6 md:-mt-8 relative z-30">
-        
-        <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl p-3 md:p-4 rounded-2xl shadow-lg border border-white/20 dark:border-gray-700 mb-8 md:mb-10">
-            <h3 class="text-[10px] md:text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-3 ml-2">Filter by Diet</h3>
-            
-            <div class="relative group/scroll">
-                <div class="flex gap-2 md:gap-3 overflow-x-auto pb-2 no-scrollbar snap-x snap-mandatory">
-                    
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 mt-8 relative z-30">
+
+        <div class="mb-10 text-center">
+
+            <div class="relative group/scroll max-w-4xl mx-auto px-4 sm:px-0">
+                <div class="flex gap-2 md:gap-3 overflow-x-auto md:flex-wrap md:justify-center pb-2 no-scrollbar snap-x snap-mandatory md:snap-none md:overflow-visible">
+
                     {% with current_diet=request.GET.diet %}
-                    
-                    <a href="?diet=Vegetarian" class="diet-chip snap-start {% if current_diet == 'Vegetarian' %}active{% endif %}">
-                        <span class="chip-icon bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300"><i data-lucide="leaf" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
+
+                    <a href="?diet=Vegetarian"
+                        class="diet-chip snap-start {% if current_diet == 'Vegetarian' %}active{% endif %}">
+                        <span class="chip-icon bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300"><i
+                                data-lucide="leaf" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
                         <span>Veg</span>
                     </a>
-                    
-                    <a href="?diet=Non Vegeterian" class="diet-chip snap-start {% if current_diet == 'Non Vegeterian' %}active{% endif %}">
-                        <span class="chip-icon bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-300"><i data-lucide="drumstick" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
+
+                    <a href="?diet=Non Vegeterian"
+                        class="diet-chip snap-start {% if current_diet == 'Non Vegeterian' %}active{% endif %}">
+                        <span class="chip-icon bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-300"><i
+                                data-lucide="drumstick" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
                         <span>Non-Veg</span>
                     </a>
-                    
-                    <a href="?diet=Vegan" class="diet-chip snap-start {% if current_diet == 'Vegan' %}active{% endif %}">
-                        <span class="chip-icon bg-emerald-100 text-emerald-600 dark:bg-emerald-900 dark:text-emerald-300"><i data-lucide="sprout" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
+
+                    <a href="?diet=Vegan"
+                        class="diet-chip snap-start {% if current_diet == 'Vegan' %}active{% endif %}">
+                        <span
+                            class="chip-icon bg-emerald-100 text-emerald-600 dark:bg-emerald-900 dark:text-emerald-300"><i
+                                data-lucide="sprout" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
                         <span>Vegan</span>
                     </a>
-                    
-                    <a href="?diet=Eggetarian" class="diet-chip snap-start {% if current_diet == 'Eggetarian' %}active{% endif %}">
-                        <span class="chip-icon bg-yellow-100 text-yellow-600 dark:bg-yellow-900 dark:text-yellow-300"><i data-lucide="egg" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
+
+                    <a href="?diet=Eggetarian"
+                        class="diet-chip snap-start {% if current_diet == 'Eggetarian' %}active{% endif %}">
+                        <span class="chip-icon bg-yellow-100 text-yellow-600 dark:bg-yellow-900 dark:text-yellow-300"><i
+                                data-lucide="egg" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
                         <span>Eggetarian</span>
                     </a>
-                    
-                    <a href="?diet=Gluten Free" class="diet-chip snap-start {% if current_diet == 'Gluten Free' %}active{% endif %}">
-                        <span class="chip-icon bg-amber-100 text-amber-600 dark:bg-amber-900 dark:text-amber-300"><i data-lucide="wheat-off" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
+
+                    <a href="?diet=Gluten Free"
+                        class="diet-chip snap-start {% if current_diet == 'Gluten Free' %}active{% endif %}">
+                        <span class="chip-icon bg-amber-100 text-amber-600 dark:bg-amber-900 dark:text-amber-300"><i
+                                data-lucide="wheat-off" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
                         <span>Gluten-Free</span>
                     </a>
-                    
-                    <a href="?diet=Diabetic Friendly" class="diet-chip snap-start {% if current_diet == 'Diabetic Friendly' %}active{% endif %}">
-                        <span class="chip-icon bg-teal-100 text-teal-600 dark:bg-teal-900 dark:text-teal-300"><i data-lucide="heart-pulse" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
+
+                    <a href="?diet=Diabetic Friendly"
+                        class="diet-chip snap-start {% if current_diet == 'Diabetic Friendly' %}active{% endif %}">
+                        <span class="chip-icon bg-teal-100 text-teal-600 dark:bg-teal-900 dark:text-teal-300"><i
+                                data-lucide="heart-pulse" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
                         <span>Diabetic</span>
                     </a>
-                    
-                    <a href="?diet=High Protein Vegetarian" class="diet-chip snap-start {% if current_diet == 'High Protein Vegetarian' %}active{% endif %}">
-                        <span class="chip-icon bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300"><i data-lucide="dumbbell" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
+
+                    <a href="?diet=High Protein Vegetarian"
+                        class="diet-chip snap-start {% if current_diet == 'High Protein Vegetarian' %}active{% endif %}">
+                        <span class="chip-icon bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300"><i
+                                data-lucide="dumbbell" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
                         <span>High-Pro Veg</span>
                     </a>
 
-                     <a href="?diet=High Protein Non Vegetarian" class="diet-chip snap-start {% if current_diet == 'High Protein Non Vegetarian' %}active{% endif %}">
-                        <span class="chip-icon bg-orange-100 text-orange-600 dark:bg-orange-900 dark:text-orange-300"><i data-lucide="biceps-flexed" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
+                    <a href="?diet=High Protein Non Vegetarian"
+                        class="diet-chip snap-start {% if current_diet == 'High Protein Non Vegetarian' %}active{% endif %}">
+                        <span class="chip-icon bg-orange-100 text-orange-600 dark:bg-orange-900 dark:text-orange-300"><i
+                                data-lucide="biceps-flexed" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
                         <span>High-Pro NV</span>
                     </a>
-                    
+
                     {% endwith %}
                 </div>
-                <div class="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-white dark:from-gray-800 to-transparent pointer-events-none md:hidden"></div>
+                <div
+                    class="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-slate-50 dark:from-slate-900 to-transparent pointer-events-none md:hidden">
+                </div>
             </div>
         </div>
 
-        <div id="results" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 min-h-[300px]">
+        <div id="results"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 min-h-[300px]">
             {% for recipe in recipes %}
             <a href="{% url 'recipe_detail' recipe.id %}" class="block group h-full">
-                <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-stone-100 dark:border-gray-700 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full flex flex-col">
-                    
-                    <div class="relative h-48 sm:h-56 overflow-hidden">
-                        <img src="{{ recipe.image_url.url }}" alt="{{ recipe.name }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-70 group-hover:opacity-90"></div>
-                        
+                <div
+                    class="bg-white dark:bg-slate-800 rounded-[2rem] shadow-sm border border-slate-100 dark:border-white/5 overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 h-full flex flex-col">
+
+                    <div class="relative h-56 sm:h-64 overflow-hidden">
+                        <img src="{{ recipe.image_url.url }}" alt="{{ recipe.name }}"
+                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                            loading="lazy" />
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-70 group-hover:opacity-90">
+                        </div>
+
                         <span class="absolute top-4 left-4 px-3 py-1 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest backdrop-blur-md shadow-sm border border-white/20
                             {% if 'Non' in recipe.diet %} bg-red-500/90 text-white
-                            {% elif 'Veg' in recipe.diet %} bg-success/90 text-white
-                            {% else %} bg-primary/90 text-white {% endif %}">
+                            {% elif 'Veg' in recipe.diet %} bg-green-500/90 text-white
+                            {% else %} bg-orange-500/90 text-white {% endif %}">
                             {{ recipe.diet }}
                         </span>
                     </div>
 
-                    <div class="p-4 md:p-5 flex flex-col flex-grow">
-                        <h3 class="text-lg md:text-xl font-bold text-slate-900 dark:text-white mb-2 leading-tight group-hover:text-primary transition-colors line-clamp-2">
+                    <div class="p-5 flex flex-col flex-grow">
+                        <h3
+                            class="text-xl font-bold text-[#00012A] dark:text-white mb-2 leading-tight group-hover:text-orange-500 transition-colors line-clamp-2">
                             {{ recipe.name }}
                         </h3>
-                        
-                        <div class="mt-auto pt-3 md:pt-4 border-t border-slate-100 dark:border-white/5 flex items-center justify-between text-xs md:text-sm">
-                            <div class="flex items-center text-slate-500 dark:text-slate-400">
-                                <i data-lucide="chef-hat" class="w-3.5 h-3.5 md:w-4 md:h-4 mr-1.5"></i>
+
+                        <div
+                            class="mt-auto pt-4 border-t border-slate-100 dark:border-white/5 flex items-center justify-between text-sm">
+                            <div class="flex items-center text-slate-500 dark:text-slate-400 font-medium tracking-wide">
+                                <i data-lucide="chef-hat" class="w-4 h-4 mr-1.5 text-orange-500"></i>
                                 {{ recipe.cuisine }}
                             </div>
-                            <span class="font-bold text-accent bg-accent/10 px-3 py-1 rounded-full uppercase">
+                            <span
+                                class="font-bold text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-500/10 px-3 py-1 rounded-full uppercase text-xs">
                                 {{ recipe.course }}
                             </span>
                         </div>
@@ -138,12 +163,15 @@
             </a>
             {% empty %}
             <div class="col-span-full flex flex-col items-center justify-center py-20 text-center">
-                <div class="w-20 h-20 md:w-24 md:h-24 bg-slate-100 dark:bg-[#1f1f1f] rounded-full flex items-center justify-center mb-4">
+                <div
+                    class="w-20 h-20 md:w-24 md:h-24 bg-slate-100 dark:bg-[#1f1f1f] rounded-full flex items-center justify-center mb-4">
                     <i data-lucide="search-x" class="w-8 h-8 md:w-10 md:h-10 text-slate-400"></i>
                 </div>
                 <h3 class="text-lg md:text-xl font-bold text-slate-900 dark:text-white">No recipes found</h3>
-                <p class="text-sm md:text-base text-slate-500 dark:text-slate-400 mt-2">Try adjusting your filters or search term.</p>
-                <a href="{% url 'search_page' %}" class="mt-6 text-primary hover:underline font-semibold text-sm">Clear all filters</a>
+                <p class="text-sm md:text-base text-slate-500 dark:text-slate-400 mt-2">Try adjusting your filters or
+                    search term.</p>
+                <a href="{% url 'search_page' %}" class="mt-6 text-primary hover:underline font-semibold text-sm">Clear
+                    all filters</a>
             </div>
             {% endfor %}
         </div>
@@ -155,17 +183,19 @@
     .no-scrollbar::-webkit-scrollbar {
         display: none;
     }
+
     .no-scrollbar {
         -ms-overflow-style: none;
         scrollbar-width: none;
     }
-    
+
     /* Diet Chip Styles */
     .diet-chip {
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        padding: 0.35rem 0.85rem 0.35rem 0.35rem; /* responsive padding */
+        padding: 0.35rem 0.85rem 0.35rem 0.35rem;
+        /* responsive padding */
         background-color: white;
         border: 1px solid #e5e7eb;
         border-radius: 9999px;
@@ -177,6 +207,7 @@
         box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
         cursor: pointer;
     }
+
     /* Dark Mode for Chip */
     :is(.dark .diet-chip) {
         background-color: #1f2937;
@@ -186,14 +217,18 @@
 
     .diet-chip:hover {
         transform: translateY(-1px);
-        border-color: #f97316; /* orange-500 */
+        border-color: #f97316;
+        /* orange-500 */
     }
 
     .diet-chip.active {
-        background-color: #fff7ed; /* orange-50 */
+        background-color: #fff7ed;
+        /* orange-50 */
         border-color: #f97316;
-        color: #ea580c; /* orange-600 */
+        color: #ea580c;
+        /* orange-600 */
     }
+
     :is(.dark .diet-chip.active) {
         background-color: rgba(249, 115, 22, 0.2);
         color: #fb923c;
@@ -207,12 +242,13 @@
         height: 1.75rem;
         border-radius: 9999px;
     }
-    
+
     @media (min-width: 768px) {
         .diet-chip {
             font-size: 0.875rem;
             padding: 0.5rem 1rem 0.5rem 0.5rem;
         }
+
         .chip-icon {
             width: 2rem;
             height: 2rem;
@@ -232,7 +268,7 @@
         const query = this.value.trim();
 
         if (!query) {
-             // Optional: Handle empty state
+            // Optional: Handle empty state
             return;
         }
 
@@ -257,15 +293,15 @@
                     }
 
                     data.recipes.forEach((recipe) => {
-                        let badgeClass = "bg-primary/90";
+                        let badgeClass = "bg-orange-500/90";
                         if (recipe.diet.includes("Non")) badgeClass = "bg-red-500/90";
-                        else if (recipe.diet.includes("Veg")) badgeClass = "bg-success/90";
+                        else if (recipe.diet.includes("Veg")) badgeClass = "bg-green-500/90";
 
                         resultsContainer.innerHTML += `
                         <a href="/recipe_detail/${recipe.id}" class="block group h-full fade-in">
-                            <div class="bg-white dark:bg-[#121212] rounded-3xl shadow-sm border border-slate-100 dark:border-white/5 overflow-hidden hover:shadow-[0_20px_40px_-20px_rgba(249,115,22,0.4)] hover:-translate-y-2 transition-all duration-500 h-full flex flex-col">
+                            <div class="bg-white dark:bg-slate-800 rounded-[2rem] shadow-sm border border-slate-100 dark:border-white/5 overflow-hidden hover:shadow-[0_20px_40px_-20px_rgba(249,115,22,0.4)] hover:-translate-y-2 transition-all duration-500 h-full flex flex-col">
                                 
-                                <div class="relative h-48 sm:h-56 overflow-hidden">
+                                <div class="relative h-56 sm:h-64 overflow-hidden">
                                     <img src="${recipe.image_url}" alt="${recipe.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-70 group-hover:opacity-90"></div>
                                     
@@ -274,17 +310,17 @@
                                     </span>
                                 </div>
 
-                                <div class="p-4 md:p-5 flex flex-col flex-grow">
-                                    <h3 class="text-lg md:text-xl font-bold text-slate-900 dark:text-white mb-2 leading-tight group-hover:text-primary transition-colors line-clamp-2">
+                                <div class="p-5 flex flex-col flex-grow">
+                                    <h3 class="text-xl font-bold text-[#00012A] dark:text-white mb-2 leading-tight group-hover:text-orange-500 transition-colors line-clamp-2">
                                         ${recipe.name}
                                     </h3>
                                     
-                                    <div class="mt-auto pt-3 md:pt-4 border-t border-slate-100 dark:border-white/5 flex items-center justify-between text-xs md:text-sm">
-                                        <div class="flex items-center text-slate-500 dark:text-slate-400">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chef-hat mr-1.5 w-3.5 h-3.5 md:w-4 md:h-4"><path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/><line x1="6" x2="18" y1="17" y2="17"/></svg>
+                                    <div class="mt-auto pt-4 border-t border-slate-100 dark:border-white/5 flex items-center justify-between text-sm">
+                                        <div class="flex items-center text-slate-500 dark:text-slate-400 font-medium tracking-wide">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chef-hat mr-1.5 w-4 h-4 text-orange-500"><path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/><line x1="6" x2="18" y1="17" y2="17"/></svg>
                                             ${recipe.cuisine}
                                         </div>
-                                        <span class="font-bold text-accent bg-accent/10 px-3 py-1 rounded-full uppercase">
+                                        <span class="font-bold text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-500/10 px-3 py-1 rounded-full uppercase text-xs">
                                             ${recipe.course}
                                         </span>
                                     </div>
@@ -293,7 +329,7 @@
                         </a>
                         `;
                     });
-                    
+
                     // RE-INITIALIZE ICONS for the newly added HTML
                     lucide.createIcons();
                 })

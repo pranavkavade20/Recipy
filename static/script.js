@@ -1,8 +1,3 @@
-/**
- * 🎨 Premium App UI JavaScript
- * Handles Theming, Dynamic Feed Loading, and Interactions
- */
-
 // --- Theme Toggler Logic (Bulletproof Class-based logic) ---
 const themeToggleBtns = document.querySelectorAll('.theme-toggle-btn');
 const themeToggleDarkIcons = document.querySelectorAll('.theme-toggle-dark-icon');

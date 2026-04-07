@@ -32,102 +32,88 @@
 </head>
 <body class="bg-white dark:bg-base text-slate-900 dark:text-slate-50 transition-colors duration-200 selection:bg-primary/20 selection:text-primary">
 
-<nav class="sticky top-0 z-50 w-full nav-glass border-b border-slate-200 dark:border-white/5 transition-all duration-200">
+<nav class="absolute top-0 z-50 w-full transition-all duration-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-[72px]">
+        <div class="flex justify-between items-center h-24">
             
-            <!-- Left: Logo & Links -->
-            <div class="flex items-center gap-8">
-                <a href="{% url 'home' %}" class="flex items-center gap-3 group outline-none">
-                    <img src="{% static 'images/logo.png' %}" alt="Recipy Logo" class="h-8 sm:h-10 w-auto object-contain transition-transform group-hover:scale-105 duration-300 drop-shadow-sm">
-                    <span class="text-xl sm:text-2xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent transition-all duration-300 hidden md:block">
+            <!-- Left: Logo & Branding -->
+            <div class="flex items-center gap-4">
+                <button id="mobile-menu-button" class="md:hidden p-2 text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
+                </button>
+                <a href="{% url 'home' %}" class="flex items-center gap-2 group outline-none">
+                    <img src="{% static 'images/logo.png' %}" alt="Recipy Logo" class="h-8 w-auto object-contain transition-transform group-hover:scale-105 duration-300 drop-shadow-sm">
+                    <span class="text-xl font-black tracking-tight text-slate-900 dark:text-white uppercase">
                         Recipy
                     </span>
                 </a>
-
-                <div class="hidden lg:flex items-center space-x-6">
-                    <a href="{% url 'home' %}" class="text-sm font-semibold text-slate-900 dark:text-white hover:text-primary dark:hover:text-primary transition-colors">Feed</a>
-                    {% if request.user.is_authenticated %}
-                    <a href="{% url 'search_page' %}" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors">Explore</a>
-                    <a href="{% url 'dashboard' %}" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors">Meal Plans</a>
-                    
-                    <!-- Easy Create Dropdown -->
-                    <div class="relative group">
-                        <button class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-1">
-                            Create <svg class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                        </button>
-                        <div class="absolute left-0 mt-2 w-48 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-white/40 dark:border-white/10 rounded-2xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 py-2 translate-y-2 group-hover:translate-y-0">
-                            <a href="{% url 'add_recipe'%}" class="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50/50 dark:hover:bg-white/5 transition-colors"><svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> Add Recipe</a>
-                            <a href="{% url 'add_meal_plan'%}" class="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50/50 dark:hover:bg-white/5 transition-colors"><svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg> Plan Meal</a>
-                        </div>
-                    </div>
-                    {% endif %}
-                </div>
             </div>
 
-            <!-- Center: Search Bar -->
-            <div class="hidden md:flex flex-1 max-w-lg mx-8 relative group">
-                <form action="{% url 'search_page' %}" method="GET" class="w-full">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <svg class="h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                    </div>
-                    <input type="text" name="query" class="block w-full pl-11 pr-4 py-2.5 border border-transparent dark:border-white/5 rounded-full bg-slate-100/70 dark:bg-slate-800/50 backdrop-blur-md text-slate-900 dark:text-white placeholder-slate-400 focus:border-primary/30 focus:ring-4 focus:ring-primary/20 focus:bg-white/90 dark:focus:bg-slate-900/90 sm:text-sm transition-all duration-300" placeholder="Search recipes, tags (e.g. Vegan)...">
-                </form>
-            </div>
-
-            <!-- Right: Actions & Profile -->
-            <div class="flex items-center space-x-3 sm:space-x-4">
+            <!-- Center: Navigation Links -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="{% url 'home' %}" class="text-sm font-bold text-slate-900 dark:text-white hover:text-orange-500 dark:hover:text-orange-400 transition-colors">Feed</a>
                 {% if request.user.is_authenticated %}
-                <a href="{% url 'get_saved_recipes' %}" class="relative p-2 text-slate-500 hover:text-primary dark:text-slate-400 transition-colors rounded-full hover:bg-slate-100 dark:hover:bg-white/10 group">
-                    <svg class="w-6 h-6 transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                    </svg>
-                    {% if count > 0 %}
-                    <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-primary rounded-full border-2 border-white dark:border-base"></span>
-                    {% endif %}
-                </a>
+                <a href="{% url 'search_page' %}" class="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-orange-500 dark:hover:text-orange-400 transition-colors">Explore</a>
+                <a href="{% url 'dashboard' %}" class="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-orange-500 dark:hover:text-orange-400 transition-colors">Meal Plans</a>
                 {% endif %}
+            </div>
 
-                <button id="theme-toggle" class="theme-toggle-btn p-2 text-slate-500 hover:text-accent dark:text-slate-400 transition-colors rounded-full hover:bg-slate-100 dark:hover:bg-white/10">
+            <!-- Right: Call to Action / Profile -->
+            <div class="flex items-center gap-3 sm:gap-4">
+                <button id="theme-toggle" class="theme-toggle-btn p-2 text-slate-900 dark:text-white hover:text-orange-500 transition-colors rounded-full">
                     <svg id="theme-toggle-dark-icon" class="theme-toggle-dark-icon hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
                     <svg id="theme-toggle-light-icon" class="theme-toggle-light-icon hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
                 </button>
 
+                {% if request.user.is_authenticated %}
                 <div class="relative group">
-                    <button class="flex items-center justify-center w-9 h-9 rounded-full bg-slate-100/80 dark:bg-white/10 backdrop-blur-sm border-2 border-transparent hover:border-primary transition-all duration-300 hover:scale-110 focus:outline-none">
-                        {% if request.user.is_authenticated %}
-                            <span class="text-sm font-bold text-slate-700 dark:text-white">{{ request.user.username|slice:":1"|upper }}</span>
-                        {% else %}
-                            <svg class="w-5 h-5 text-slate-500 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                        {% endif %}
+                    <button class="flex items-center justify-center w-10 h-10 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-2 border-transparent transition-all duration-300 focus:outline-none hover:bg-orange-500 dark:hover:bg-orange-500 hover:text-white">
+                        <span class="text-sm font-bold">{{ request.user.username|slice:":1"|upper }}</span>
                     </button>
-                    
-                    <div class="absolute right-0 mt-2 w-56 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-white/40 dark:border-white/10 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 py-2 translate-y-2 group-hover:translate-y-0">
-                        {% if request.user.is_authenticated %}
+                    <!-- Dropdown matching original functionality -->
+                    <div class="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 py-2 translate-y-2 group-hover:translate-y-0">
                         <div class="px-4 py-3 border-b border-slate-100 dark:border-white/10 mb-1">
                             <p class="text-sm font-bold text-slate-900 dark:text-white">{{ request.user.username }}</p>
                             <p class="text-xs text-slate-500 dark:text-slate-400 truncate">{{ request.user.email }}</p>
                         </div>
-                        <a href="{% url 'view_meal_plans'%}" class="block px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5">My Meal Plans</a>
-                        <a href="{% url 'my_recipes'%}" class="block px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5">My Uploads</a>
-                        <a href="{% url 'password_change' %}" class="block px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5">Settings</a>
+                        <div class="py-1">
+                            <a href="{% url 'view_meal_plans'%}" class="flex items-center px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group">
+                                <svg class="w-4 h-4 mr-3 text-slate-400 group-hover:text-orange-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                                My Meal Plans
+                            </a>
+                            <a href="{% url 'my_recipes'%}" class="flex items-center px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group">
+                                <svg class="w-4 h-4 mr-3 text-slate-400 group-hover:text-orange-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                                My Uploads
+                            </a>
+                            <a href="{% url 'password_change'%}" class="flex items-center px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group">
+                                <svg class="w-4 h-4 mr-3 text-slate-400 group-hover:text-orange-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                Account Settings
+                            </a>
+                        </div>
                         <form method="post" action="{% url 'logout' %}" class="mt-1 border-t border-slate-100 dark:border-white/10 pt-1">
                             {% csrf_token %}
-                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm font-bold text-primary hover:bg-orange-50 dark:hover:bg-primary/10">Sign out</button>
+                            <button type="submit" class="flex items-center w-full text-left px-4 py-2 text-sm font-bold text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-500/10 transition-colors group">
+                                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                                Sign out
+                            </button>
                         </form>
-                        {% else %}
-                        <a href="{% url 'login'%}" class="block px-4 py-2 text-sm font-bold text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-white/5">Log in</a>
-                        <a href="{% url 'register'%}" class="block px-4 py-2 text-sm font-bold text-primary hover:bg-orange-50 dark:hover:bg-primary/10">Create account</a>
-                        {% endif %}
                     </div>
                 </div>
+                {% else %}
+                <a href="{% url 'login' %}" class="px-6 py-2.5 rounded-full bg-[#4F4AD7] hover:bg-[#3d38bf] dark:bg-orange-600 dark:hover:bg-orange-500 text-white font-bold text-sm transition-all shadow-md">
+                    Sign In
+                </a>
+                {% endif %}
             </div>
+            
         </div>
     </div>
 </nav>
-
+<main class="w-full mt-20">
 {% block content %}
 {% endblock %}
+</main>
+
 
 <div class="relative z-50 hidden" id="slide-over" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
     <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity opacity-0" id="backdrop" aria-hidden="true"></div>
@@ -175,6 +161,52 @@
     </div>
 </div>
 
+<!-- Mobile Navigation Sidebar -->
+<div id="mobile-menu" class="fixed inset-0 z-[100] hidden overflow-hidden" role="dialog" aria-modal="true">
+    <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" id="mobile-menu-backdrop"></div>
+    <div class="fixed inset-y-0 left-0 flex max-w-full">
+        <div id="mobile-menu-panel" class="w-screen max-w-xs transform -translate-x-full transition-transform duration-300 ease-in-out bg-white dark:bg-slate-900 shadow-2xl">
+            <div class="flex h-full flex-col py-6 px-6">
+                <div class="flex items-center justify-between mb-8">
+                    <div class="flex items-center gap-2">
+                        <img src="{% static 'images/logo.png' %}" alt="Logo" class="h-8 w-auto">
+                        <span class="text-xl font-black text-slate-900 dark:text-white">RECIPY</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button class="theme-toggle-btn p-2 text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors rounded-full">
+                            <svg class="theme-toggle-dark-icon hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                            <svg class="theme-toggle-light-icon hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                        </button>
+                        <button id="mobile-menu-close" class="p-2 text-slate-400 hover:text-slate-500">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
+                    </div>
+                </div>
+                <nav class="space-y-4">
+                    <a href="{% url 'home' %}" class="block text-lg font-bold text-slate-900 dark:text-white hover:text-orange-500">Feed</a>
+                    {% if request.user.is_authenticated %}
+                    <a href="{% url 'search_page' %}" class="block text-lg font-bold text-slate-600 dark:text-slate-300 hover:text-orange-500">Explore</a>
+                    <a href="{% url 'dashboard' %}" class="block text-lg font-bold text-slate-600 dark:text-slate-300 hover:text-orange-500">Meal Plans</a>
+                    <div class="pt-4 border-t border-slate-100 dark:border-white/10 mt-4">
+                        <a href="{% url 'view_meal_plans'%}" class="block py-2 text-sm font-medium text-slate-700 dark:text-slate-200">My Meal Plans</a>
+                        <a href="{% url 'my_recipes'%}" class="block py-2 text-sm font-medium text-slate-700 dark:text-slate-200">My Uploads</a>
+                        <a href="{% url 'password_change'%}" class="block py-2 text-sm font-medium text-slate-700 dark:text-slate-200">Account Settings</a>
+                        <form method="post" action="{% url 'logout' %}" class="mt-4">
+                            {% csrf_token %}
+                            <button type="submit" class="w-full text-left py-2 text-sm font-bold text-orange-500">Sign out</button>
+                        </form>
+                    </div>
+                    {% else %}
+                    <div class="pt-4 border-t border-slate-100 dark:border-white/10 mt-4">
+                        <a href="{% url 'login' %}" class="block py-2 text-lg font-bold text-orange-500">Sign In</a>
+                    </div>
+                    {% endif %}
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
 <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 mt-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="flex flex-col md:flex-row justify-between items-center gap-6">
@@ -194,6 +226,32 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+<script>
+    // Mobile Menu Logic
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenuClose = document.getElementById('mobile-menu-close');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileMenuPanel = document.getElementById('mobile-menu-panel');
+    const mobileMenuBackdrop = document.getElementById('mobile-menu-backdrop');
+
+    function toggleMobileMenu(show) {
+        if (show) {
+            mobileMenu.classList.remove('hidden');
+            setTimeout(() => {
+                mobileMenuPanel.classList.remove('-translate-x-full');
+            }, 10);
+        } else {
+            mobileMenuPanel.classList.add('-translate-x-full');
+            setTimeout(() => {
+                mobileMenu.classList.add('hidden');
+            }, 300);
+        }
+    }
+
+    mobileMenuButton?.addEventListener('click', () => toggleMobileMenu(true));
+    mobileMenuClose?.addEventListener('click', () => toggleMobileMenu(false));
+    mobileMenuBackdrop?.addEventListener('click', () => toggleMobileMenu(false));
+</script>
 <script type="module" src="{% static 'script.js' %}"></script>
 </body>
 </html>
