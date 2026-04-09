@@ -1,11 +1,10 @@
 # recipes_app/management/commands/import_recipes.py
-
 import csv
 import os
 from django.core.management.base import BaseCommand, CommandError
 # Assuming you have already set up your Recipe model in recipes_app.models
 from recipes.models import Recipe 
-
+# Command :  python manage.py import_recipes
 class Command(BaseCommand):
     help = 'Imports recipe data from recipes.csv, generating sequential local image paths (1.jpg, 2.jpg, etc.).'
 
