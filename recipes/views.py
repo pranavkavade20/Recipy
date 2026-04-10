@@ -1,32 +1,23 @@
-#Django Built modules
+import json, requests, faiss
+import numpy as np
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.shortcuts import render
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt # Temporarily for testing, but should be handled via headers
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from django.conf import settings
-from django.http import JsonResponse
-from django.views.decorators.http import require_POST # Ensure UserRecipeActivity model is imported from your models file
-
-# Python modules
-import json, requests,faiss
-import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.decomposition import TruncatedSVD
-from rapidfuzz import fuzz, process
-from fuzzywuzzy import process, fuzz
-
-# Django Files
-from .forms import *
-from .models import Receipe, Ingredients, Recipe, UserRecipeActivity
-from .forms import ReceipeForm, IngredientFormSet
-from .serializers import RecipeSerializer, UserRecipeActivitySerializer
+from rapidfuzz import process, fuzz
 from decouple import config
 
+from .models import Recipe, Ingredient, MealPlanner, UserRecipeActivity, RecipeVideo
+from .forms import RecipeForm, IngredientFormSet, RecipeVideoFormSet, MealPlannerForm
+from .serializers import RecipeSerializer, UserRecipeActivitySerializer
 
 def home(request):
     favorite_recipes = []
@@ -36,142 +27,94 @@ def home(request):
         ).values_list('recipe', flat=True)
 
     recommended_recipes = []
-
     if favorite_recipes:
         all_recipes = list(Recipe.objects.all())
-        if not all_recipes:
-            return render(request, 'home.html', {
-                'section': 'home',
-                'recommended_recipes': [],
-            })
+        if all_recipes:
+            recipe_ids = [r.id for r in all_recipes]
+            recipe_map = {r.id: r for r in all_recipes}
+            recipe_texts = [f"{r.cuisine or ''} {r.course or ''} {r.diet or ''} {r.description or ''}" for r in all_recipes]
 
-        recipe_ids = [r.id for r in all_recipes]
-        recipe_map = {r.id: r for r in all_recipes}
+            vectorizer = TfidfVectorizer(stop_words='english')
+            tfidf_matrix = vectorizer.fit_transform(recipe_texts)
+            
+            n_components = min(50, tfidf_matrix.shape[1] - 1)
+            if n_components > 0:
+                svd = TruncatedSVD(n_components=n_components, random_state=42)
+                reduced_matrix = svd.fit_transform(tfidf_matrix).astype('float32')
 
-        # Combine text features
-        recipe_texts = [f"{r.cuisine} {r.course} {r.diet} {r.ingredients}" for r in all_recipes]
+                faiss_index = faiss.IndexFlatL2(n_components)
+                faiss_index.add(reduced_matrix)
 
-        # TF-IDF vectorization
-        vectorizer = TfidfVectorizer(stop_words='english')
-        tfidf_matrix = vectorizer.fit_transform(recipe_texts)
+                favorite_indices = [recipe_ids.index(fid) for fid in favorite_recipes if fid in recipe_ids]
+                if favorite_indices:
+                    favorite_vectors = reduced_matrix[favorite_indices]
+                    D, I = faiss_index.search(favorite_vectors, k=min(10, len(all_recipes)))
+                    similar_indices = set(i for neighbors in I for i in neighbors if i not in favorite_indices)
+                    recommended_recipes = [recipe_map[recipe_ids[i]] for i in similar_indices][:5]
 
-        # Dimensionality reduction
-        svd = TruncatedSVD(n_components=50, random_state=42)
-        reduced_matrix = svd.fit_transform(tfidf_matrix).astype('float32')
+    return render(request, 'home.html', {'section': 'home', 'recommended_recipes': recommended_recipes})
 
-        # Build FAISS index
-        faiss_index = faiss.IndexFlatL2(50)
-        faiss_index.add(reduced_matrix)
-
-        # Get favorite recipe vectors
-        favorite_indices = [recipe_ids.index(fid) for fid in favorite_recipes if fid in recipe_ids]
-        favorite_vectors = reduced_matrix[favorite_indices]
-
-        # Search for similar recipes
-        D, I = faiss_index.search(favorite_vectors, k=10)
-
-        # Flatten indices and remove favorites
-        similar_indices = set(i for neighbors in I for i in neighbors if i not in favorite_indices)
-
-        # Map indices back to recipes
-        recommended_recipes = [recipe_map[recipe_ids[i]] for i in similar_indices][:5]
-
-    return render(request, 'home.html', {
-        'section': 'home',
-        'recommended_recipes': recommended_recipes,
-    })
-
-#About page
 def about(request):
-    return render(request,'recipes/about.html', {'section':'dashboard'})
+    return render(request, 'recipes/about.html', {'section': 'about'})
 
-#User profile or dashboard
-@login_required 
-def dashboard(request):
-    return render(request,'registration/dashboard.html', {'section':'dashboard'})
-
-#User registeration page
-def register(request):
-    if request.method == 'POST':
-        user_form =UserRegistrationForm(request.POST) 
-        if user_form.is_valid():
-            #Create a new user object but avoid saving it yet.   
-            new_user= user_form.save(commit=False)
-            #set the choosen password
-            new_user.set_password(
-                user_form.cleaned_data['password']
-            )
-            #Save the user object
-            new_user.save()
-            return render(request,'registration/login.html',{'new_user':new_user})
-    else:
-        user_form=UserRegistrationForm()
-    return render(request,'registration/register.html',{'user_form' : user_form})
-
-#Add recipe page
 @login_required
 def add_recipe(request):
     if request.method == 'POST':
-        receipe_form = ReceipeForm(request.POST, request.FILES)
-
-        if receipe_form.is_valid():
-            # Save the recipe instance
-            receipe = receipe_form.save(commit=False)
-            receipe.user = request.user
-            receipe.save()
-
-            # Add ingredients one by one
-            ingredients = [value for key, value in request.POST.items() if key.startswith('ingredients_name_')]
-            for ingredient_name in ingredients:
-                if ingredient_name.strip():  # Skip empty fields
-                    Ingredients.objects.create(receipe=receipe, ingredients_name=ingredient_name.strip())
-
-            return redirect('my_recipes')  # Redirect to the user's recipes
-        else:
-            print(receipe_form.errors)
-
+        recipe_form = RecipeForm(request.POST, request.FILES)
+        if recipe_form.is_valid():
+            recipe = recipe_form.save(commit=False)
+            recipe.author = request.user
+            recipe.save()
+            
+            ingredient_formset = IngredientFormSet(request.POST, instance=recipe)
+            video_formset = RecipeVideoFormSet(request.POST, request.FILES, instance=recipe)
+            
+            if ingredient_formset.is_valid() and video_formset.is_valid():
+                ingredient_formset.save()
+                video_formset.save()
+                return redirect('recipes:my_recipes')
     else:
-        receipe_form = ReceipeForm()
+        recipe_form = RecipeForm()
+        ingredient_formset = IngredientFormSet()
+        video_formset = RecipeVideoFormSet()
 
-    context = {'receipe_form': receipe_form}
-    return render(request, 'recipes/add_receipe.html', context)
+    context = {'recipe_form': recipe_form, 'ingredient_formset': ingredient_formset, 'video_formset': video_formset}
+    return render(request, 'recipes/add_recipe.html', context)
 
-#User Add recipes 
 @login_required
 def my_recipes(request):
-    # Fetch recipes with their related ingredients
-    recipes = Receipe.objects.filter(user=request.user).prefetch_related('ingredients')
+    recipes = Recipe.objects.filter(author=request.user).prefetch_related('ingredients', 'videos')
     return render(request, 'recipes/my_recipes.html', {'recipes': recipes})
-    
-#Update recipe page
+
 @login_required
 def update_recipe(request, recipe_id):
-    recipe = get_object_or_404(Receipe, id=recipe_id, user=request.user)  # Ensure the user owns the recipe
-    ingredient_formset = IngredientFormSet(instance=recipe)
-
+    recipe = get_object_or_404(Recipe, id=recipe_id, author=request.user)
     if request.method == 'POST':
-        recipe_form = ReceipeForm(request.POST, request.FILES, instance=recipe)
+        recipe_form = RecipeForm(request.POST, request.FILES, instance=recipe)
         ingredient_formset = IngredientFormSet(request.POST, instance=recipe)
+        video_formset = RecipeVideoFormSet(request.POST, request.FILES, instance=recipe)
 
-        if recipe_form.is_valid() and ingredient_formset.is_valid():
+        if recipe_form.is_valid() and ingredient_formset.is_valid() and video_formset.is_valid():
             recipe_form.save()
             ingredient_formset.save()
-            return redirect('my_recipes')  # Redirect to the user's recipe list
-        else:
-            print("Errors:", recipe_form.errors, ingredient_formset.errors)
-
+            video_formset.save()
+            return redirect('recipes:my_recipes')
     else:
-        recipe_form = ReceipeForm(instance=recipe)
+        recipe_form = RecipeForm(instance=recipe)
         ingredient_formset = IngredientFormSet(instance=recipe)
+        video_formset = RecipeVideoFormSet(instance=recipe)
 
-    context = {
-        'recipe_form': recipe_form,
-        'ingredient_formset': ingredient_formset,
-        'recipe': recipe,
-    }
+    context = {'recipe_form': recipe_form, 'ingredient_formset': ingredient_formset, 'video_formset': video_formset, 'recipe': recipe}
     return render(request, 'recipes/update_recipe.html', context)
 
-#Add meal plan page.
+@login_required
+def delete_recipe(request, recipe_id):
+    recipe = get_object_or_404(Recipe, id=recipe_id, author=request.user)
+    if request.method == 'POST':
+        recipe.delete()
+        return redirect('recipes:my_recipes')
+    return render(request, 'recipes/delete_recipe.html', {'recipe': recipe})
+
 @login_required
 def add_meal_plan(request):
     if request.method == 'POST':
@@ -180,372 +123,161 @@ def add_meal_plan(request):
             meal_plan = form.save(commit=False)
             meal_plan.user = request.user
             meal_plan.save()
-            return redirect('view_meal_plans')  # Redirect to the meal plans view
+            return redirect('recipes:view_meal_plans')
     else:
         form = MealPlannerForm()
+        form.fields['recipe'].queryset = Recipe.objects.all() # Or limit to user's favorites/own recipes
     return render(request, 'recipes/add_meal_plan.html', {'form': form})
 
-#User check meals(view meal plan page)
 @login_required
 def view_meal_plans(request):
     meal_plans = MealPlanner.objects.filter(user=request.user)
     return render(request, 'recipes/view_meal_plans.html', {'meal_plans': meal_plans})
 
-#Delete recipes 
-@login_required
-def delete_recipe(request, recipe_id):
-    recipe = get_object_or_404(Receipe, id=recipe_id, user=request.user)
-
-    if request.method == 'POST':
-        recipe.delete()
-        return redirect('my_recipes')  # Redirect to the recipe list after deletion
-
-    return render(request, 'recipes/delete_recipe.html', {'recipe': recipe})
-
-# Render recipe detail page
 def recipe_detail(request, id):
-    context = {'id': id}
-    return render(request, 'recipes/recipe_detail.html', context)
+    recipe = get_object_or_404(Recipe, id=id)
+    return render(request, 'recipes/recipe_detail.html', {'recipe': recipe})
 
-# Log user activity for recipes
 class LogUserActivity(APIView):
     def get(self, request):
-        if request.GET.get('recipe_id') is None:
-            return Response({"message": "id required!"}, status=201)
-
-        data = {
-            "user": request.user.id,
-            "recipe": request.GET.get('recipe_id'),
-            "action": "view"
-        }
+        if not request.GET.get('recipe_id'):
+            return Response({"message": "id required!"}, status=400)
+        data = {"user": request.user.id, "recipe": request.GET.get('recipe_id'), "action": "view"}
         serializer = UserRecipeActivitySerializer(data=data)
         if serializer.is_valid():
-            serializer.save(user=request.user)  # Automatically set the logged-in user
-            activities = UserRecipeActivity.objects.filter(user=request.user)
+            serializer.save(user=request.user)
+            activities = UserRecipeActivity.objects.filter(user=request.user, action='view')
             if activities.count() > 5:
-                activities.last().delete()
+                activities.order_by('timestamp').first().delete()
             return Response({"message": "User activity logged successfully!"}, status=201)
-        return Response(serializer.errors, status=200)
+        return Response(serializer.errors, status=400)
 
-# Get similar recipes based on user activity
-def get_similar_recipes_by_user_activity(user_id, top_n=9):
-    try:
-        user_activities = UserRecipeActivity.objects.filter(user_id=user_id)
-        if not user_activities.exists():
-            return []
-
-        recipe_ids = user_activities.values_list('recipe', flat=True).distinct()
-        user_recipes = Recipe.objects.filter(id__in=recipe_ids)
-        descriptions = [recipe.description for recipe in user_recipes]
-        tfidf_vectorizer = TfidfVectorizer(stop_words='english')
-        tfidf_matrix = tfidf_vectorizer.fit_transform(descriptions)
-
-        all_recipes = list(Recipe.objects.all())
-        all_descriptions = [recipe.description for recipe in all_recipes]
-        all_tfidf_matrix = tfidf_vectorizer.transform(all_descriptions)
-
-        similar_recipes = set()
-        for i, user_recipe in enumerate(user_recipes):
-            cosine_sim = cosine_similarity(tfidf_matrix[i], all_tfidf_matrix).flatten()
-            similar_indices = cosine_sim.argsort()[-top_n-1:-1][::-1]
-            for idx in similar_indices:
-                similar_recipe = all_recipes[idx]
-                if similar_recipe != user_recipe and similar_recipe.id not in recipe_ids:
-                    similar_recipes.add(similar_recipe)
-
-        return list(similar_recipes)
-    except Exception as e:
-        print(f"Error: {e}")
-        return []
-
-# API to list recipes and similar recipes based on user activity
 class RecipeAPI(APIView):
     def get(self, request):
-        user_id = request.user.id
         all_recipes = RecipeSerializer(Recipe.objects.all().order_by('?')[:9], many=True)
-        recipes = get_similar_recipes_by_user_activity(user_id)
-        serializer = RecipeSerializer(recipes, many=True)
-        return Response({"all_recipes": all_recipes.data, "similar_recipes": serializer.data})
+        return Response({"all_recipes": all_recipes.data})
 
-# Get similar recipes for a specific recipe
-def get_similar_recipes(recipe_id, top_n=9):
-    try:
-        vectorizer = TfidfVectorizer(stop_words='english')
-        recipe_descriptions = Recipe.objects.all().values_list('description', flat=True)
-        tfidf_matrix = vectorizer.fit_transform(recipe_descriptions)
-
-        target_recipe = Recipe.objects.get(id=recipe_id)
-        all_recipes = list(Recipe.objects.all())
-        target_index = all_recipes.index(target_recipe)
-
-        cosine_sim = cosine_similarity(tfidf_matrix[target_index], tfidf_matrix).flatten()
-        similar_indices = cosine_sim.argsort()[-top_n-1:-1][::-1]
-        similar_indices = [i for i in similar_indices if i != target_index]
-
-        return [all_recipes[idx] for idx in similar_indices]
-    except Exception as e:
-        print(f"Error: {e}")
-        return []
-
-# API to fetch recipe details and similar recipes
 class RecipeDetailAPI(APIView):
     def get(self, request, id):
-        recipe = Recipe.objects.get(id=id)
+        recipe = get_object_or_404(Recipe, id=id)
         serializer = RecipeSerializer(recipe)
-        similar_recipes = get_similar_recipes(id)
-        similar_recipe_serializer = RecipeSerializer(similar_recipes, many=True)
-        return Response({"recipe": serializer.data, "similar_recipes": similar_recipe_serializer.data})
+        return Response({"recipe": serializer.data})
 
-#Serach recipes for user
 @login_required
 def search_user_recipes(request):
-    query = request.GET.get("q", "")  # Get the search query from the URL
-    recipes = None  # Set to None by default
-
-    if request.user.is_authenticated and query:
-        recipes = Receipe.objects.filter(
-            Q(user=request.user) & 
-            (Q(receipe_name__icontains=query) | 
-             Q(ingredients__ingredients_name__icontains=query))
+    query = request.GET.get("q", "")
+    recipes = None
+    if query:
+        recipes = Recipe.objects.filter(
+            Q(author=request.user) & 
+            (Q(name__icontains=query) | Q(ingredients__name__icontains=query))
         ).distinct()
-
     return render(request, "recipes/search_results.html", {"recipes": recipes, "query": query})
-
-# Backend: Adding search functionality
 
 def search_page(request):
     diet_type = request.GET.get('diet', '')
-    
-    # Filter recipes by diet type if selected, otherwise get all
-    if diet_type:
-        recipes = Recipe.objects.filter(diet__iexact=diet_type)[:9]
-    else:
-        recipes = Recipe.objects.all()[:9]
-    return render(request, 'recipes/search.html',{'recipes': recipes, 'diet_type': diet_type})
+    recipes = Recipe.objects.filter(diet__iexact=diet_type)[:9] if diet_type else Recipe.objects.all()[:9]
+    return render(request, 'recipes/search.html', {'recipes': recipes, 'diet_type': diet_type})
 
 def search_recipes(request):
-    """
-    AI-powered search with auto-suggestions.
-    Returns recipes with full image URLs for frontend display.
-    """
     query = request.GET.get('q', '').strip().lower()
     if not query:
         return JsonResponse({'recipes': [], 'suggestions': []}, status=200)
 
-    # Fetch all recipes
-    all_recipes = list(
-        Recipe.objects.all().values(
-            'id', 'name', 'image_url', 'description',
-            'ingredients', 'cuisine', 'course', 'diet'
-        )
-    )
-
+    all_recipes = list(Recipe.objects.all().values('id', 'name', 'image', 'description', 'cuisine', 'course', 'diet'))
     if not all_recipes:
         return JsonResponse({'recipes': [], 'suggestions': []}, status=200)
 
-    # Prepare text data for TF-IDF
-    recipe_texts = [
-        f"{recipe['name']} {recipe.get('ingredients', '')} "
-        f"{recipe.get('cuisine', '')} {recipe.get('course', '')} "
-        f"{recipe.get('diet', '')}".lower()
-        for recipe in all_recipes
-    ]
-
-    recipe_names = [recipe['name'].lower() for recipe in all_recipes]
+    recipe_texts = [f"{r['name']} {r.get('cuisine', '')} {r.get('course', '')} {r.get('diet', '')}".lower() for r in all_recipes]
+    recipe_names = [r['name'].lower() for r in all_recipes]
     recipe_texts.append(query)
 
-    # TF-IDF and cosine similarity
     vectorizer = TfidfVectorizer(stop_words='english')
     tfidf_matrix = vectorizer.fit_transform(recipe_texts)
     similarity_scores = cosine_similarity(tfidf_matrix[-1], tfidf_matrix[:-1]).flatten()
 
-    # Fuzzy matching
     fuzzy_matches = process.extract(query, recipe_names, scorer=fuzz.partial_ratio, limit=5)
-    for match, score in fuzzy_matches:
+    for match, score, index in fuzzy_matches:
         if score > 70:
-            try:
-                index = recipe_names.index(match)
-                similarity_scores[index] += score / 100
-            except ValueError:
-                pass
+            similarity_scores[index] += score / 100
 
-    # Get top 5 results
     top_indices = np.argsort(similarity_scores)[::-1][:5]
-
     matched_recipes = []
+    
     for i in top_indices:
         if similarity_scores[i] > 0.3:
-            recipe = all_recipes[i]
-
-            # Build full image URL from media/recipe/
-            image_name = recipe['image_url'] or ""
-            image_url = ""
-            if image_name:
-                image_url = request.build_absolute_uri(f"{settings.MEDIA_URL}{image_name}")
-
-
+            r = all_recipes[i]
+            image_url = request.build_absolute_uri(f"{settings.MEDIA_URL}{r['image']}") if r['image'] else ""
             matched_recipes.append({
-                'id': recipe['id'],
-                'name': recipe['name'],
-                'image_url': image_url,  # ✅ full URL
-                'description': recipe.get('description', ''),
-                'ingredients': recipe.get('ingredients', ''),
-                'cuisine': recipe.get('cuisine', 'Unknown'),
-                'course': recipe.get('course', 'Unknown'),
-                'diet': recipe.get('diet', 'Unknown'),
+                'id': r['id'], 'name': r['name'], 'image_url': image_url,
+                'description': r.get('description', ''), 'cuisine': r.get('cuisine', 'Unknown')
             })
 
-    suggestions = [
-        all_recipes[i]['name'] for i in top_indices if similarity_scores[i] > 0.2
-    ]
-
+    suggestions = [all_recipes[i]['name'] for i in top_indices if similarity_scores[i] > 0.2]
     return JsonResponse({'recipes': matched_recipes, 'suggestions': suggestions}, status=200)
 
-# Favorite recipes functionality
 @csrf_exempt
 @login_required
 def save_favorite_recipe(request):
     if request.method == "POST":
-        data = json.loads(request.body)
-        recipe_id = data.get("recipe_id")
-        user = request.user
-
         try:
-            recipe = Recipe.objects.get(id=recipe_id)
-            # Check if the recipe is already favorited
-            favorite, created = UserRecipeActivity.objects.get_or_create(
-                user=user, recipe=recipe, action="favorite"
-            )
+            data = json.loads(request.body)
+            recipe = Recipe.objects.get(id=data.get("recipe_id"))
+            favorite, created = UserRecipeActivity.objects.get_or_create(user=request.user, recipe=recipe, action="favorite")
             if not created:
                 return JsonResponse({"message": "Recipe already favorited"}, status=400)
-
             return JsonResponse({"message": "Recipe saved as favorite!"}, status=201)
-
         except Recipe.DoesNotExist:
             return JsonResponse({"error": "Recipe not found"}, status=404)
-
     return JsonResponse({"error": "Invalid request"}, status=400)
 
 @login_required
 def get_saved_recipes(request):
-    user = request.user
-    saved_recipes = UserRecipeActivity.objects.filter(user=user, action="favorite").select_related("recipe")
-
-    context = {
-        "saved_recipes": [
-            {
-                "id": activity.recipe.id,
-                "name": activity.recipe.name,
-                "image_url": activity.recipe.image_url,
-                "cuisine": activity.recipe.cuisine,
-                "course": activity.recipe.course,
-                "diet": activity.recipe.diet,
-            }
-            for activity in saved_recipes
-        ],
-        "count": saved_recipes.count(),  # ✅ Pass updated count
-    }
-
+    saved = UserRecipeActivity.objects.filter(user=request.user, action="favorite").select_related("recipe")
+    context = {"saved_recipes": [s.recipe for s in saved], "count": saved.count()}
     return render(request, "recipes/saved_recipes.html", context)
 
 @login_required
 @require_POST
 def remove_saved_recipe(request):
-    """
-    Removes a recipe from the user's favorites list.
-    Expects JSON body: {"recipe_id": <id>}
-    """
-    # 1. FIX: Read JSON data from the request body
     try:
-        data = json.loads(request.body)
-        recipe_id = data.get("recipe_id")
-    except json.JSONDecodeError:
-        return JsonResponse({"error": "Invalid JSON body"}, status=400)
-    
-    user = request.user
-    
-    if not recipe_id:
-        return JsonResponse({"error": "Recipe ID missing"}, status=400)
-
-    try:
-        # Assumes UserRecipeActivity model exists
-        activity = UserRecipeActivity.objects.get(user=user, recipe_id=recipe_id, action="favorite")
-        activity.delete()
+        recipe_id = json.loads(request.body).get("recipe_id")
+        UserRecipeActivity.objects.get(user=request.user, recipe_id=recipe_id, action="favorite").delete()
+        new_count = UserRecipeActivity.objects.filter(user=request.user, action="favorite").count()
+        return JsonResponse({"success": True, "count": new_count, "message": "Recipe removed successfully!"})
     except UserRecipeActivity.DoesNotExist:
-        # This is the "Recipe not found in favorites" error you saw,
-        # which can happen if the client sends a bad ID. We return success if deletion is the goal.
-        return JsonResponse({"success": False, "error": "Recipe was not found in your favorites list."}, status=404)
+        return JsonResponse({"success": False, "error": "Not in favorites."}, status=404)
     except Exception as e:
-        return JsonResponse({"success": False, "error": f"Database error during removal: {str(e)}"}, status=500)
-
-    # Recalculate new count for frontend badge update
-    new_count = UserRecipeActivity.objects.filter(user=user, action="favorite").count()
-    
-    # 2. FIX: Return JsonResponse for AJAX success
-    return JsonResponse({"success": True, "count": new_count, "message": "Recipe removed successfully!"})
-
+        return JsonResponse({"success": False, "error": str(e)}, status=500)
 
 def get_recipe_videos(request, recipe_id):
     recipe = get_object_or_404(Recipe, id=recipe_id)
-    # Fetch standard recipe videos
-    search_query = f"{recipe.name} recipe"
+    video_data = []
 
-    youtube_url = "https://www.googleapis.com/youtube/v3/search"
-    api_key = config('YOUTUBE_API_KEY', default=None)
+    # Include locally uploaded/linked videos from the new RecipeVideo model
+    for v in recipe.videos.all():
+        video_data.append({
+            "title": v.title or f"{recipe.name} Video",
+            "video_url": v.hls_stream_url or v.external_url or (v.raw_video_file.url if v.raw_video_file else ""),
+            "thumbnail": v.thumbnail.url if v.thumbnail else ""
+        })
 
-    if not api_key:
-        return JsonResponse({"error": "API Key not found"}, status=500)
-
-    # Standard videos
-    params_long = {
-        "part": "snippet",
-        "q": f"{recipe.name} recipe",
-        "key": api_key,
-        "maxResults": 1,
-        "type": "video"
-    }
-    
-    # Shorts
-    params_short = {
-        "part": "snippet",
-        "q": f"{recipe.name} recipe shorts",
-        "key": api_key,
-        "maxResults": 5,
-        "type": "video"
-    }
-
-    try:
-        video_data = []
-        
-        # Fetch standard video
-        res_long = requests.get(youtube_url, params=params_long)
-        if res_long.status_code == 200:
-            for item in res_long.json().get("items", []):
-                thumbnails = item["snippet"]["thumbnails"]
-                thumbnail_url = thumbnails.get("high", thumbnails.get("medium", {})).get("url")
-                video_data.append({
-                    "title": item["snippet"]["title"],
-                    "video_id": item["id"]["videoId"],
-                    "thumbnail": thumbnail_url
+    # Fallback to YouTube API if no local videos exist
+    if not video_data:
+        api_key = config('YOUTUBE_API_KEY', default=None)
+        if api_key:
+            try:
+                res = requests.get("https://www.googleapis.com/youtube/v3/search", params={
+                    "part": "snippet", "q": f"{recipe.name} recipe", "key": api_key, "maxResults": 1, "type": "video"
                 })
-                
-        # Fetch shorts
-        res_short = requests.get(youtube_url, params=params_short)
-        if res_short.status_code == 200:
-            for item in res_short.json().get("items", []):
-                thumbnails = item["snippet"]["thumbnails"]
-                thumbnail_url = thumbnails.get("high", thumbnails.get("medium", {})).get("url")
-                video_data.append({
-                    "title": item["snippet"]["title"],
-                    "video_id": f"/shorts/{item['id']['videoId']}", # Append /shorts/ so frontend detects it
-                    "thumbnail": thumbnail_url
-                })
+                if res.status_code == 200:
+                    for item in res.json().get("items", []):
+                        video_data.append({
+                            "title": item["snippet"]["title"],
+                            "video_id": item["id"]["videoId"],
+                            "thumbnail": item["snippet"]["thumbnails"].get("high", {}).get("url")
+                        })
+            except Exception as e:
+                pass 
 
-        return JsonResponse({"videos": video_data})
-
-    except requests.exceptions.RequestException as e:
-        return JsonResponse({"error": str(e)}, status=500)
-
-
-
-
+    return JsonResponse({"videos": video_data})

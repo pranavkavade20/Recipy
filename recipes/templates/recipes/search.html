@@ -53,61 +53,19 @@
 
                     {% with current_diet=request.GET.diet %}
 
-                    <a href="?diet=Vegetarian"
-                        class="diet-chip snap-start {% if current_diet == 'Vegetarian' %}active{% endif %}">
-                        <span class="chip-icon bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300"><i
-                                data-lucide="leaf" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
+                    <a href="?diet=Vegetarian" class="diet-chip snap-start {% if current_diet == 'Vegetarian' %}active{% endif %}">
+                        <span class="chip-icon bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300"><i data-lucide="leaf" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
                         <span>Veg</span>
                     </a>
 
-                    <a href="?diet=Non Vegeterian"
-                        class="diet-chip snap-start {% if current_diet == 'Non Vegeterian' %}active{% endif %}">
-                        <span class="chip-icon bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-300"><i
-                                data-lucide="drumstick" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
+                    <a href="?diet=Non Vegeterian" class="diet-chip snap-start {% if current_diet == 'Non Vegeterian' %}active{% endif %}">
+                        <span class="chip-icon bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-300"><i data-lucide="drumstick" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
                         <span>Non-Veg</span>
                     </a>
 
-                    <a href="?diet=Vegan"
-                        class="diet-chip snap-start {% if current_diet == 'Vegan' %}active{% endif %}">
-                        <span
-                            class="chip-icon bg-emerald-100 text-emerald-600 dark:bg-emerald-900 dark:text-emerald-300"><i
-                                data-lucide="sprout" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
+                    <a href="?diet=Vegan" class="diet-chip snap-start {% if current_diet == 'Vegan' %}active{% endif %}">
+                        <span class="chip-icon bg-emerald-100 text-emerald-600 dark:bg-emerald-900 dark:text-emerald-300"><i data-lucide="sprout" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
                         <span>Vegan</span>
-                    </a>
-
-                    <a href="?diet=Eggetarian"
-                        class="diet-chip snap-start {% if current_diet == 'Eggetarian' %}active{% endif %}">
-                        <span class="chip-icon bg-yellow-100 text-yellow-600 dark:bg-yellow-900 dark:text-yellow-300"><i
-                                data-lucide="egg" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
-                        <span>Eggetarian</span>
-                    </a>
-
-                    <a href="?diet=Gluten Free"
-                        class="diet-chip snap-start {% if current_diet == 'Gluten Free' %}active{% endif %}">
-                        <span class="chip-icon bg-amber-100 text-amber-600 dark:bg-amber-900 dark:text-amber-300"><i
-                                data-lucide="wheat-off" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
-                        <span>Gluten-Free</span>
-                    </a>
-
-                    <a href="?diet=Diabetic Friendly"
-                        class="diet-chip snap-start {% if current_diet == 'Diabetic Friendly' %}active{% endif %}">
-                        <span class="chip-icon bg-teal-100 text-teal-600 dark:bg-teal-900 dark:text-teal-300"><i
-                                data-lucide="heart-pulse" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
-                        <span>Diabetic</span>
-                    </a>
-
-                    <a href="?diet=High Protein Vegetarian"
-                        class="diet-chip snap-start {% if current_diet == 'High Protein Vegetarian' %}active{% endif %}">
-                        <span class="chip-icon bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300"><i
-                                data-lucide="dumbbell" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
-                        <span>High-Pro Veg</span>
-                    </a>
-
-                    <a href="?diet=High Protein Non Vegetarian"
-                        class="diet-chip snap-start {% if current_diet == 'High Protein Non Vegetarian' %}active{% endif %}">
-                        <span class="chip-icon bg-orange-100 text-orange-600 dark:bg-orange-900 dark:text-orange-300"><i
-                                data-lucide="biceps-flexed" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
-                        <span>High-Pro NV</span>
                     </a>
 
                     {% endwith %}
@@ -121,14 +79,16 @@
         <div id="results"
             class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 min-h-[300px]">
             {% for recipe in recipes %}
-            <a href="{% url 'recipe_detail' recipe.id %}" class="block group h-full">
+            <a href="{% url 'recipes:recipe_detail' recipe.id %}" class="block group h-full">
                 <div
                     class="bg-white dark:bg-slate-800 rounded-[2rem] shadow-sm border border-slate-100 dark:border-white/5 overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 h-full flex flex-col">
 
                     <div class="relative h-56 sm:h-64 overflow-hidden">
-                        <img src="{{ recipe.image_url.url }}" alt="{{ recipe.name }}"
+                        {% if recipe.image %}
+                        <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}"
                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                             loading="lazy" />
+                        {% endif %}
                         <div
                             class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-70 group-hover:opacity-90">
                         </div>
@@ -137,7 +97,7 @@
                             {% if 'Non' in recipe.diet %} bg-red-500/90 text-white
                             {% elif 'Veg' in recipe.diet %} bg-green-500/90 text-white
                             {% else %} bg-orange-500/90 text-white {% endif %}">
-                            {{ recipe.diet }}
+                            {{ recipe.diet|default:"Standard" }}
                         </span>
                     </div>
 
@@ -170,7 +130,7 @@
                 <h3 class="text-lg md:text-xl font-bold text-slate-900 dark:text-white">No recipes found</h3>
                 <p class="text-sm md:text-base text-slate-500 dark:text-slate-400 mt-2">Try adjusting your filters or
                     search term.</p>
-                <a href="{% url 'search_page' %}" class="mt-6 text-primary hover:underline font-semibold text-sm">Clear
+                <a href="{% url 'recipes:search_page' %}" class="mt-6 text-primary hover:underline font-semibold text-sm">Clear
                     all filters</a>
             </div>
             {% endfor %}
@@ -179,86 +139,19 @@
 </div>
 
 <style>
-    /* Hide Scrollbar but keep functionality */
-    .no-scrollbar::-webkit-scrollbar {
-        display: none;
-    }
-
-    .no-scrollbar {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
-
-    /* Diet Chip Styles */
-    .diet-chip {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.35rem 0.85rem 0.35rem 0.35rem;
-        /* responsive padding */
-        background-color: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 9999px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: #374151;
-        white-space: nowrap;
-        transition: all 0.2s;
-        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-        cursor: pointer;
-    }
-
-    /* Dark Mode for Chip */
-    :is(.dark .diet-chip) {
-        background-color: #1f2937;
-        border-color: #374151;
-        color: #d1d5db;
-    }
-
-    .diet-chip:hover {
-        transform: translateY(-1px);
-        border-color: #f97316;
-        /* orange-500 */
-    }
-
-    .diet-chip.active {
-        background-color: #fff7ed;
-        /* orange-50 */
-        border-color: #f97316;
-        color: #ea580c;
-        /* orange-600 */
-    }
-
-    :is(.dark .diet-chip.active) {
-        background-color: rgba(249, 115, 22, 0.2);
-        color: #fb923c;
-    }
-
-    .chip-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 1.75rem;
-        height: 1.75rem;
-        border-radius: 9999px;
-    }
-
-    @media (min-width: 768px) {
-        .diet-chip {
-            font-size: 0.875rem;
-            padding: 0.5rem 1rem 0.5rem 0.5rem;
-        }
-
-        .chip-icon {
-            width: 2rem;
-            height: 2rem;
-        }
-    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .diet-chip { display: flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0.85rem 0.35rem 0.35rem; background-color: white; border: 1px solid #e5e7eb; border-radius: 9999px; font-size: 0.8rem; font-weight: 600; color: #374151; white-space: nowrap; transition: all 0.2s; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); cursor: pointer; }
+    :is(.dark .diet-chip) { background-color: #1f2937; border-color: #374151; color: #d1d5db; }
+    .diet-chip:hover { transform: translateY(-1px); border-color: #f97316; }
+    .diet-chip.active { background-color: #fff7ed; border-color: #f97316; color: #ea580c; }
+    :is(.dark .diet-chip.active) { background-color: rgba(249, 115, 22, 0.2); color: #fb923c; }
+    .chip-icon { display: flex; align-items: center; justify-content: center; width: 1.75rem; height: 1.75rem; border-radius: 9999px; }
+    @media (min-width: 768px) { .diet-chip { font-size: 0.875rem; padding: 0.5rem 1rem 0.5rem 0.5rem; } .chip-icon { width: 2rem; height: 2rem; } }
 </style>
 
 <script src="https://unpkg.com/lucide@latest"></script>
 <script>
-    // Initialize icons on page load
     lucide.createIcons();
 
     let timeout = null;
@@ -267,10 +160,7 @@
         clearTimeout(timeout);
         const query = this.value.trim();
 
-        if (!query) {
-            // Optional: Handle empty state
-            return;
-        }
+        if (!query) return;
 
         timeout = setTimeout(() => {
             fetch(`/api/search/?q=${encodeURIComponent(query)}`)
@@ -298,7 +188,7 @@
                         else if (recipe.diet.includes("Veg")) badgeClass = "bg-green-500/90";
 
                         resultsContainer.innerHTML += `
-                        <a href="/recipe_detail/${recipe.id}" class="block group h-full fade-in">
+                        <a href="/detail/${recipe.id}" class="block group h-full fade-in">
                             <div class="bg-white dark:bg-slate-800 rounded-[2rem] shadow-sm border border-slate-100 dark:border-white/5 overflow-hidden hover:shadow-[0_20px_40px_-20px_rgba(249,115,22,0.4)] hover:-translate-y-2 transition-all duration-500 h-full flex flex-col">
                                 
                                 <div class="relative h-56 sm:h-64 overflow-hidden">
@@ -330,7 +220,6 @@
                         `;
                     });
 
-                    // RE-INITIALIZE ICONS for the newly added HTML
                     lucide.createIcons();
                 })
                 .catch((error) => {

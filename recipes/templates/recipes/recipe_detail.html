@@ -21,8 +21,7 @@
                     </div>
                     <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white">Video Guide</h2>
                 </div>
-                <div id="long-videos-grid" class="flex flex-col gap-16">
-                    </div>
+                <div id="long-videos-grid" class="flex flex-col gap-16"></div>
             </div>
 
             <div id="shorts-container" class="hidden">
@@ -34,8 +33,7 @@
                         <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white">Quick Tips & Shorts</h2>
                     </div>
                 </div>
-                <div id="shorts-grid" class="flex overflow-x-auto pb-6 gap-6 md:grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 snap-x scroll-smooth no-scrollbar">
-                    </div>
+                <div id="shorts-grid" class="flex overflow-x-auto pb-6 gap-6 md:grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 snap-x scroll-smooth no-scrollbar"></div>
             </div>
         </div>
 
@@ -45,29 +43,18 @@
                     You Might Also <span class="text-primary">Love</span>
                 </h2>
             </div>
-            
-            <div id="similar-recipes" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                </div>
+            <div id="similar-recipes" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
         </div>
     </div>
 
     <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 pointer-events-none"></div>
 
     <style>
-        /* Hide scrollbar for shorts container but allow scrolling */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 
     <script>
-        // ==========================================
-        // 1. UTILITIES (TOASTS & CSRF)
-        // ==========================================
         function showToast(message, type) {
             const container = document.getElementById('toast-container');
             const isSuccess = type === 'success';
@@ -90,12 +77,7 @@
             const cookieValue = document.cookie.match(/csrftoken=([^ ;]+)/);
             return cookieValue ? cookieValue[1] : "";
         }
-
-        // ==========================================
-        // 2. VIDEO LOGIC (Fixes Error 153 & Separates Shorts)
-        // ==========================================
         
-       // Helper: Extract Clean Video ID
         function getVideoId(input) {
             if (!input) return null;
             if (input.includes('v=')) return input.split('v=')[1].split('&')[0];
@@ -105,16 +87,9 @@
             return input; 
         }
 
-        function isShortVideo(input) {
-            return input.includes("/shorts/");
-        }
+        function isShortVideo(input) { return input.includes("/shorts/"); }
+        function getSecureEmbedUrl(videoId) { return `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`; }
 
-        // --- FIX IS HERE ---
-        function getSecureEmbedUrl(videoId) {
-            return `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`;
-        }
-
-       // --- UPDATED VIDEO FETCHING LOGIC ---
     async function fetchRecipeVideos(recipeId) {
         const section = document.getElementById('video-section');
         const longContainer = document.getElementById('long-videos-container');
@@ -123,7 +98,8 @@
         const shortGrid = document.getElementById('shorts-grid');
 
         try {
-            const response = await fetch(`/recipe_videos/${recipeId}/`);
+            // Note: Make sure the URL matches the one you established in urls.py
+            const response = await fetch(`/videos/${recipeId}/`);
             const data = await response.json();
 
             if (!data.videos || data.videos.length === 0) return;
@@ -134,76 +110,40 @@
             let hasShort = false;
 
             data.videos.forEach(video => {
-                const videoId = getVideoId(video.video_id);
+                const videoId = getVideoId(video.video_id || video.video_url); // Accounts for new custom model DB
                 const embedUrl = getSecureEmbedUrl(videoId);
                 const watchUrl = `https://www.youtube.com/watch?v=${videoId}`;
                 
-                if (isShortVideo(video.video_id)) {
+                if (video.video_id && isShortVideo(video.video_id)) {
                     hasShort = true;
                     shortsHTML += `
                         <div class="snap-center shrink-0 flex flex-col gap-3" style="width: 240px;">
                             <div class="bg-black rounded-3xl overflow-hidden shadow-xl border-4 border-gray-800 group relative" style="aspect-ratio: 9/16;">
-                                <iframe class="absolute inset-0 w-full h-full"
-                                    src="${embedUrl}" 
-                                    title="YouTube Short" 
-                                    frameborder="0"
-                                    referrerpolicy="strict-origin-when-cross-origin"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                    allowfullscreen>
-                                </iframe>
+                                <iframe class="absolute inset-0 w-full h-full" src="${embedUrl}" title="YouTube Short" frameborder="0" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                             </div>
-                            <a href="${watchUrl}" target="_blank" class="w-full py-2 bg-white dark:bg-gray-800 rounded-xl text-xs font-bold text-gray-600 dark:text-gray-300 hover:bg-red-50 hover:text-red-600 transition-colors flex items-center justify-center gap-1 shadow-sm border border-gray-100 dark:border-gray-700">
-                                Open in YouTube
-                            </a>
+                            <a href="${watchUrl}" target="_blank" class="w-full py-2 bg-white dark:bg-gray-800 rounded-xl text-xs font-bold text-gray-600 dark:text-gray-300 hover:bg-red-50 hover:text-red-600 transition-colors flex items-center justify-center gap-1 shadow-sm border border-gray-100 dark:border-gray-700">Open in YouTube</a>
                         </div>`;
                 } else {
                     hasLong = true;
-                    // Added referrerpolicy below
                     longVideosHTML += `
                         <div class="flex flex-col gap-4 w-full">
                             <div class="bg-black rounded-3xl overflow-hidden shadow-2xl border border-gray-200 dark:border-gray-800 group relative w-full" style="aspect-ratio: 16/9;">
-                                <iframe class="absolute inset-0 w-full h-full"
-                                    src="${embedUrl}" 
-                                    title="Recipe Video" 
-                                    frameborder="0"
-                                    referrerpolicy="strict-origin-when-cross-origin"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                    allowfullscreen>
-                                </iframe>
-                            </div>
-                            <div class="flex justify-end">
-                                <a href="${watchUrl}" target="_blank" class="inline-flex items-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-red-500/30 transition-all hover:-translate-y-0.5">
-                                    Watch on YouTube
-                                </a>
+                                <iframe class="absolute inset-0 w-full h-full" src="${video.video_url || embedUrl}" title="Recipe Video" frameborder="0" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                             </div>
                         </div>`;
                 }
             });
 
-            if (hasLong) {
-                longGrid.innerHTML = longVideosHTML;
-                longContainer.classList.remove('hidden');
-            }
-            if (hasShort) {
-                shortGrid.innerHTML = shortsHTML;
-                shortContainer.classList.remove('hidden');
-            }
-            if (hasLong || hasShort) {
-                section.classList.remove('hidden');
-            }
+            if (hasLong) { longGrid.innerHTML = longVideosHTML; longContainer.classList.remove('hidden'); }
+            if (hasShort) { shortGrid.innerHTML = shortsHTML; shortContainer.classList.remove('hidden'); }
+            if (hasLong || hasShort) { section.classList.remove('hidden'); }
 
-        } catch (error) {
-            console.error('Error loading videos:', error);
-        }
+        } catch (error) { console.error('Error loading videos:', error); }
     }
 
-        // ==========================================
-        // 3. RECIPE DISPLAY LOGIC
-        // ==========================================
         async function fetchRecipeData() {
             try {
-                // Ensure this URL matches your backend route
-                const response = await fetch('/recipe/{{id}}/');
+                const response = await fetch('/api/recipe/{{id}}/');
                 if (!response.ok) throw new Error('Network response was not ok');
                 const data = await response.json();
                 
@@ -227,15 +167,16 @@
             const recipeContainer = document.getElementById('recipe');
             const dietColor = recipe.diet && recipe.diet.includes('Non') ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300' : 'bg-success/20 text-success';
             
+            // DRF Serializer renders the image field natively as the URL string
             recipeContainer.innerHTML = `
                 <div class="flex flex-col lg:flex-row gap-8 lg:gap-12 mb-12">
                     <div class="w-full lg:w-1/2">
                         <div class="relative rounded-2xl sm:rounded-[2rem] overflow-hidden shadow-2xl group">
-                            <img src="${recipe.image_url}" alt="${recipe.name}" class="w-full h-auto object-cover transform transition-transform duration-700 group-hover:scale-105" />
+                            <img src="${recipe.image}" alt="${recipe.name}" class="w-full h-auto object-cover transform transition-transform duration-700 group-hover:scale-105" />
                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
                             <div class="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 flex flex-wrap gap-2">
-                                <span class="px-2 sm:px-3 py-1 rounded-lg text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-white/90 backdrop-blur text-slate-900 shadow-lg">${recipe.course}</span>
-                                <span class="px-2 sm:px-3 py-1 rounded-lg text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-primary text-white shadow-lg">${recipe.cuisine}</span>
+                                <span class="px-2 sm:px-3 py-1 rounded-lg text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-white/90 backdrop-blur text-slate-900 shadow-lg">${recipe.course || 'Dish'}</span>
+                                <span class="px-2 sm:px-3 py-1 rounded-lg text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-primary text-white shadow-lg">${recipe.cuisine || 'Global'}</span>
                             </div>
                         </div>
                         <div class="mt-6">
@@ -264,16 +205,10 @@
                     </div>
                 </div>
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
-                    <div class="lg:col-span-1">
-                        <div class="bg-white dark:bg-[#121212] rounded-2xl sm:rounded-[2rem] shadow-xl border border-slate-100 dark:border-white/10 overflow-hidden lg:sticky lg:top-24">
-                            <div class="bg-primary/10 dark:bg-primary/20 p-5 sm:p-6 border-b border-primary/20"><h3 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2"><svg class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>Ingredients</h3></div>
-                            <div class="p-5 sm:p-6"><ul class="space-y-3 sm:space-y-4">${recipe.ingredients.split(',').map(ing => `<li class="flex items-start gap-3 text-slate-700 dark:text-slate-300"><svg class="w-5 h-5 text-success flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg><span class="text-sm sm:text-base">${ing.trim()}</span></li>`).join('')}</ul></div>
-                        </div>
-                    </div>
                     <div class="lg:col-span-2">
                         <div class="bg-white dark:bg-[#121212] rounded-2xl sm:rounded-[2rem] shadow-sm border border-slate-100 dark:border-white/10 p-6 sm:p-8 md:p-10 mb-8">
                             <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3"><span class="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-primary/20 text-primary"><svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg></span>Instructions</h3>
-                            <div class="prose prose-sm sm:prose-lg dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">${recipe.instructions}</div>
+                            <div class="prose prose-sm sm:prose-lg dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">${recipe.instructions || "Instructions not added yet."}</div>
                         </div>
                     </div>
                 </div>`;
@@ -289,13 +224,13 @@
                 let badgeClass = "bg-primary/90";
                 if (recipe.diet && recipe.diet.includes("Non")) badgeClass = "bg-red-500/90";
                 else if (recipe.diet && recipe.diet.includes("Veg")) badgeClass = "bg-success/90 text-white";
-                return `<a href="/recipe_detail/${recipe.id}" class="block group h-full"><div class="bg-white dark:bg-[#121212] rounded-[2rem] border border-slate-100 dark:border-white/5 overflow-hidden hover:-translate-y-2 hover:shadow-[0_20px_40px_-20px_rgba(249,115,22,0.4)] transition-all duration-500 h-full flex flex-col"><div class="relative h-72 overflow-hidden"><img src="${recipe.image_url}" alt="${recipe.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" /><div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-70 group-hover:opacity-90"></div><span class="absolute top-4 left-4 px-3 py-1 rounded-full text-[10px] uppercase tracking-widest font-black backdrop-blur-md shadow-sm border border-white/20 text-white ${badgeClass}">${recipe.diet || 'Recipe'}</span></div><div class="p-6 flex flex-col flex-grow relative z-10"><h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2 leading-snug group-hover:text-primary transition-colors line-clamp-2">${recipe.name}</h3><div class="mt-auto pt-4 border-t border-slate-100 dark:border-white/5 flex items-center justify-between"><div class="flex items-center text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400"><svg class="w-4 h-4 mr-1.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>${recipe.cuisine}</div><span class="font-bold text-xs uppercase text-accent bg-accent/10 px-3 py-1 rounded-full">${recipe.course}</span></div></div></div></a>`;
+                return `<a href="/detail/${recipe.id}" class="block group h-full"><div class="bg-white dark:bg-[#121212] rounded-[2rem] border border-slate-100 dark:border-white/5 overflow-hidden hover:-translate-y-2 hover:shadow-[0_20px_40px_-20px_rgba(249,115,22,0.4)] transition-all duration-500 h-full flex flex-col"><div class="relative h-72 overflow-hidden"><img src="${recipe.image}" alt="${recipe.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" /><div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-70 group-hover:opacity-90"></div><span class="absolute top-4 left-4 px-3 py-1 rounded-full text-[10px] uppercase tracking-widest font-black backdrop-blur-md shadow-sm border border-white/20 text-white ${badgeClass}">${recipe.diet || 'Recipe'}</span></div><div class="p-6 flex flex-col flex-grow relative z-10"><h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2 leading-snug group-hover:text-primary transition-colors line-clamp-2">${recipe.name}</h3><div class="mt-auto pt-4 border-t border-slate-100 dark:border-white/5 flex items-center justify-between"><div class="flex items-center text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400"><svg class="w-4 h-4 mr-1.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>${recipe.cuisine || 'Global'}</div><span class="font-bold text-xs uppercase text-accent bg-accent/10 px-3 py-1 rounded-full">${recipe.course || 'Dish'}</span></div></div></div></a>`;
             }).join('');
         }
 
         async function saveFavoriteRecipe(recipeId) {
             try {
-                const response = await fetch('/save_favorite/', {
+                const response = await fetch('/save-favorite/', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCSRFToken() },
                     body: JSON.stringify({ recipe_id: recipeId })
@@ -308,7 +243,6 @@
             }
         }
 
-        // Initialize Page
         fetchRecipeData();
     </script>
 </div>

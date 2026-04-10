@@ -1,35 +1,35 @@
 {% extends "base.html" %}
-{% block title %}Update Recipe | Recipy{% endblock %}
+{% block title %}Add Recipe | Recipy{% endblock %} 
 
 {% block content %}
 <main class="min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-slate-50 dark:bg-base transition-colors duration-500">
     <div class="max-w-4xl mx-auto">
         
-        <div class="mb-10 flex items-center justify-between">
-            <div>
-                <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-                    Update <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Recipe</span>
-                </h2>
-                <p class="text-slate-500 dark:text-slate-400 mt-2">Refine your culinary masterpiece.</p>
-            </div>
+        <div class="text-center mb-12">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-4">
+                Submit Your <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Recipe</span>
+            </h2>
+            <p class="text-lg text-slate-500 dark:text-slate-400">
+                Share your culinary creation with the community!
+            </p>
         </div>
 
-        <div class="bg-white dark:bg-[#121212] shadow-2xl rounded-[2.5rem] p-8 md:p-12 border border-slate-100 dark:border-white/5">
+        <div class="bg-white dark:bg-[#121212] shadow-2xl rounded-[2.5rem] p-8 md:p-12 border border-slate-100 dark:border-white/5 relative overflow-hidden">
             
-            <form method="post" enctype="multipart/form-data" id="update-form">
+            <div class="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-primary/10 dark:bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+
+            <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 relative z-10">
                     {% for field in recipe_form %}
                     <div class="form-group {% if field.name == 'description' or field.name == 'image' or field.name == 'instructions' %}md:col-span-2{% endif %}">
                         <label for="{{ field.id_for_label }}" class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 uppercase tracking-wide">
                             {{ field.label }}
                         </label>
-                        
                         <div class="relative">
                             {{ field }}
                         </div>
-                        
                         {% if field.help_text %}
                             <p class="text-xs text-gray-400 mt-2">{{ field.help_text }}</p>
                         {% endif %}
@@ -45,22 +45,16 @@
 
                 <div class="border-t border-slate-100 dark:border-white/5 pt-10 mb-10">
                     <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-                        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-success/20 text-success"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg></span>
+                        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-success/20 text-success">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                        </span>
                         Ingredients
                     </h3>
                     
                     <div id="ingredient-form-container" class="space-y-4">
                         {{ ingredient_formset.management_form }}
                         {% for form in ingredient_formset %}
-                        <div class="formset-row ingredient-field group relative p-5 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 transition-all hover:border-success/30 dark:hover:border-success/30">
-                            <div class="absolute top-2 right-2">
-                                {% if form.instance.pk %}
-                                    <div class="hidden">{{ form.DELETE }}</div>
-                                    <button type="button" class="delete-btn p-2 text-gray-400 hover:text-red-500 transition-colors rounded-full hover:bg-red-50 dark:hover:bg-red-900/20">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                    </button>
-                                {% endif %}
-                            </div>
+                        <div class="formset-row ingredient-field group relative p-5 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 transition-all hover:border-primary/30 dark:hover:border-primary/30 animate-fade-in-up">
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 {% for field in form %}
                                     {% if field.label != 'Id' and field.label != 'DELETE' %}
@@ -70,35 +64,30 @@
                                         {% for error in field.errors %}<p class="text-xs text-red-500 mt-1">{{ error }}</p>{% endfor %}
                                     </div>
                                     {% endif %}
-                                    {% if field.label == 'Id' %}{{ field }}{% endif %}
                                 {% endfor %}
                             </div>
                         </div>
                         {% endfor %}
                     </div>
+                    
                     <button type="button" onclick="addFormsetRow('ingredients', 'ingredient-form-container')" class="mt-6 flex items-center justify-center w-full md:w-auto px-6 py-3 border-2 border-dashed border-slate-300 dark:border-white/10 rounded-xl text-slate-500 hover:text-success hover:border-success/40 hover:bg-success/5 dark:hover:bg-white/5 transition-all font-bold text-sm">
-                        <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> Add Another Ingredient
+                        <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Add Another Ingredient
                     </button>
                 </div>
 
                 <div class="border-t border-slate-100 dark:border-white/5 pt-10">
                     <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-                        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg></span>
-                        Recipe Videos
+                        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                        </span>
+                        Recipe Videos (Optional)
                     </h3>
                     
                     <div id="video-form-container" class="space-y-4">
                         {{ video_formset.management_form }}
                         {% for form in video_formset %}
-                        <div class="formset-row video-field group relative p-5 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 transition-all hover:border-red-500/30 dark:hover:border-red-500/30">
-                            <div class="absolute top-2 right-2">
-                                {% if form.instance.pk %}
-                                    <div class="hidden">{{ form.DELETE }}</div>
-                                    <button type="button" class="delete-btn p-2 text-gray-400 hover:text-red-500 transition-colors rounded-full hover:bg-red-50 dark:hover:bg-red-900/20">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                    </button>
-                                {% endif %}
-                            </div>
+                        <div class="formset-row video-field group relative p-5 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 transition-all hover:border-red-500/30 dark:hover:border-red-500/30 animate-fade-in-up">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {% for field in form %}
                                     {% if field.label != 'Id' and field.label != 'DELETE' %}
@@ -109,23 +98,23 @@
                                         {% for error in field.errors %}<p class="text-xs text-red-500 mt-1">{{ error }}</p>{% endfor %}
                                     </div>
                                     {% endif %}
-                                    {% if field.label == 'Id' %}{{ field }}{% endif %}
                                 {% endfor %}
                             </div>
                         </div>
                         {% endfor %}
                     </div>
+                    
                     <button type="button" onclick="addFormsetRow('videos', 'video-form-container')" class="mt-6 flex items-center justify-center w-full md:w-auto px-6 py-3 border-2 border-dashed border-slate-300 dark:border-white/10 rounded-xl text-slate-500 hover:text-red-500 hover:border-red-500/40 hover:bg-red-50 dark:hover:bg-red-900/10 transition-all font-bold text-sm">
-                        <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> Add Another Video
+                        <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Add Another Video
                     </button>
                 </div>
-
-                <div class="flex flex-col-reverse md:flex-row items-center justify-end gap-4 mt-12 pt-8 border-t border-slate-100 dark:border-white/5">
-                    <a href="{% url 'recipes:delete_recipe' recipe.id %}" class="w-full md:w-auto px-6 py-3.5 text-red-600 font-bold text-sm hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors text-center">
-                        Delete Recipe
-                    </a>
-                    <button type="submit" class="w-full md:w-auto px-8 py-3.5 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-lg shadow-primary/30 outline-none focus:ring-4 focus:ring-primary/50 transform hover:scale-105 transition-all">
-                        Save Changes
+                
+                <div class="mt-12 pt-8 border-t border-slate-100 dark:border-white/5 flex justify-center md:justify-end">
+                    <button type="submit" 
+                        class="w-full md:w-auto px-10 py-4 bg-primary hover:bg-primary/90 text-white text-lg font-bold rounded-xl shadow-lg shadow-primary/30 outline-none focus:ring-4 focus:ring-primary/50 transform hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2">
+                        <span>Publish Recipe</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg>
                     </button>
                 </div>
             </form>
@@ -148,27 +137,9 @@
         fileInputs.forEach(input => {
             input.classList.add('block', 'w-full', 'text-sm', 'text-slate-500', 'file:mr-4', 'file:py-2', 'file:px-4', 'file:rounded-full', 'file:border-0', 'file:text-sm', 'file:font-bold', 'file:bg-primary/10', 'file:text-primary', 'hover:file:bg-primary/20', 'dark:file:bg-primary/10', 'dark:file:text-primary');
         });
-
-        // Custom Delete Button Logic (Handles hidden Django Checkboxes)
-        document.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const container = this.closest('.formset-row');
-                const checkbox = container.querySelector('input[type="checkbox"]');
-                if (checkbox) {
-                    checkbox.checked = !checkbox.checked;
-                    if(checkbox.checked) {
-                        container.classList.add('opacity-50', 'bg-red-50', 'dark:bg-red-900/10');
-                        this.classList.add('text-red-600', 'bg-red-100');
-                    } else {
-                        container.classList.remove('opacity-50', 'bg-red-50', 'dark:bg-red-900/10');
-                        this.classList.remove('text-red-600', 'bg-red-100');
-                    }
-                }
-            });
-        });
     });
 
-    // Dynamic Formset Handler
+    // Dynamic Formset Handler for both Ingredients and Videos
     function addFormsetRow(prefix, containerId) {
         const formContainer = document.getElementById(containerId);
         const totalForms = document.getElementById(`id_${prefix}-TOTAL_FORMS`);
@@ -182,17 +153,17 @@
         const regex = new RegExp(`${prefix}-(\\d+)-`, 'g');
         newForm.innerHTML = newForm.innerHTML.replace(regex, `${prefix}-${currentFormCount}-`);
         
-        const delBtn = newForm.querySelector('.delete-btn');
-        if(delBtn) delBtn.remove();
-        
         newForm.querySelectorAll('input, select, textarea').forEach(input => {
             if(input.type !== 'hidden') input.value = '';
-            input.classList.remove('bg-red-50', 'opacity-50'); 
         });
-        newForm.classList.remove('opacity-50', 'bg-red-50', 'dark:bg-red-900/10');
 
         formContainer.appendChild(newForm);
         totalForms.value = currentFormCount + 1;
     }
 </script>
+
+<style>
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-fade-in-up { animation: fadeInUp 0.3s ease-out forwards; }
+</style>
 {% endblock %}

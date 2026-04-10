@@ -45,7 +45,8 @@
                                         <p class="text-xs text-red-500 mt-1 font-bold">{{ error }}</p>
                                     {% endfor %}
                                 </div>
-                            </div> {% else %}
+                            </div> 
+                        {% else %}
                             <div class="space-y-2">
                                 <label for="{{ field.id_for_label }}" class="block text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">
                                     {{ field.label }}
@@ -69,7 +70,7 @@
             </form> 
             
             <div class="text-center mt-8 pt-6 border-t border-slate-100 dark:border-white/5">
-                <a href="{% url 'view_meal_plans' %}" class="inline-flex items-center text-sm font-bold text-slate-500 hover:text-primary transition-colors group">
+                <a href="{% url 'recipes:view_meal_plans' %}" class="inline-flex items-center text-sm font-bold text-slate-500 hover:text-primary transition-colors group">
                     <svg class="w-4 h-4 mr-1 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                     View Schedule
                 </a>

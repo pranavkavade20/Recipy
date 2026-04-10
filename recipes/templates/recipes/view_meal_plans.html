@@ -22,7 +22,7 @@
                     </div>
                 </div>
                 
-                <a href="{% url 'add_meal_plan' %}" class="group inline-flex items-center justify-center px-6 py-3.5 bg-primary hover:bg-primary/90 text-white text-sm font-bold rounded-xl shadow-lg shadow-primary/30 hover:-translate-y-0.5 transition-all duration-300">
+                <a href="{% url 'recipes:add_meal_plan' %}" class="group inline-flex items-center justify-center px-6 py-3.5 bg-primary hover:bg-primary/90 text-white text-sm font-bold rounded-xl shadow-lg shadow-primary/30 hover:-translate-y-0.5 transition-all duration-300">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
                     Plan New Meal
                 </a>
@@ -31,7 +31,6 @@
         
         <div class="p-6 md:p-8">
             
-            <!-- Desktop Table View -->
             <div class="hidden md:block relative overflow-hidden rounded-2xl border border-slate-100 dark:border-white/5 shadow-sm">
                 <div class="overflow-x-auto custom-scrollbar max-h-[70vh]">
                     <table class="w-full text-left border-collapse">
@@ -50,9 +49,9 @@
                             <tr class="group hover:bg-primary/5 dark:hover:bg-white/5 transition-colors duration-200">
                                 
                                 <td class="px-6 py-4">
-                                    {% if plan.recipe.receipe_image %}
+                                    {% if plan.recipe.image %}
                                     <div class="h-14 w-14 rounded-2xl overflow-hidden shadow-sm border border-slate-100 dark:border-white/10 group-hover:scale-110 transition-transform duration-300">
-                                        <img src="{{ plan.recipe.receipe_image.url }}" alt="{{ plan.recipe.receipe_name }}" class="h-full w-full object-cover">
+                                        <img src="{{ plan.recipe.image.url }}" alt="{{ plan.recipe.name }}" class="h-full w-full object-cover">
                                     </div>
                                     {% else %}
                                     <div class="h-14 w-14 rounded-2xl bg-slate-100 dark:bg-white/5 flex items-center justify-center text-slate-400 text-[10px] font-bold">
@@ -62,8 +61,8 @@
                                 </td>
                                 
                                 <td class="px-6 py-4">
-                                    <a href="{% url 'recipe_detail' plan.recipe.id %}" class="text-sm font-bold text-slate-900 dark:text-white hover:text-primary transition-colors">
-                                        {{ plan.recipe.receipe_name }}
+                                    <a href="{% url 'recipes:recipe_detail' plan.recipe.id %}" class="text-sm font-bold text-slate-900 dark:text-white hover:text-primary transition-colors">
+                                        {{ plan.recipe.name }}
                                     </a>
                                     <div class="text-xs text-gray-400 mt-0.5">{{ plan.recipe.cuisine }} • {{ plan.recipe.course }}</div>
                                 </td>
@@ -73,7 +72,8 @@
                                         <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                         {{ plan.meal_date|date:"M d, Y" }}
                                     </div>
-                                    <div class="text-xs text-gray-400 ml-6">{{ plan.meal_date|date:"l" }}</div> </td>
+                                    <div class="text-xs text-gray-400 ml-6">{{ plan.meal_date|date:"l" }}</div> 
+                                </td>
                                 
                                 <td class="px-6 py-4">
                                     <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold border shadow-sm
@@ -111,7 +111,7 @@
                                         </div>
                                         <h3 class="text-lg font-bold text-slate-900 dark:text-white">Your schedule is empty</h3>
                                         <p class="text-slate-500 dark:text-slate-400 mt-2 mb-6 max-w-sm">Start planning your week to save time and eat healthier.</p>
-                                        <a href="{% url 'add_meal_plan' %}" class="px-6 py-2.5 bg-primary hover:bg-primary/90 text-white rounded-xl text-sm font-bold shadow-md transition-colors hover:scale-105">
+                                        <a href="{% url 'recipes:add_meal_plan' %}" class="px-6 py-2.5 bg-primary hover:bg-primary/90 text-white rounded-xl text-sm font-bold shadow-md transition-colors hover:scale-105">
                                             Create First Plan
                                         </a>
                                     </div>
@@ -124,7 +124,7 @@
                         <tfoot class="bg-slate-50 dark:bg-white/5 border-t border-slate-100 dark:border-white/5">
                             <tr>
                                 <td colspan="6" class="px-6 py-4 text-center">
-                                    <a href="{% url 'add_meal_plan' %}" class="inline-flex items-center text-sm font-bold text-primary hover:text-primary/80 transition-colors">
+                                    <a href="{% url 'recipes:add_meal_plan' %}" class="inline-flex items-center text-sm font-bold text-primary hover:text-primary/80 transition-colors">
                                         <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                                         Add Another Meal to Plan
                                     </a>
@@ -136,20 +136,19 @@
                 </div>
             </div>
 
-            <!-- Mobile Card View -->
             <div class="md:hidden space-y-4">
                 {% for plan in meal_plans %}
                 <div class="bg-white dark:bg-[#1f1f1f] rounded-2xl p-5 border border-slate-100 dark:border-white/5 shadow-sm">
                     <div class="flex gap-4 mb-4">
-                        {% if plan.recipe.receipe_image %}
+                        {% if plan.recipe.image %}
                         <div class="h-16 w-16 rounded-xl overflow-hidden flex-shrink-0">
-                            <img src="{{ plan.recipe.receipe_image.url }}" alt="{{ plan.recipe.receipe_name }}" class="h-full w-full object-cover">
+                            <img src="{{ plan.recipe.image.url }}" alt="{{ plan.recipe.name }}" class="h-full w-full object-cover">
                         </div>
                         {% endif %}
                         <div class="flex-1">
                             <div class="flex justify-between items-start">
-                                <a href="{% url 'recipe_detail' plan.recipe.id %}" class="text-base font-bold text-slate-900 dark:text-white leading-tight">
-                                    {{ plan.recipe.receipe_name }}
+                                <a href="{% url 'recipes:recipe_detail' plan.recipe.id %}" class="text-base font-bold text-slate-900 dark:text-white leading-tight">
+                                    {{ plan.recipe.name }}
                                 </a>
                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border 
                                     {% if plan.meal_type == 'Breakfast' %} bg-amber-50 text-amber-700 border-amber-100
@@ -184,7 +183,7 @@
                 {% empty %}
                 <div class="text-center py-12 bg-white dark:bg-[#121212] rounded-3xl border border-slate-100 dark:border-white/5">
                     <p class="text-slate-500 dark:text-slate-400 text-sm">No meal plans scheduled yet.</p>
-                    <a href="{% url 'add_meal_plan' %}" class="mt-4 inline-block text-primary font-bold text-sm">Plan a meal</a>
+                    <a href="{% url 'recipes:add_meal_plan' %}" class="mt-4 inline-block text-primary font-bold text-sm">Plan a meal</a>
                 </div>
                 {% endfor %}
             </div>

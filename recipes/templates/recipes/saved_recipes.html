@@ -20,9 +20,9 @@
                 <div id="recipe-{{ recipe.id }}" class="group h-full flex flex-col transition-all duration-500 ease-in-out">
                     <div class="relative bg-white dark:bg-[#121212] rounded-[2rem] shadow-sm border border-slate-100 dark:border-white/5 overflow-hidden hover:shadow-[0_20px_40px_-20px_rgba(249,115,22,0.4)] hover:-translate-y-2 transition-all duration-500 h-full flex flex-col">
                         
-                        <a href="{% url 'recipe_detail' recipe.id %}" class="relative h-72 overflow-hidden block">
-                            {% if recipe.image_url %}
-                            <img src="{{ recipe.image_url.url }}" alt="{{ recipe.name }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
+                        <a href="{% url 'recipes:recipe_detail' recipe.id %}" class="relative h-72 overflow-hidden block">
+                            {% if recipe.image %}
+                            <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
                             {% else %}
                             <div class="w-full h-full bg-slate-100 dark:bg-white/5 flex items-center justify-center text-slate-400">
                                 <span class="text-xs font-bold uppercase">No Image</span>
@@ -41,7 +41,7 @@
 
                         <div class="p-6 flex flex-col flex-grow">
                             <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-                                <a href="{% url 'recipe_detail' recipe.id %}">
+                                <a href="{% url 'recipes:recipe_detail' recipe.id %}">
                                     {{ recipe.name }}
                                 </a>
                             </h2>
@@ -58,7 +58,7 @@
                             </div>
 
                             <div class="mt-auto grid grid-cols-2 gap-3">
-                                <a href="{% url 'recipe_detail' recipe.id %}" class="flex items-center justify-center px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-slate-300 font-bold text-sm hover:bg-slate-200 dark:hover:bg-white/10 transition-colors">
+                                <a href="{% url 'recipes:recipe_detail' recipe.id %}" class="flex items-center justify-center px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-slate-300 font-bold text-sm hover:bg-slate-200 dark:hover:bg-white/10 transition-colors">
                                     View
                                 </a>
                                 <button onclick="removeRecipe('{{ recipe.id }}')" class="flex items-center justify-center px-4 py-2.5 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 font-bold text-sm hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors group/btn">
@@ -81,7 +81,7 @@
                     <p class="text-slate-500 dark:text-slate-400 mb-8 max-w-sm mx-auto">
                         Save recipes you want to cook later by clicking the heart icon on any recipe page.
                     </p>
-                    <a href="{% url 'search_page' %}" class="inline-flex items-center px-8 py-3.5 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-lg shadow-primary/30 transition-all hover:scale-105">
+                    <a href="{% url 'recipes:search_page' %}" class="inline-flex items-center px-8 py-3.5 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-lg shadow-primary/30 transition-all hover:scale-105">
                         Discover Recipes
                     </a>
                 </div>
@@ -93,7 +93,6 @@
 <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 pointer-events-none"></div>
 
 <script>
-    // --- 1. TOAST UTILITY ---
     function showToast(message, type) {
         const container = document.getElementById('toast-container');
         const isSuccess = type === 'success';
@@ -112,7 +111,6 @@
         setTimeout(() => { toast.classList.add('translate-y-10', 'opacity-0'); setTimeout(() => toast.remove(), 300); }, 4000);
     }
 
-    // --- 2. LOGIC ---
     function getCSRFToken() {
         const cookieValue = document.cookie.match(/csrftoken=([^ ;]+)/);
         return cookieValue ? cookieValue[1] : "";
@@ -125,13 +123,12 @@
             return;
         }
 
-        // Optimistic UI: animate card out immediately
         const card = document.getElementById(`recipe-${recipeId}`);
         if(card) {
             card.style.transform = 'scale(0.9) opacity(0)';
         }
 
-        fetch("{% url 'remove_saved_recipe' %}", {
+        fetch("{% url 'recipes:remove_saved_recipe' %}", {
             method: "POST",
             headers: { 
                 "X-CSRFToken": csrfToken,
@@ -142,25 +139,18 @@
         .then(response => response.json().then(data => ({ status: response.status, body: data })))
         .then(({ status, body }) => {
             if (body.success) {
-                // Remove element after animation
                 setTimeout(() => {
                     if (card) card.remove();
-                    
-                    // Check if grid is empty to show empty state (optional simple check)
                     const grid = document.querySelector('.grid');
                     if (grid && grid.children.length === 0) {
-                        location.reload(); // Reload to show empty state template
+                        location.reload(); 
                     }
                 }, 300);
-                
                 showToast("Recipe removed from favorites.", "success");
-                
-                // Update nav counts if they exist
                 const countEls = document.querySelectorAll("#saved-recipe-count, #saved-recipe-badge");
                 countEls.forEach(el => el.innerText = body.count);
 
             } else {
-                // Revert animation on failure
                 if(card) card.style.transform = 'none';
                 showToast(body.error || "Failed to remove recipe.", "error");
             }

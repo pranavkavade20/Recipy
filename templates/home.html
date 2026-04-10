@@ -23,9 +23,7 @@
     <section class="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 pb-20 pt-12">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
-            <!-- Left Column: Story -->
             <div class="lg:col-span-3 flex flex-col items-start space-y-6">
-                <!-- Circular demo badge placeholder -->
                 <div class="w-24 h-24 rounded-full border border-dashed border-slate-300 dark:border-slate-600 flex items-center justify-center relative p-1">
                     <div class="w-full h-full rounded-full overflow-hidden relative">
                         <video class="w-full h-full object-cover grayscale opacity-60" autoplay loop muted playsinline>
@@ -50,22 +48,18 @@
                         Unlock a world of flavors with an intelligent platform that learns your tastes. Get dynamic meal plans, track nutrition, and discover highly curated <span class="text-orange-500">recipes tailored just for you.</span>
                     </p>
                 </div>
-                <!-- Action Button -->
                 <button id="open-button" class="w-14 h-14 bg-orange-500 hover:bg-orange-600 text-white rounded-2xl flex items-center justify-center transition-all shadow-lg shadow-orange-500/30 transform hover:-translate-y-1">
                     <svg class="w-5 h-5 -rotate-45 group-hover:rotate-0 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </button>
             </div>
 
-            <!-- Middle Column: Main Shape -->
             <div class="lg:col-span-6 flex justify-center relative w-full order-first lg:order-none mb-8 lg:mb-0">
                 <div class="w-full max-w-2xl aspect-[16/9] sm:aspect-[4/3] bg-gradient-to-br from-green-500 via-green-400 to-yellow-400 rounded-[3rem] sm:rounded-[5rem] rounded-tl-[1.5rem] rounded-br-[1.5rem] relative overflow-hidden shadow-2xl transition-transform hover:scale-[1.01] duration-700 flex items-center justify-center group p-4 sm:p-8">
-                    <!-- Subtle video overlay inside shape -->
                     <video class="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-30 group-hover:opacity-40 transition-opacity duration-700" autoplay loop muted playsinline>
                         <source src="{% static 'videos/background.mp4' %}" type="video/mp4">
                     </video>
                     
                     <div class="relative z-10 flex gap-4 sm:gap-6 mt-4 sm:mt-8">
-                        <!-- Floating elements -->
                         <div class="w-20 h-32 sm:w-32 sm:h-52 bg-white/90 backdrop-blur-md rounded-[1.5rem] sm:rounded-[2rem] p-3 sm:p-4 shadow-xl transform -rotate-12 transition-transform hover:rotate-0 hover:scale-105 duration-500 border border-white flex flex-col items-center justify-center relative">
                             <span class="absolute top-2 left-1/2 -translate-x-1/2 w-6 sm:w-8 h-1.5 sm:h-2 bg-yellow-400/50 rounded-full"></span>
                             <img src="{% static 'images/logo.png' %}" class="w-12 sm:w-16 h-auto drop-shadow-md opacity-80" alt="Recipy">
@@ -84,7 +78,6 @@
                 </div>
             </div>
 
-            <!-- Right Column: Stats -->
             <div class="lg:col-span-3 grid grid-cols-1 sm:grid-cols-3 lg:flex lg:flex-col justify-center gap-8 lg:space-y-12 pl-4 lg:pl-10">
                 <div class="text-center lg:text-left">
                     <h3 class="text-[2.5rem] sm:text-[3rem] font-medium text-[#00012A] dark:text-white leading-none tracking-tight flex items-start justify-center lg:justify-start -ml-1">Smart<span class="text-orange-500 text-xl font-black mt-2 ml-1">+</span></h3>
@@ -110,14 +103,13 @@
                 <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">The latest recipes from top creators.</p>
             </div>
             {% if request.user.is_authenticated %}
-            <a href="{% url 'search_page' %}" class="text-sm font-medium text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300 transition-colors flex items-center gap-1">
+            <a href="{% url 'recipes:search_page' %}" class="text-sm font-medium text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300 transition-colors flex items-center gap-1">
                 View all <span aria-hidden="true">&rarr;</span>
             </a>
             {% endif %}
         </div>
 
         {% if request.user.is_authenticated %}
-            <!-- Filter & Category row (Pinterest-style metadata spacing) -->
             <div class="flex items-center gap-3 overflow-x-auto pb-4 mb-6 no-scrollbar">
                 <button class="whitespace-nowrap px-5 py-2 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-sm transition-transform hover:scale-105">All Recipes</button>
                 <button class="whitespace-nowrap px-5 py-2 rounded-full bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 font-bold text-sm hover:border-primary hover:text-primary transition-all">Breakfast</button>
@@ -127,7 +119,6 @@
             </div>
             
             <div id="all-recipes" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <!-- Skeletons (Will be replaced by JS) -->
                 {% for i in "12345678" %}
                 <div class="skeleton-card bg-white/60 dark:bg-[#121212]/60 backdrop-blur-sm rounded-[2rem] overflow-hidden border border-white/50 dark:border-white/5 shadow-sm animate-pulse flex flex-col h-[400px]">
                     <div class="h-64 w-full bg-slate-200/50 dark:bg-white/5"></div>
@@ -153,10 +144,10 @@
                 <h3 class="text-3xl font-black text-slate-900 dark:text-white mb-4 relative z-10 tracking-tight">Discover Masterpieces</h3>
                 <p class="max-w-md text-slate-600 dark:text-slate-400 text-lg mb-10 relative z-10 leading-relaxed font-medium">Join our creative platform to explore a Pinterest-like feed of visually stunning, high-protein, and diet-friendly recipes.</p>
                 <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto relative z-10">
-                    <a href="{% url 'login' %}" class="inline-flex justify-center items-center px-8 py-4 rounded-xl bg-white/80 dark:bg-slate-800/80 backdrop-blur text-slate-900 dark:text-white border border-white/40 dark:border-white/10 font-bold text-sm hover:scale-105 hover:bg-white dark:hover:bg-slate-800 transition-all shadow-lg">
+                    <a href="{% url 'users:login' %}" class="inline-flex justify-center items-center px-8 py-4 rounded-xl bg-white/80 dark:bg-slate-800/80 backdrop-blur text-slate-900 dark:text-white border border-white/40 dark:border-white/10 font-bold text-sm hover:scale-105 hover:bg-white dark:hover:bg-slate-800 transition-all shadow-lg">
                         Sign In
                     </a>
-                    <a href="{% url 'register' %}" class="inline-flex justify-center items-center px-8 py-4 rounded-xl bg-primary text-white font-bold text-sm hover:bg-primary/90 hover:scale-105 transition-all shadow-xl shadow-primary/30">
+                    <a href="{% url 'users:register' %}" class="inline-flex justify-center items-center px-8 py-4 rounded-xl bg-primary text-white font-bold text-sm hover:bg-primary/90 hover:scale-105 transition-all shadow-xl shadow-primary/30">
                         Create Account
                     </a>
                 </div>
