@@ -58,9 +58,9 @@
                             <tr class="group hover:bg-orange-50/50 dark:hover:bg-gray-700/50 transition-colors duration-200">
                                 
                                 <td class="px-6 py-4">
-                                    {% if recipe.receipe_image %}
+                                    {% if recipe.image %}
                                     <div class="h-14 w-14 rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-600 group-hover:scale-110 transition-transform duration-300">
-                                        <img src="{{ recipe.receipe_image.url }}" alt="{{ recipe.receipe_name }}" class="h-full w-full object-cover">
+                                        <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" class="h-full w-full object-cover">
                                     </div>
                                     {% else %}
                                     <div class="h-14 w-14 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-400">
@@ -70,31 +70,34 @@
                                 </td>
                                 
                                 <td class="px-6 py-4">
-                                    <div class="text-sm font-bold text-gray-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">{{ recipe.receipe_name }}</div>
+                                    <div class="text-sm font-bold text-gray-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">{{ recipe.name }}</div>
                                 </td>
                                 
                                 <td class="px-6 py-4">
                                     <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border
-                                        {% if recipe.receipe_type == 'Vegetarian' %} bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800
-                                        {% elif recipe.receipe_type == 'Non Vegeterian' %} bg-rose-50 text-rose-700 border-rose-100 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800
+                                        {% if recipe.recipe_type == 'Veg' %} bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800
+                                        {% elif recipe.recipe_type == 'Non-veg' %} bg-rose-50 text-rose-700 border-rose-100 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800
                                         {% else %} bg-gray-50 text-gray-600 border-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600
                                         {% endif %}">
-                                        {{ recipe.receipe_type }}
+                                        {{ recipe.recipe_type }}
                                     </span>
                                 </td>
                                 
                                 <td class="px-6 py-4">
                                     <div class="text-sm text-gray-600 dark:text-gray-400 truncate max-w-[200px] cursor-help border-b border-dotted border-gray-300"
-                                         onmouseenter="showTooltip(this, `{{ recipe.receipe_description|escapejs }}`)"
+                                         onmouseenter="showTooltip(this, `{{ recipe.description|escapejs }}`)"
                                          onmouseleave="hideTooltip()">
-                                        {{ recipe.receipe_description }}
+                                        {{ recipe.description }}
                                     </div>
                                 </td>
 
                                 <td class="px-6 py-4 text-center">
-                                    <button class="text-gray-400 hover:text-blue-500 transition-colors p-1.5 rounded-full hover:bg-blue-50 dark:hover:bg-gray-700 mx-1">
+                                    <a href="{% url 'recipes:update_recipe' recipe.id %}" class="text-gray-400 hover:text-blue-500 transition-colors p-1.5 rounded-full hover:bg-blue-50 dark:hover:bg-gray-700 mx-1" title="Edit Recipe">
                                         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-                                    </button>
+                                    </a>
+                                    <a href="{% url 'recipes:delete_recipe' recipe.id %}" class="text-gray-400 hover:text-red-500 transition-colors p-1.5 rounded-full hover:bg-red-50 dark:hover:bg-gray-700 mx-1" title="Delete Recipe">
+                                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    </a>
                                 </td>
                             </tr>
                             {% empty %}

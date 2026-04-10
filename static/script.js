@@ -57,31 +57,50 @@ window.toggleHeart = function(btn) {
 };
 
 function fetchRecipes() {
-    fetch('http://127.0.0.1:8000/recipes/')
+    fetch('/api/recipes/')
         .then(response => response.json())
         .then(data => {
             const allRecipes = data.all_recipes || [];
             const similarRecipes = data.similar_recipes || [];
 
             function createRecipeCard(recipe) {
+                // Null-guard every optional field — avoids showing literal "null" text
+                const diet      = recipe.diet      || '';
+                const cuisine   = recipe.cuisine   || '—';
+                const course    = recipe.course    || '—';
+                const prepTime  = recipe.prep_time || '—';
+
+                // Image element: show the photo if available, otherwise a styled placeholder
+                // The serializer field is named 'image' (not 'image_url').
+                // DRF returns a full absolute URL when context={'request': request} is set.
+                const imageHTML = recipe.image
+                    ? `<img
+                            src="${recipe.image}"
+                            alt="${recipe.name}"
+                            loading="lazy"
+                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        />`
+                    : `<div class="w-full h-full flex flex-col items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-400">
+                            <svg class="w-12 h-12 mb-2 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                            <span class="text-xs font-semibold uppercase tracking-wide">No Photo</span>
+                        </div>`;
+
                 return `
-                    <a href="/recipe_detail/${recipe.id}" target="_blank" onclick="handleRecipeClick('${recipe.id}')" class="group block outline-none h-full">
+                    <a href="/detail/${recipe.id}/" target="_blank" onclick="handleRecipeClick('${recipe.id}')" class="group block outline-none h-full">
                         <div class="relative glass-panel bg-white dark:bg-[#121212] rounded-[2rem] overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-20px_rgba(249,115,22,0.4)] border border-gray-100 dark:border-white/5 h-full flex flex-col">
-                            
-                            <div class="relative h-72 w-full overflow-hidden bg-slate-200 dark:bg-base">
-                                <img 
-                                    src="${recipe.image_url}" 
-                                    alt="${recipe.name}" 
-                                    loading="lazy"
-                                    class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
-                                />
+
+                            <div class="relative h-72 w-full overflow-hidden bg-slate-200 dark:bg-slate-800">
+                                ${imageHTML}
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-70 group-hover:opacity-90 transition-opacity duration-300"></div>
-                                
-                                <div class="absolute top-4 left-4 flex gap-2 z-10">
+
+                                ${diet ? `<div class="absolute top-4 left-4 flex gap-2 z-10">
                                     <span class="px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full bg-success/90 backdrop-blur-md text-white shadow-sm border border-white/20">
-                                        ${recipe.diet}
+                                        ${diet}
                                     </span>
-                                </div>
+                                </div>` : ''}
 
                                 <button onclick="event.preventDefault(); window.toggleHeart(this);" class="absolute top-4 right-4 p-2.5 rounded-full bg-white/20 backdrop-blur-md text-white border border-white/30 hover:bg-white hover:text-primary transition-all duration-300 focus:outline-none z-30 group/heart hover:scale-110 hover:shadow-lg">
                                     <svg class="w-5 h-5 heart-icon transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
@@ -93,22 +112,22 @@ function fetchRecipes() {
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="p-6 flex flex-col flex-grow relative z-10">
                                 <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2 line-clamp-2 leading-snug group-hover:text-primary transition-colors">
                                     ${recipe.name}
                                 </h3>
 
                                 <div class="flex flex-wrap items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400 mb-4 uppercase tracking-wider">
-                                    <span>${recipe.cuisine}</span>
+                                    <span>${cuisine}</span>
                                     <span class="w-1 h-1 rounded-full bg-slate-300 dark:bg-white/20"></span>
-                                    <span class="text-accent">${recipe.course}</span>
+                                    <span class="text-accent">${course}</span>
                                 </div>
 
                                 <div class="mt-auto pt-4 border-t border-slate-100 dark:border-white/5 flex items-center justify-between">
                                     <span class="flex items-center gap-1.5 text-sm font-bold text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-white/5 px-3 py-1 rounded-full">
                                         <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                        ${recipe.prep_time}
+                                        ${prepTime}
                                     </span>
                                 </div>
                             </div>
@@ -161,7 +180,8 @@ function handleRecipeClick(recipeId) {
         }).showToast();
     }
 
-    fetch(`http://127.0.0.1:8000/activity/?recipe_id=${recipeId}`)
+    // Use a relative URL so the app works on any host/port
+    fetch(`/api/activity/?recipe_id=${recipeId}`)
         .then(response => response.json())
         .then(data => {
             console.log('Activity tracked:', recipeId);

@@ -78,28 +78,21 @@
             return cookieValue ? cookieValue[1] : "";
         }
         
-        function getVideoId(input) {
-            if (!input) return null;
-            if (input.includes('v=')) return input.split('v=')[1].split('&')[0];
-            if (input.includes('/shorts/')) return input.split('/shorts/')[1].split('?')[0];
-            if (input.includes('youtu.be/')) return input.split('youtu.be/')[1].split('?')[0];
-            if (input.includes('/embed/')) return input.split('/embed/')[1].split('?')[0];
-            return input; 
-        }
-
-        function isShortVideo(input) { return input.includes("/shorts/"); }
-        function getSecureEmbedUrl(videoId) { return `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`; }
+        // All URL parsing is done server-side. The view now returns:
+        //   embed_url  — ready-to-use for <iframe src> or <video src>
+        //   watch_url  — YouTube watch link (null for file/external types)
+        //   type       — 'youtube' | 'youtube_short' | 'file' | 'external'
 
     async function fetchRecipeVideos(recipeId) {
-        const section = document.getElementById('video-section');
-        const longContainer = document.getElementById('long-videos-container');
+        const section        = document.getElementById('video-section');
+        const longContainer  = document.getElementById('long-videos-container');
         const shortContainer = document.getElementById('shorts-container');
-        const longGrid = document.getElementById('long-videos-grid');
-        const shortGrid = document.getElementById('shorts-grid');
+        const longGrid       = document.getElementById('long-videos-grid');
+        const shortGrid      = document.getElementById('shorts-grid');
 
         try {
-            // Note: Make sure the URL matches the one you established in urls.py
             const response = await fetch(`/videos/${recipeId}/`);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const data = await response.json();
 
             if (!data.videos || data.videos.length === 0) return;
@@ -110,46 +103,109 @@
             let hasShort = false;
 
             data.videos.forEach(video => {
-                const videoId = getVideoId(video.video_id || video.video_url); // Accounts for new custom model DB
-                const embedUrl = getSecureEmbedUrl(videoId);
-                const watchUrl = `https://www.youtube.com/watch?v=${videoId}`;
-                
-                if (video.video_id && isShortVideo(video.video_id)) {
+                const title      = video.title     || 'Recipe Video';
+                const embedUrl   = video.embed_url || '';
+                const watchUrl   = video.watch_url || null;
+                const videoType  = video.type      || 'youtube';
+
+                if (!embedUrl) return; // Skip if no valid URL
+
+                if (videoType === 'youtube_short') {
+                    // ── Short video (9:16 portrait layout) ──
                     hasShort = true;
                     shortsHTML += `
-                        <div class="snap-center shrink-0 flex flex-col gap-3" style="width: 240px;">
-                            <div class="bg-black rounded-3xl overflow-hidden shadow-xl border-4 border-gray-800 group relative" style="aspect-ratio: 9/16;">
-                                <iframe class="absolute inset-0 w-full h-full" src="${embedUrl}" title="YouTube Short" frameborder="0" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        <div class="snap-center shrink-0 flex flex-col gap-3" style="width:240px;">
+                            <div class="bg-black rounded-3xl overflow-hidden shadow-xl border-4 border-gray-800 relative" style="aspect-ratio:9/16;">
+                                <iframe
+                                    class="absolute inset-0 w-full h-full"
+                                    src="${embedUrl}"
+                                    title="${title}"
+                                    frameborder="0"
+                                    referrerpolicy="strict-origin-when-cross-origin"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowfullscreen
+                                ></iframe>
                             </div>
-                            <a href="${watchUrl}" target="_blank" class="w-full py-2 bg-white dark:bg-gray-800 rounded-xl text-xs font-bold text-gray-600 dark:text-gray-300 hover:bg-red-50 hover:text-red-600 transition-colors flex items-center justify-center gap-1 shadow-sm border border-gray-100 dark:border-gray-700">Open in YouTube</a>
+                            ${watchUrl ? `<a href="${watchUrl}" target="_blank" rel="noopener noreferrer"
+                                class="w-full py-2 bg-white dark:bg-gray-800 rounded-xl text-xs font-bold
+                                       text-gray-600 dark:text-gray-300 hover:bg-red-50 hover:text-red-600
+                                       transition-colors flex items-center justify-center gap-1 shadow-sm
+                                       border border-gray-100 dark:border-gray-700">
+                                Open in YouTube
+                            </a>` : ''}
                         </div>`;
-                } else {
+
+                } else if (videoType === 'file') {
+                    // ── Raw video file uploaded by user — use <video> tag ──
                     hasLong = true;
                     longVideosHTML += `
                         <div class="flex flex-col gap-4 w-full">
-                            <div class="bg-black rounded-3xl overflow-hidden shadow-2xl border border-gray-200 dark:border-gray-800 group relative w-full" style="aspect-ratio: 16/9;">
-                                <iframe class="absolute inset-0 w-full h-full" src="${video.video_url || embedUrl}" title="Recipe Video" frameborder="0" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                            <p class="text-sm font-bold text-slate-700 dark:text-slate-200">${title}</p>
+                            <div class="bg-black rounded-3xl overflow-hidden shadow-2xl border border-gray-200
+                                        dark:border-gray-800 w-full" style="aspect-ratio:16/9;">
+                                <video
+                                    class="w-full h-full object-contain"
+                                    controls
+                                    preload="metadata"
+                                    src="${embedUrl}"
+                                    title="${title}"
+                                >
+                                    Your browser does not support the video tag.
+                                </video>
                             </div>
+                        </div>`;
+
+                } else {
+                    // ── YouTube (standard) or external embeddable URL ──
+                    hasLong = true;
+                    longVideosHTML += `
+                        <div class="flex flex-col gap-4 w-full">
+                            <p class="text-sm font-bold text-slate-700 dark:text-slate-200">${title}</p>
+                            <div class="bg-black rounded-3xl overflow-hidden shadow-2xl border border-gray-200
+                                        dark:border-gray-800 relative w-full" style="aspect-ratio:16/9;">
+                                <iframe
+                                    class="absolute inset-0 w-full h-full"
+                                    src="${embedUrl}"
+                                    title="${title}"
+                                    frameborder="0"
+                                    referrerpolicy="strict-origin-when-cross-origin"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowfullscreen
+                                ></iframe>
+                            </div>
+                            ${watchUrl ? `<a href="${watchUrl}" target="_blank" rel="noopener noreferrer"
+                                class="inline-flex items-center gap-2 text-xs font-bold text-red-600
+                                       hover:underline">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356
+                                             2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245
+                                             11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185
+                                             -.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+                                </svg>
+                                Watch on YouTube
+                            </a>` : ''}
                         </div>`;
                 }
             });
 
-            if (hasLong) { longGrid.innerHTML = longVideosHTML; longContainer.classList.remove('hidden'); }
-            if (hasShort) { shortGrid.innerHTML = shortsHTML; shortContainer.classList.remove('hidden'); }
+            if (hasLong)  { longGrid.innerHTML  = longVideosHTML; longContainer.classList.remove('hidden'); }
+            if (hasShort) { shortGrid.innerHTML = shortsHTML;     shortContainer.classList.remove('hidden'); }
             if (hasLong || hasShort) { section.classList.remove('hidden'); }
 
-        } catch (error) { console.error('Error loading videos:', error); }
+        } catch (error) {
+            console.error('Error loading videos:', error);
+        }
     }
 
         async function fetchRecipeData() {
             try {
-                const response = await fetch('/api/recipe/{{id}}/');
+                const response = await fetch('/api/recipe/{{ recipe.id }}/');
                 if (!response.ok) throw new Error('Network response was not ok');
                 const data = await response.json();
                 
                 displayRecipe(data.recipe);
                 displaySimilarRecipes(data.similar_recipes);
-                fetchRecipeVideos("{{ id }}"); 
+                fetchRecipeVideos("{{ recipe.id }}"); 
             } catch (error) {
                 console.error('Error fetching data:', error);
                 document.getElementById('recipe').innerHTML = `

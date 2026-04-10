@@ -31,20 +31,23 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'recipes',
-    'users',
+    # Django built-ins first (convention & avoids template shadowing)
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Third-party
     'tailwind',
     'django_browser_reload',
     'theme',
     'crispy_forms',
     'crispy_tailwind',
     'rest_framework',
+    # Local apps
+    'recipes',
+    'users',
 ]
 
 # Tailwind CSS settings
@@ -141,7 +144,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 MEDIA_URL = '/media/'
@@ -158,11 +161,34 @@ CRISPY_TEMPLATE_PACK = "tailwind"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = 'home'
-LOGIN_URL ='login'
-LOGOUT_URL = 'logout'
+LOGIN_REDIRECT_URL = '/'
+# Absolute path is required because LOGIN_URL is under the 'users' namespace;
+# bare name 'login' resolves to the wrong URL and causes @login_required to 404.
+LOGIN_URL = '/users/login/'
+LOGOUT_URL = '/users/logout/'
 
-EMAIL_BACKEND ='django.core.mail.backends.console.EmailBackend'
-EMAIL_HOST="smtop.gmail.com"
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Switch to smtp.gmail.com + a real backend in production
+EMAIL_HOST = 'smtp.gmail.com'  # Fixed typo: was 'smtop.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='noreply@recipy.com')
+
+# -------------------------------------------------------------------
+# Cache — use in-memory cache for development.
+# For production, switch to Redis: django.core.cache.backends.redis.RedisCache
+# -------------------------------------------------------------------
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'recipy-cache',
+    }
+}
+
+# How long (seconds) to cache the recommendation engine vectors
+RECOMMENDATION_CACHE_TIMEOUT = 900   # 15 minutes
+SEARCH_CACHE_TIMEOUT = 300           # 5 minutes
 
 

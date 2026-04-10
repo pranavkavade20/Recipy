@@ -29,7 +29,9 @@ class Recipe(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
-        if not self.author or (self.author and self.author.is_superuser):
+        # Only admin/superuser-created recipes are tagged Premium.
+        # Null author (e.g. data imports) is treated as Normal, not Premium.
+        if self.author and self.author.is_superuser:
             self.tag = 'Premium'
         else:
             self.tag = 'Normal'
@@ -84,6 +86,12 @@ class MealPlanner(models.Model):
 class UserRecipeActivity(models.Model):
     ACTION_CHOICES = [('favorite', 'Favorite'), ('view', 'View')]
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE,null=True, blank=True)
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, null=True, blank=True)
     action = models.CharField(max_length=10, choices=ACTION_CHOICES)
     timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['user', 'action']),
+            models.Index(fields=['user', 'recipe', 'action']),
+        ]
