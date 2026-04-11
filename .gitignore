@@ -167,9 +167,6 @@ cython_debug/
 # Django commands
 Django.md
 
-# Dataset
-recipes.csv
-
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
 #  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
@@ -178,3 +175,8 @@ recipes.csv
 #.idea/
 
 # End of https://www.toptal.com/developers/gitignore/api/django
+
+# Data
+seed_recipes.py
+
+recipes.json
