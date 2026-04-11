@@ -38,21 +38,37 @@ window.toggleHeart = function(btn) {
     const icon = btn.querySelector('.heart-icon');
     if (icon.getAttribute('fill') === 'none') {
         icon.setAttribute('fill', 'currentColor');
-        icon.classList.add('text-primary', 'scale-125');
-        btn.classList.add('bg-white', 'text-primary', 'border-white', 'shadow-lg');
-        btn.classList.remove('bg-white/20', 'text-white', 'border-white/30');
+        icon.classList.add('text-orange-500', 'scale-110');
+        btn.classList.add('bg-white/90', 'dark:bg-[#111111]/90', 'border-slate-200', 'dark:border-white/20', 'shadow-md');
+        btn.classList.remove('bg-black/20', 'text-white', 'border-white/30');
+        
+        // Premium Apple-style Notification
         if (typeof Toastify !== 'undefined') {
             Toastify({ 
                 text: "Recipe saved!", 
-                duration: 2000, 
-                style: { background: "#1E293B", color: "#fff", borderRadius: "100px", border: "1px solid #F97316"} 
+                duration: 2500, 
+                gravity: "top",
+                position: "center",
+                style: { 
+                    background: "rgba(255, 255, 255, 0.8)", 
+                    backdropFilter: "blur(20px)",
+                    WebkitBackdropFilter: "blur(20px)",
+                    color: "#0f172a", 
+                    borderRadius: "100px", 
+                    border: "1px solid rgba(255, 255, 255, 0.4)",
+                    boxShadow: "0 10px 40px -10px rgba(0,0,0,0.1)",
+                    fontWeight: "700",
+                    fontSize: "14px",
+                    padding: "12px 24px",
+                    marginTop: "80px"
+                } 
             }).showToast();
         }
     } else {
         icon.setAttribute('fill', 'none');
-        icon.classList.remove('text-primary', 'scale-125');
-        btn.classList.remove('bg-white', 'text-primary', 'border-white', 'shadow-lg');
-        btn.classList.add('bg-white/20', 'text-white', 'border-white/30');
+        icon.classList.remove('text-orange-500', 'scale-110');
+        btn.classList.remove('bg-white/90', 'dark:bg-[#111111]/90', 'border-slate-200', 'dark:border-white/20', 'shadow-md');
+        btn.classList.add('bg-black/20', 'text-white', 'border-white/30');
     }
 };
 
@@ -71,62 +87,60 @@ function fetchRecipes() {
                 const prepTime  = recipe.prep_time || '—';
 
                 // Image element: show the photo if available, otherwise a styled placeholder
-                // The serializer field is named 'image' (not 'image_url').
-                // DRF returns a full absolute URL when context={'request': request} is set.
                 const imageHTML = recipe.image
                     ? `<img
                             src="${recipe.image}"
                             alt="${recipe.name}"
                             loading="lazy"
-                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                            class="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
                         />`
-                    : `<div class="w-full h-full flex flex-col items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-400">
-                            <svg class="w-12 h-12 mb-2 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    : `<div class="w-full h-full flex flex-col items-center justify-center bg-slate-100 dark:bg-[#111111] text-slate-400">
+                            <svg class="w-10 h-10 mb-2 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                     d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                             </svg>
-                            <span class="text-xs font-semibold uppercase tracking-wide">No Photo</span>
+                            <span class="text-[10px] font-black uppercase tracking-widest">No Photo</span>
                         </div>`;
 
                 return `
                     <a href="/detail/${recipe.id}/" target="_blank" onclick="handleRecipeClick('${recipe.id}')" class="group block outline-none h-full">
-                        <div class="relative glass-panel bg-white dark:bg-[#121212] rounded-[2rem] overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-20px_rgba(249,115,22,0.4)] border border-gray-100 dark:border-white/5 h-full flex flex-col">
+                        <div class="relative bg-white/60 dark:bg-[#111111]/60 backdrop-blur-xl rounded-[2rem] overflow-hidden transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.5)] border border-slate-200/60 dark:border-white/5 h-full flex flex-col group-hover:border-slate-300 dark:group-hover:border-white/10">
 
-                            <div class="relative h-72 w-full overflow-hidden bg-slate-200 dark:bg-slate-800">
+                            <div class="relative h-64 sm:h-72 w-full overflow-hidden bg-slate-200 dark:bg-slate-800 rounded-t-[2rem]">
                                 ${imageHTML}
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-70 group-hover:opacity-90 transition-opacity duration-300"></div>
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500 pointer-events-none"></div>
 
                                 ${diet ? `<div class="absolute top-4 left-4 flex gap-2 z-10">
-                                    <span class="px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full bg-success/90 backdrop-blur-md text-white shadow-sm border border-white/20">
+                                    <span class="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-full bg-black/30 backdrop-blur-md text-white shadow-sm border border-white/20">
                                         ${diet}
                                     </span>
                                 </div>` : ''}
 
-                                <button onclick="event.preventDefault(); window.toggleHeart(this);" class="absolute top-4 right-4 p-2.5 rounded-full bg-white/20 backdrop-blur-md text-white border border-white/30 hover:bg-white hover:text-primary transition-all duration-300 focus:outline-none z-30 group/heart hover:scale-110 hover:shadow-lg">
-                                    <svg class="w-5 h-5 heart-icon transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                                <button onclick="event.preventDefault(); window.toggleHeart(this);" class="absolute top-4 right-4 p-2.5 rounded-full bg-black/20 backdrop-blur-md text-white border border-white/30 hover:bg-white/90 hover:text-orange-500 transition-all duration-300 focus:outline-none z-30 group/heart hover:scale-110 shadow-sm">
+                                    <svg class="w-4 h-4 sm:w-5 sm:h-5 heart-icon transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                                 </button>
-
-                                <div class="absolute bottom-4 right-4 translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-out z-20">
-                                    <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/40 hover:scale-110 transition-transform">
-                                        <svg class="w-5 h-5 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                
+                                <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20 pointer-events-none">
+                                    <div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white shadow-xl transform scale-75 group-hover:scale-100 transition-transform duration-500 ease-out">
+                                        <svg class="w-5 h-5 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="p-6 flex flex-col flex-grow relative z-10">
-                                <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2 line-clamp-2 leading-snug group-hover:text-primary transition-colors">
+                            <div class="p-5 sm:p-6 flex flex-col flex-grow relative z-10 bg-gradient-to-b from-white/50 to-white/10 dark:from-white/5 dark:to-transparent">
+                                <h3 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-2 line-clamp-2 leading-tight tracking-tight group-hover:text-orange-500 transition-colors duration-300">
                                     ${recipe.name}
                                 </h3>
 
-                                <div class="flex flex-wrap items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400 mb-4 uppercase tracking-wider">
+                                <div class="flex flex-wrap items-center gap-2 text-[10px] sm:text-xs font-black text-slate-400 dark:text-slate-500 mb-4 uppercase tracking-widest">
                                     <span>${cuisine}</span>
                                     <span class="w-1 h-1 rounded-full bg-slate-300 dark:bg-white/20"></span>
-                                    <span class="text-accent">${course}</span>
+                                    <span class="text-orange-500 dark:text-orange-400">${course}</span>
                                 </div>
 
-                                <div class="mt-auto pt-4 border-t border-slate-100 dark:border-white/5 flex items-center justify-between">
-                                    <span class="flex items-center gap-1.5 text-sm font-bold text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-white/5 px-3 py-1 rounded-full">
-                                        <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <div class="mt-auto pt-4 flex items-center justify-between border-t border-slate-200/50 dark:border-white/5">
+                                    <span class="flex items-center gap-1.5 text-xs font-bold text-slate-600 dark:text-slate-300 bg-white/80 dark:bg-white/10 shadow-sm border border-slate-200/50 dark:border-white/5 px-3 py-1.5 rounded-full">
+                                        <svg class="w-3.5 h-3.5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                         ${prepTime}
                                     </span>
                                 </div>
@@ -151,7 +165,7 @@ function fetchRecipes() {
             console.error('Error fetching data:', error);
             const allRecipesContainer = document.getElementById('all-recipes');
             if (allRecipesContainer) {
-                allRecipesContainer.innerHTML = '<div class="col-span-full text-center py-12 text-slate-500">Failed to load recommendations. Please try again.</div>';
+                allRecipesContainer.innerHTML = '<div class="col-span-full text-center py-12 text-sm font-medium text-slate-500 bg-white/50 dark:bg-[#111111]/50 backdrop-blur-xl rounded-[2rem] border border-slate-200 dark:border-white/5">Failed to load recommendations. Please try again.</div>';
             }
         });
 }
@@ -162,20 +176,20 @@ function handleRecipeClick(recipeId) {
             text: "Loading recipe...",
             duration: 3000,
             close: false,
-            gravity: "bottom", 
+            gravity: "top", 
             position: "center", 
             style: {
-                background: "rgba(255, 255, 255, 0.1)",
-                backdropFilter: "blur(16px)",
-                WebkitBackdropFilter: "blur(16px)",
+                background: "rgba(15, 23, 42, 0.85)", // Dark premium backdrop
+                backdropFilter: "blur(20px)",
+                WebkitBackdropFilter: "blur(20px)",
                 color: "#fff",
                 borderRadius: "100px",
                 padding: "12px 24px",
                 fontSize: "14px",
                 fontWeight: "700",
-                boxShadow: "0 10px 40px rgba(0,0,0,0.5)",
+                boxShadow: "0 20px 40px -10px rgba(0,0,0,0.3)",
                 border: "1px solid rgba(255,255,255,0.1)",
-                marginBottom: "80px"
+                marginTop: "80px"
             }
         }).showToast();
     }
