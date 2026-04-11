@@ -25,6 +25,9 @@ from .models import Recipe, Ingredient, MealPlanner, UserRecipeActivity, RecipeV
 from .forms import RecipeForm, IngredientFormSet, RecipeVideoFormSet, MealPlannerForm
 from .serializers import RecipeSerializer, UserRecipeActivitySerializer
 
+@login_required
+def dashboard(request):
+    return render(request, 'recipes/dashboard.html', {'section': 'dashboard'})
 
 # ---------------------------------------------------------------------------
 # Helper: build and cache the recommendation FAISS index
