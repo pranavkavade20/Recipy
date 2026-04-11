@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # Local apps added top to overwrite design.
+    'users',
     # Django built-ins first (convention & avoids template shadowing)
     'django.contrib.admin',
     'django.contrib.auth',
@@ -47,7 +49,7 @@ INSTALLED_APPS = [
     'rest_framework',
     # Local apps
     'recipes',
-    'users',
+    
 ]
 
 # Tailwind CSS settings
