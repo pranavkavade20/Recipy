@@ -308,96 +308,249 @@ class RecipeDetailAPI(APIView):
 
 @login_required
 def search_user_recipes(request):
-    query = request.GET.get("q", "")
+    """
+    Search user's own recipes by name, description, and ingredients.
+    Supports partial matches and is case-insensitive.
+    """
+    query = request.GET.get("q", "").strip()
     recipes = None
+    
     if query:
+        # Build comprehensive filter combining name, description, and ingredients
         recipes = Recipe.objects.filter(
-            Q(author=request.user) &
-            (Q(name__icontains=query) | Q(ingredients__name__icontains=query))
-        ).distinct()
+            author=request.user
+        ).filter(
+            # Search in name (case-insensitive)
+            Q(name__icontains=query) |
+            # Search in description
+            Q(description__icontains=query) |
+            # Search in ingredient names
+            Q(ingredients__name__icontains=query) |
+            # Search in cuisine type
+            Q(cuisine__icontains=query) |
+            # Search in course type
+            Q(course__icontains=query)
+        ).distinct().prefetch_related('ingredients', 'videos')
+    
     return render(request, "recipes/search_results.html", {"recipes": recipes, "query": query})
 
 
 def search_page(request):
-    diet_type = request.GET.get('diet', '')
-    recipes = (
-        Recipe.objects.filter(diet__iexact=diet_type)[:9]
-        if diet_type
-        else Recipe.objects.all()[:9]
+    """
+    Explore/search page with advanced filtering by diet, cuisine, course, and recipe type.
+    Optimized query with select_related and prefetch_related for performance.
+    """
+    diet_type = request.GET.get('diet', '').strip()
+    cuisine_type = request.GET.get('cuisine', '').strip()
+    course_type = request.GET.get('course', '').strip()
+    recipe_type = request.GET.get('type', '').strip()
+    
+    # Start with all recipes and apply filters
+    recipes_qs = Recipe.objects.all().prefetch_related('ingredients', 'videos')
+    
+    if diet_type:
+        recipes_qs = recipes_qs.filter(diet__iexact=diet_type)
+    
+    if cuisine_type:
+        recipes_qs = recipes_qs.filter(cuisine__iexact=cuisine_type)
+    
+    if course_type:
+        recipes_qs = recipes_qs.filter(course__iexact=course_type)
+    
+    if recipe_type:
+        recipes_qs = recipes_qs.filter(recipe_type__iexact=recipe_type)
+    
+    # Randomize display and limit to 12 for better UX
+    recipes = recipes_qs.order_by('?')[:12]
+    
+    # Get unique filter options for dropdown population
+    unique_diets = Recipe.objects.filter(diet__isnull=False).values_list('diet', flat=True).distinct()
+    unique_cuisines = Recipe.objects.filter(cuisine__isnull=False).values_list('cuisine', flat=True).distinct()
+    unique_courses = Recipe.objects.filter(course__isnull=False).values_list('course', flat=True).distinct()
+    
+    context = {
+        'recipes': recipes,
+        'diet_type': diet_type,
+        'cuisine_type': cuisine_type,
+        'course_type': course_type,
+        'recipe_type': recipe_type ,
+        'available_diets': unique_diets,
+        'available_cuisines': unique_cuisines,
+        'available_courses': unique_courses,
+    }
+    
+    return render(request, 'recipes/search.html', context)
+
+
+def _build_optimized_search_index():
+    """
+    Build and cache an optimized search index with TF-IDF + ingredient data.
+    Returns (vectorizer, tfidf_matrix, all_recipes, ingredient_map, combined_texts)
+    """
+    recipe_count = Recipe.objects.count()
+    cache_key = f'search_index_v2_{recipe_count}'
+    cached = cache.get(cache_key)
+    if cached:
+        return cached
+
+    all_recipes = list(
+        Recipe.objects.all().prefetch_related('ingredients').values(
+            'id', 'name', 'image', 'description', 'cuisine', 'course', 'diet'
+        )
     )
-    return render(request, 'recipes/search.html', {'recipes': recipes, 'diet_type': diet_type})
+    if not all_recipes:
+        return None
+
+    # Build ingredient map for each recipe
+    ingredient_map = {}
+    for recipe in Recipe.objects.all().prefetch_related('ingredients'):
+        ingredient_map[recipe.id] = [ing.name.lower() for ing in recipe.ingredients.all()]
+
+    # Combined text includes recipe metadata + ingredients
+    combined_texts = []
+    for r in all_recipes:
+        ingredients_text = ' '.join(ingredient_map.get(r['id'], []))
+        combined_text = (
+            f"{r['name']} {r.get('description', '')} "
+            f"{r.get('cuisine', '')} {r.get('course', '')} {r.get('diet', '')} "
+            f"{ingredients_text}"
+        ).lower()
+        combined_texts.append(combined_text)
+
+    # Create TF-IDF vectorizer with optimized parameters
+    vectorizer = TfidfVectorizer(
+        stop_words='english',
+        min_df=1,
+        max_df=0.9,
+        ngram_range=(1, 2),  # Unigrams + bigrams for better matching
+        sublinear_tf=True,
+        max_features=5000
+    )
+    tfidf_matrix = vectorizer.fit_transform(combined_texts)
+
+    result = (vectorizer, tfidf_matrix, all_recipes, ingredient_map, combined_texts)
+    timeout = getattr(settings, 'SEARCH_CACHE_TIMEOUT', 600)
+    cache.set(cache_key, result, timeout)
+    return result
 
 
 def search_recipes(request):
+    """
+    Optimized hybrid search combining:
+    - TF-IDF semantic similarity
+    - Fuzzy matching on recipe names
+    - Ingredient-based search
+    - Weighted ranking system
+    """
     query = request.GET.get('q', '').strip().lower()
-    if not query:
+    if not query or len(query) < 2:
         return JsonResponse({'recipes': [], 'suggestions': []}, status=200)
 
-    # Cache key includes recipe count so the vectorizer rebuilds if data changes
+    # Check cache for exact query
     recipe_count = Recipe.objects.count()
-    vector_cache_key = f'search_vectorizer_{recipe_count}'
-    search_cache_key = f'search_results_{query}_{recipe_count}'
-
-    # Return cached results for the exact same query + dataset state
+    search_cache_key = f'search_results_v2_{query}_{recipe_count}'
     cached_results = cache.get(search_cache_key)
     if cached_results:
         return JsonResponse(cached_results, status=200)
 
-    all_recipes = list(
-        Recipe.objects.all().values('id', 'name', 'image', 'description', 'cuisine', 'course', 'diet')
-    )
-    if not all_recipes:
+    # Build or retrieve optimized search index
+    index_data = _build_optimized_search_index()
+    if not index_data:
         return JsonResponse({'recipes': [], 'suggestions': []}, status=200)
 
-    # Cache the vectorizer data (expensive) keyed to recipe count
-    vectorizer_data = cache.get(vector_cache_key)
-    if vectorizer_data is None:
-        recipe_texts = [
-            f"{r['name']} {r.get('cuisine', '')} {r.get('course', '')} {r.get('diet', '')}".lower()
-            for r in all_recipes
-        ]
-        vectorizer = TfidfVectorizer(stop_words='english')
-        tfidf_matrix = vectorizer.fit_transform(recipe_texts)
-        vectorizer_data = (vectorizer, tfidf_matrix, all_recipes)
-        timeout = getattr(settings, 'SEARCH_CACHE_TIMEOUT', 300)
-        cache.set(vector_cache_key, vectorizer_data, timeout)
-    else:
-        vectorizer, tfidf_matrix, all_recipes = vectorizer_data
+    vectorizer, tfidf_matrix, all_recipes, ingredient_map, combined_texts = index_data
 
+    # ===== SEMANTIC SIMILARITY (TF-IDF) =====
+    try:
+        query_vec = vectorizer.transform([query])
+        semantic_scores = cosine_similarity(query_vec, tfidf_matrix).flatten()
+    except Exception:
+        semantic_scores = np.zeros(len(all_recipes))
+
+    # ===== FUZZY NAME MATCHING =====
     recipe_names = [r['name'].lower() for r in all_recipes]
+    fuzzy_name_scores = np.zeros(len(all_recipes))
 
-    # Compare query vector against all recipe vectors
-    query_vec = vectorizer.transform([query])
-    similarity_scores = cosine_similarity(query_vec, tfidf_matrix).flatten()
+    # Extract best fuzzy matches for names
+    if recipe_names:
+        fuzzy_matches = process.extract(
+            query, recipe_names, scorer=fuzz.token_set_ratio, limit=20
+        )
+        for _match, score, index in fuzzy_matches:
+            if score > 50:  # Lower threshold for more matches
+                fuzzy_name_scores[index] = score / 100.0
 
-    # Fuzzy name matching as a boosting signal
-    fuzzy_matches = process.extract(query, recipe_names, scorer=fuzz.partial_ratio, limit=5)
-    for _match, score, index in fuzzy_matches:
-        if score > 70:
-            similarity_scores[index] += score / 100
+    # ===== INGREDIENT-BASED SEARCH =====
+    ingredient_scores = np.zeros(len(all_recipes))
+    query_terms = set(query.split())
 
-    top_indices = np.argsort(similarity_scores)[::-1][:5]
+    for idx, (recipe, ingredients) in enumerate(zip(all_recipes, [ingredient_map.get(r['id'], []) for r in all_recipes])):
+        if ingredients:
+            # Fuzzy match ingredients
+            matching_ingredients = []
+            for ingredient in ingredients:
+                for term in query_terms:
+                    # Use token_set_ratio for ingredient matching
+                    if fuzz.token_set_ratio(term, ingredient) > 60:
+                        matching_ingredients.append(ingredient)
+                        break
+
+            # Score based on matched ingredients
+            if matching_ingredients:
+                ingredient_scores[idx] = min(len(matching_ingredients) / len(ingredients), 1.0) * 0.8
+
+    # ===== COMBINED RANKING =====
+    # Normalize scores to [0, 1] range
+    max_semantic = np.max(semantic_scores) if len(semantic_scores) > 0 else 1
+    semantic_scores = semantic_scores / max_semantic if max_semantic > 0 else semantic_scores
+
+    # Weight combination (can be tuned based on preference)
+    combined_scores = (
+        semantic_scores * 0.50 +      # 50% semantic similarity
+        fuzzy_name_scores * 0.35 +    # 35% name matching
+        ingredient_scores * 0.15      # 15% ingredient matching
+    )
+
+    # ===== RESULT COMPILATION =====
+    top_k = 10  # Get top 10 candidates
+    top_indices = np.argsort(combined_scores)[::-1][:top_k]
+
     matched_recipes = []
+    min_score_threshold = 0.15  # Adaptive threshold
 
     for i in top_indices:
-        if similarity_scores[i] > 0.3:
+        score = combined_scores[i]
+        if score >= min_score_threshold:
             r = all_recipes[i]
-            image_url = (
-                request.build_absolute_uri(f"{settings.MEDIA_URL}{r['image']}")
-                if r['image'] else ""
-            )
+            # Build proper absolute URL for images, with fallback
+            if r['image']:
+                image_url = request.build_absolute_uri(f"{settings.MEDIA_URL}{r['image']}")
+            else:
+                image_url = ""
+            
             matched_recipes.append({
                 'id': r['id'],
                 'name': r['name'],
                 'image_url': image_url,
-                'description': r.get('description', ''),
+                'description': r.get('description', '')[:150],  # Truncate description
                 'cuisine': r.get('cuisine', 'Unknown'),
+                'diet': r.get('diet', 'Standard'),  # ← ADDED: Frontend expects this
+                'course': r.get('course', 'Main'),  # ← ADDED: Frontend expects this
+                'score': float(score)
             })
 
-    suggestions = [all_recipes[i]['name'] for i in top_indices if similarity_scores[i] > 0.2]
+    # Limit to 6 results for UI
+    matched_recipes = matched_recipes[:6]
+
+    # Generate smart suggestions from top matches
+    suggestions = []
+    for idx in top_indices[:5]:
+        if combined_scores[idx] > 0.1:
+            suggestions.append(all_recipes[idx]['name'])
+
     result = {'recipes': matched_recipes, 'suggestions': suggestions}
 
-    timeout = getattr(settings, 'SEARCH_CACHE_TIMEOUT', 300)
+    timeout = getattr(settings, 'SEARCH_CACHE_TIMEOUT', 600)
     cache.set(search_cache_key, result, timeout)
 
     return JsonResponse(result, status=200)

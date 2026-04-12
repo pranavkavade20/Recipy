@@ -34,10 +34,6 @@
                             placeholder="What are you craving?" autocomplete="off" value="{{ request.GET.q }}"
                             required />
 
-                        <button type="submit"
-                            class="bg-[#4F4AD7] hover:bg-[#3d38bf] dark:bg-orange-500 dark:hover:bg-orange-600 text-white font-bold rounded-full text-sm sm:text-base px-5 sm:px-8 py-3 sm:py-4 transition-colors shadow-lg shrink-0">
-                            Search
-                        </button>
                     </div>
                 </form>
             </div>
@@ -45,36 +41,6 @@
     </div>
 
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 mt-8 relative z-30">
-
-        <div class="mb-10 text-center">
-
-            <div class="relative group/scroll max-w-4xl mx-auto px-4 sm:px-0">
-                <div class="flex gap-2 md:gap-3 overflow-x-auto md:flex-wrap md:justify-center pb-2 no-scrollbar snap-x snap-mandatory md:snap-none md:overflow-visible">
-
-                    {% with current_diet=request.GET.diet %}
-
-                    <a href="?diet=Vegetarian" class="diet-chip snap-start {% if current_diet == 'Vegetarian' %}active{% endif %}">
-                        <span class="chip-icon bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300"><i data-lucide="leaf" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
-                        <span>Veg</span>
-                    </a>
-
-                    <a href="?diet=Non Vegeterian" class="diet-chip snap-start {% if current_diet == 'Non Vegeterian' %}active{% endif %}">
-                        <span class="chip-icon bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-300"><i data-lucide="drumstick" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
-                        <span>Non-Veg</span>
-                    </a>
-
-                    <a href="?diet=Vegan" class="diet-chip snap-start {% if current_diet == 'Vegan' %}active{% endif %}">
-                        <span class="chip-icon bg-emerald-100 text-emerald-600 dark:bg-emerald-900 dark:text-emerald-300"><i data-lucide="sprout" class="w-3.5 h-3.5 md:w-4 md:h-4"></i></span>
-                        <span>Vegan</span>
-                    </a>
-
-                    {% endwith %}
-                </div>
-                <div
-                    class="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-slate-50 dark:from-slate-900 to-transparent pointer-events-none md:hidden">
-                </div>
-            </div>
-        </div>
 
         <div id="results"
             class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 min-h-[300px]">
@@ -97,7 +63,7 @@
                             {% if 'Non' in recipe.diet %} bg-red-500/90 text-white
                             {% elif 'Veg' in recipe.diet %} bg-green-500/90 text-white
                             {% else %} bg-orange-500/90 text-white {% endif %}">
-                            {{ recipe.diet|default:"Standard" }}
+                            {{ recipe.diet|default:"Non-veg" }}
                         </span>
                     </div>
 
@@ -184,19 +150,29 @@
 
                     data.recipes.forEach((recipe) => {
                         let badgeClass = "bg-orange-500/90";
-                        if (recipe.diet.includes("Non")) badgeClass = "bg-red-500/90";
-                        else if (recipe.diet.includes("Veg")) badgeClass = "bg-green-500/90";
+                        if (recipe.diet && recipe.diet.includes("Non")) badgeClass = "bg-red-500/90";
+                        else if (recipe.diet && recipe.diet.includes("Veg")) badgeClass = "bg-green-500/90";
+
+                        // Build image HTML with fallback for missing images
+                        const imageHTML = recipe.image_url 
+                            ? `<img src="${recipe.image_url}" alt="${recipe.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />`
+                            : `<div class="w-full h-full flex flex-col items-center justify-center bg-slate-100 dark:bg-[#111111] text-slate-400">
+                                <svg class="w-10 h-10 mb-2 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                <span class="text-[10px] font-black uppercase tracking-widest">No Photo</span>
+                            </div>`;
 
                         resultsContainer.innerHTML += `
                         <a href="/detail/${recipe.id}" class="block group h-full fade-in">
                             <div class="bg-white dark:bg-slate-800 rounded-[2rem] shadow-sm border border-slate-100 dark:border-white/5 overflow-hidden hover:shadow-[0_20px_40px_-20px_rgba(249,115,22,0.4)] hover:-translate-y-2 transition-all duration-500 h-full flex flex-col">
                                 
-                                <div class="relative h-56 sm:h-64 overflow-hidden">
-                                    <img src="${recipe.image_url}" alt="${recipe.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                                <div class="relative h-56 sm:h-64 overflow-hidden bg-slate-200 dark:bg-slate-700">
+                                    ${imageHTML}
                                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-70 group-hover:opacity-90"></div>
                                     
                                     <span class="absolute top-4 left-4 px-3 py-1 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest backdrop-blur-md shadow-sm border border-white/20 text-white ${badgeClass}">
-                                        ${recipe.diet}
+                                        ${recipe.diet || 'Standard'}
                                     </span>
                                 </div>
 
@@ -205,13 +181,17 @@
                                         ${recipe.name}
                                     </h3>
                                     
+                                    <p class="text-sm text-slate-600 dark:text-slate-300 mb-4 line-clamp-2 text-opacity-75">
+                                        ${recipe.description || 'No description available'}
+                                    </p>
+                                    
                                     <div class="mt-auto pt-4 border-t border-slate-100 dark:border-white/5 flex items-center justify-between text-sm">
                                         <div class="flex items-center text-slate-500 dark:text-slate-400 font-medium tracking-wide">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chef-hat mr-1.5 w-4 h-4 text-orange-500"><path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/><line x1="6" x2="18" y1="17" y2="17"/></svg>
-                                            ${recipe.cuisine}
+                                            ${recipe.cuisine || 'Unknown'}
                                         </div>
                                         <span class="font-bold text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-500/10 px-3 py-1 rounded-full uppercase text-xs">
-                                            ${recipe.course}
+                                            ${recipe.course || 'Main'}
                                         </span>
                                     </div>
                                 </div>
