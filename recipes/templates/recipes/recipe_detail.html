@@ -226,16 +226,22 @@
             // DRF Serializer renders the image field natively as the URL string
             recipeContainer.innerHTML = `
                 <div class="flex flex-col lg:flex-row gap-8 lg:gap-12 mb-12">
-                    <div class="w-full lg:w-1/2">
-                        <div class="relative rounded-2xl sm:rounded-[2rem] overflow-hidden shadow-2xl group">
-                            <img src="${recipe.image}" alt="${recipe.name}" class="w-full h-auto object-cover transform transition-transform duration-700 group-hover:scale-105" />
+                    <div class="w-full lg:w-1/2 flex flex-col gap-6">
+                        <div class="relative rounded-2xl sm:rounded-[2rem] overflow-hidden shadow-2xl group w-full">
+                            <img 
+                                src="${recipe.image}" 
+                                alt="${recipe.name}" 
+                                class="w-full aspect-[4/3] object-cover transform transition-transform duration-700 group-hover:scale-105" 
+                            />
+                            
                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
                             <div class="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 flex flex-wrap gap-2">
                                 <span class="px-2 sm:px-3 py-1 rounded-lg text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-white/90 backdrop-blur text-slate-900 shadow-lg">${recipe.course || 'Dish'}</span>
                                 <span class="px-2 sm:px-3 py-1 rounded-lg text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-primary text-white shadow-lg">${recipe.cuisine || 'Global'}</span>
                             </div>
                         </div>
-                        <div class="mt-6">
+                        
+                        <div>
                             <button onclick="saveFavoriteRecipe(${recipe.id})" class="w-full relative group overflow-hidden rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-lg py-4 px-8 shadow-xl transition-all hover:-translate-y-1 focus:ring-4 focus:ring-primary/50">
                                 <span class="relative z-10 flex items-center justify-center gap-2 group-hover:scale-105 transition-transform">
                                     <svg class="w-6 h-6 text-primary group-hover:animate-ping" fill="currentColor" viewBox="0 0 24 24"><path d="M11.645 20.91l-.007-.003-.022-.012-2.73-1.636-1.125-.664-.55-.324C7.027 18.067 5.757 17.51 4.545 16.5C3.332 15.49 2.5 14.288 2.5 13.064c0-2.915 2.138-4.992 4.136-6.191C8.272 5.568 10.15 5.006 12 5.006c1.85 0 3.728.562 5.364 1.867 2 1.199 4.136 3.276 4.136 6.191 0 1.224-.833 2.424-2.045 3.435-1.212 1.01-2.482 1.567-3.791 2.378l-.55.324-1.125.664-2.73 1.636-.022.012-.007.003-.002.001-.002.001Z" /></svg>
@@ -244,26 +250,46 @@
                             </button>
                         </div>
                     </div>
+
                     <div class="w-full lg:w-1/2 flex flex-col justify-center">
-                        <div class="flex items-center gap-3 mb-4"><span class="px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wide ${dietColor}">${recipe.diet || 'Standard'}</span></div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wide ${dietColor}">${recipe.diet || 'Standard'}</span>
+                        </div>
                         <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-4 sm:mb-6 leading-tight">${recipe.name}</h1>
                         <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed mb-6 sm:mb-8 border-l-4 border-primary pl-4 bg-primary/10 py-3 rounded-r-lg shadow-sm">${recipe.description}</p>
+                        
                         <div class="grid grid-cols-2 gap-4">
                             <div class="bg-white dark:bg-white/5 p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-white/10 flex items-center gap-3 transition-transform hover:-translate-y-1">
-                                <div class="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-500"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div>
-                                <div><p class="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase">Prep Time</p><p class="font-bold text-slate-900 dark:text-white">${recipe.prep_time || '30 mins'}</p></div>
+                                <div class="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-500">
+                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase">Prep Time</p>
+                                    <p class="font-bold text-slate-900 dark:text-white">${recipe.prep_time || '30 mins'}</p>
+                                </div>
                             </div>
                             <div class="bg-white dark:bg-white/5 p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-white/10 flex items-center gap-3 transition-transform hover:-translate-y-1">
-                                <div class="w-10 h-10 rounded-full bg-success/20 flex items-center justify-center text-success"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg></div>
-                                <div><p class="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase">Servings</p><p class="font-bold text-slate-900 dark:text-white">4 People</p></div>
+                                <div class="w-10 h-10 rounded-full bg-success/20 flex items-center justify-center text-success">
+                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase">Servings</p>
+                                    <p class="font-bold text-slate-900 dark:text-white">4 People</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
                     <div class="lg:col-span-2">
                         <div class="bg-white dark:bg-[#121212] rounded-2xl sm:rounded-[2rem] shadow-sm border border-slate-100 dark:border-white/10 p-6 sm:p-8 md:p-10 mb-8">
-                            <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3"><span class="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-primary/20 text-primary"><svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg></span>Instructions</h3>
+                            <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
+                                <span class="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-primary/20 text-primary">
+                                    <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
+                                </span>
+                                Instructions
+                            </h3>
                             <div class="prose prose-sm sm:prose-lg dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">${recipe.instructions || "Instructions not added yet."}</div>
                         </div>
                     </div>
