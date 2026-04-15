@@ -115,11 +115,11 @@ def home(request):
                 recipe_ids.index(fid) for fid in favorite_ids if fid in recipe_ids
             ]
             if favorite_indices:
-                favorite_vectors = reduced_matrix[favorite_indices]
+                favorite_vectors = np.ascontiguousarray(reduced_matrix[favorite_indices], dtype=np.float32)
                 _, I = faiss_index.search(favorite_vectors, k=min(10, len(recipe_ids)))
                 similar_indices = set(
                     i for neighbors in I for i in neighbors
-                    if i not in favorite_indices
+                    if i != -1 and i not in favorite_indices
                 )
                 recommended_recipes = [
                     recipe_map[recipe_ids[i]] for i in similar_indices
@@ -616,8 +616,49 @@ def remove_saved_recipe(request):
 
 
 # ---------------------------------------------------------------------------
-# Helpers for video URL parsing
+# Helpers for video URL parsing & recommendations
 # ---------------------------------------------------------------------------
+
+def _get_youtube_recommendations(query):
+    api_key = config('YOUTUBE_API_KEY', default='')
+    if not api_key:
+        return []
+    
+    cache_key = f"yt_recs_{query.replace(' ', '_')}"
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return cached
+
+    url = "https://www.googleapis.com/youtube/v3/search"
+    params = {
+        "part": "snippet",
+        "q": f"{query} recipe",
+        "type": "video",
+        "maxResults": 3,
+        "key": api_key
+    }
+    
+    try:
+        resp = requests.get(url, params=params, timeout=5)
+        if resp.status_code == 200:
+            data = resp.json()
+            videos = []
+            for item in data.get("items", []):
+                vid_id = item["id"]["videoId"]
+                videos.append({
+                    "title": item["snippet"]["title"],
+                    "embed_url": f"https://www.youtube.com/embed/{vid_id}?rel=0&modestbranding=1&playsinline=1",
+                    "watch_url": f"https://www.youtube.com/watch?v={vid_id}",
+                    "type": "youtube_recommended",
+                    "thumbnail": item["snippet"]["thumbnails"]["high"]["url"] if "high" in item["snippet"]["thumbnails"] else ""
+                })
+            cache.set(cache_key, videos, 86400) # Cache for 24 hours
+            return videos
+    except Exception:
+        pass
+    
+    return []
+
 
 # Matches any YouTube video ID (11-char alphanumeric/dash/underscore)
 _YT_ID_RE = re.compile(
@@ -697,41 +738,9 @@ def get_recipe_videos(request, recipe_id):
             "type": video_type,
             "thumbnail": thumbnail_url,
         })
+    youtube_videos = _get_youtube_recommendations(recipe.name)
 
-    # ---- Fallback: YouTube Data API v3 search ----
-    if not video_data:
-        api_key = config('YOUTUBE_API_KEY', default=None)
-        if api_key:
-            try:
-                res = requests.get(
-                    "https://www.googleapis.com/youtube/v3/search",
-                    params={
-                        "part": "snippet",
-                        "q": f"{recipe.name} recipe",
-                        "key": api_key,
-                        "maxResults": 3,
-                        "type": "video",
-                    },
-                    timeout=5,
-                )
-                if res.status_code == 200:
-                    for item in res.json().get("items", []):
-                        vid = item["id"]["videoId"]
-                        video_data.append({
-                            "title": item["snippet"]["title"],
-                            "embed_url": (
-                                f"https://www.youtube.com/embed/{vid}"
-                                f"?rel=0&modestbranding=1&playsinline=1"
-                            ),
-                            "watch_url": f"https://www.youtube.com/watch?v={vid}",
-                            "type": "youtube",
-                            "thumbnail": (
-                                item["snippet"]["thumbnails"]
-                                .get("high", {})
-                                .get("url", "")
-                            ),
-                        })
-            except Exception:
-                pass  # Graceful degradation — log to Sentry/etc. in production
-
-    return JsonResponse({"videos": video_data})
+    return JsonResponse({
+        "videos": video_data,
+        "youtube_videos": youtube_videos
+    })

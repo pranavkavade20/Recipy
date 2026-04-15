@@ -2,7 +2,7 @@
 {% block title %}Recipe Detail | Recipy{% endblock %}
 
 {% block content %}
-<div class="bg-slate-50 dark:bg-base transition-colors duration-500 min-h-screen pb-20">
+<div class="pb-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
 
         <div id="recipe" class="animate-fade-in">
@@ -19,7 +19,7 @@
                     <div class="p-2 bg-red-100 dark:bg-red-900/30 rounded-xl text-red-600">
                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
                     </div>
-                    <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white">Video Guide</h2>
+                    <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white">Creator Videos</h2>
                 </div>
                 <div id="long-videos-grid" class="flex flex-col gap-16"></div>
             </div>
@@ -34,6 +34,18 @@
                     </div>
                 </div>
                 <div id="shorts-grid" class="flex overflow-x-auto pb-6 gap-6 md:grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 snap-x scroll-smooth no-scrollbar"></div>
+            </div>
+
+            <div id="youtube-recommended-container" class="hidden">
+                <div class="flex items-center gap-3 mb-8 border-b border-slate-200 dark:border-white/10 pb-4">
+                    <div class="p-2 bg-red-100 dark:bg-red-900/30 rounded-xl text-red-600">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                    </div>
+                    <div>
+                        <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white">YouTube Recommended</h2>
+                    </div>
+                </div>
+                <div id="youtube-recommended-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
             </div>
         </div>
 
@@ -87,22 +99,27 @@
         const section        = document.getElementById('video-section');
         const longContainer  = document.getElementById('long-videos-container');
         const shortContainer = document.getElementById('shorts-container');
+        const ytContainer    = document.getElementById('youtube-recommended-container');
         const longGrid       = document.getElementById('long-videos-grid');
         const shortGrid      = document.getElementById('shorts-grid');
+        const ytGrid         = document.getElementById('youtube-recommended-grid');
 
         try {
             const response = await fetch(`/videos/${recipeId}/`);
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const data = await response.json();
 
-            if (!data.videos || data.videos.length === 0) return;
+            if ((!data.videos || data.videos.length === 0) && (!data.youtube_videos || data.youtube_videos.length === 0)) return;
 
             let longVideosHTML = '';
             let shortsHTML = '';
+            let ytHTML = '';
             let hasLong = false;
             let hasShort = false;
+            let hasYt = false;
 
-            data.videos.forEach(video => {
+            if (data.videos && data.videos.length > 0) {
+                data.videos.forEach(video => {
                 const title      = video.title     || 'Recipe Video';
                 const embedUrl   = video.embed_url || '';
                 const watchUrl   = video.watch_url || null;
@@ -187,10 +204,52 @@
                         </div>`;
                 }
             });
+            }
+
+            if (data.youtube_videos && data.youtube_videos.length > 0) {
+                data.youtube_videos.forEach(video => {
+                    const title      = video.title     || 'YouTube Video';
+                    const embedUrl   = video.embed_url || '';
+                    const watchUrl   = video.watch_url || null;
+
+                    if (!embedUrl) return;
+
+                    hasYt = true;
+                    ytHTML += `
+                        <div class="flex flex-col gap-4 w-full">
+                            <p class="text-sm font-bold text-slate-700 dark:text-slate-200 line-clamp-2" title="${title}">${title}</p>
+                            <div class="bg-black rounded-3xl overflow-hidden shadow-2xl border border-gray-200
+                                        dark:border-gray-800 relative w-full" style="aspect-ratio:16/9;">
+                                <iframe
+                                    class="absolute inset-0 w-full h-full"
+                                    src="${embedUrl}"
+                                    title="${title}"
+                                    frameborder="0"
+                                    referrerpolicy="strict-origin-when-cross-origin"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowfullscreen
+                                ></iframe>
+                            </div>
+                            ${watchUrl ? `<a href="${watchUrl}" target="_blank" rel="noopener noreferrer"
+                                class="inline-flex items-center gap-2 text-xs font-bold text-red-600
+                                       hover:underline">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356
+                                             2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245
+                                             11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185
+                                             -.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+                                </svg>
+                                Watch on YouTube
+                            </a>` : ''}
+                        </div>`;
+                });
+            }
 
             if (hasLong)  { longGrid.innerHTML  = longVideosHTML; longContainer.classList.remove('hidden'); }
             if (hasShort) { shortGrid.innerHTML = shortsHTML;     shortContainer.classList.remove('hidden'); }
-            if (hasLong || hasShort) { section.classList.remove('hidden'); }
+            if (hasYt)    { ytGrid.innerHTML    = ytHTML;         ytContainer.classList.remove('hidden'); }
+            
+            if (hasLong || hasShort || hasYt) { section.classList.remove('hidden'); }
 
         } catch (error) {
             console.error('Error loading videos:', error);

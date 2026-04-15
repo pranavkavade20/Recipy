@@ -26,9 +26,9 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-[#000000] text-slate-900 dark:text-slate-50 transition-colors duration-500 selection:bg-orange-500/30 selection:text-orange-600 dark:selection:text-orange-400 min-h-screen flex flex-col">
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-50 transition-colors duration-500 selection:bg-orange-500/30 selection:text-orange-600 dark:selection:text-orange-400 min-h-screen flex flex-col">
 
-<nav class="fixed top-0 z-[100] w-full transition-all duration-300 bg-white/70 dark:bg-[#000000]/70 backdrop-blur-2xl border-b border-slate-200/50 dark:border-white/5">
+<nav class="fixed top-0 z-[100] w-full transition-all duration-300 bg-white/70 dark:bg-slate-900/70 backdrop-blur-2xl border-b border-slate-200/50 dark:border-white/5">
     <div class="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-20 sm:h-24">
             
@@ -70,7 +70,7 @@
                     <button class="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-tr from-slate-800 to-slate-900 dark:from-slate-100 dark:to-white text-white dark:text-slate-900 shadow-md hover:scale-105 transition-all duration-300 focus:outline-none ring-2 ring-transparent group-hover:ring-orange-500/50">
                         <span class="text-sm font-black">{{ request.user.username|slice:":1"|upper }}</span>
                     </button>
-                    <div class="absolute right-0 mt-3 w-64 bg-white/90 dark:bg-[#111111]/90 backdrop-blur-2xl border border-slate-200 dark:border-white/10 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 py-2 translate-y-2 group-hover:translate-y-0 transform origin-top-right">
+                    <div class="absolute right-0 mt-3 w-64 bg-white/90 dark:bg-slate-800/90 backdrop-blur-2xl border border-slate-200 dark:border-white/10 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 py-2 translate-y-2 group-hover:translate-y-0 transform origin-top-right">
                         <div class="px-5 py-4 border-b border-slate-100 dark:border-white/5">
                             <p class="text-sm font-black text-slate-900 dark:text-white tracking-tight">{{ request.user.username }}</p>
                             <p class="text-xs font-medium text-slate-500 dark:text-slate-400 truncate mt-0.5">{{ request.user.email }}</p>
@@ -121,13 +121,13 @@
 </main>
 
 <div class="relative z-[110] hidden" id="slide-over" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
-    <div class="fixed inset-0 bg-slate-900/40 dark:bg-[#000000]/60 backdrop-blur-sm transition-opacity opacity-0" id="backdrop" aria-hidden="true"></div>
+    <div class="fixed inset-0 dark:bg-slate-900/60 backdrop-blur-sm transition-opacity opacity-0" id="backdrop" aria-hidden="true"></div>
     
     <div class="fixed inset-0 overflow-hidden">
         <div class="absolute inset-0 overflow-hidden">
             <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
                 <div class="pointer-events-auto w-screen max-w-md transform translate-x-full transition ease-out duration-500 shadow-2xl" id="panel">
-                    <div class="flex h-full flex-col bg-white/80 dark:bg-[#111111]/80 backdrop-blur-3xl border-l border-white/40 dark:border-white/10">
+                    <div class="flex h-full flex-col bg-white/80 dark:bg-slate-900/80 backdrop-blur-3xl border-l border-white/40 dark:border-white/10">
                         <div class="px-6 py-6 border-b border-slate-200/50 dark:border-white/5 flex items-center justify-between">
                             <h2 class="text-lg font-black text-slate-900 dark:text-white tracking-tight" id="slide-over-title">Recommended For You</h2>
                             <button type="button" id="close-button" class="rounded-full p-2 text-slate-400 hover:bg-slate-200/50 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-white focus:outline-none transition-all hover:rotate-90 duration-300">
@@ -174,9 +174,9 @@
 </div>
 
 <div id="mobile-menu" class="fixed inset-0 z-[110] hidden overflow-hidden" role="dialog" aria-modal="true">
-    <div class="fixed inset-0 bg-slate-900/40 dark:bg-[#000000]/60 backdrop-blur-sm transition-opacity" id="mobile-menu-backdrop"></div>
+    <div class="fixed inset-0 bg-slate-900/40 dark:bg-slate-900/60 backdrop-blur-sm transition-opacity" id="mobile-menu-backdrop"></div>
     <div class="fixed inset-y-0 left-0 flex max-w-full">
-        <div id="mobile-menu-panel" class="w-screen max-w-xs transform -translate-x-full transition-transform duration-500 ease-out bg-white/90 dark:bg-[#111111]/90 backdrop-blur-3xl border-r border-white/40 dark:border-white/10 shadow-2xl">
+        <div id="mobile-menu-panel" class="w-screen max-w-xs transform -translate-x-full transition-transform duration-500 ease-out bg-white/90 dark:bg-slate-900/90 backdrop-blur-3xl border-r border-white/40 dark:border-white/10 shadow-2xl">
             <div class="flex h-full flex-col py-6 px-6">
                 <div class="flex items-center justify-between mb-8 pb-4 border-b border-slate-200/50 dark:border-white/5">
                     <div class="flex items-center gap-3">
@@ -225,7 +225,7 @@
     </div>
 </div>
 
-<footer class="bg-slate-50 dark:bg-[#000000] border-t border-slate-200/50 dark:border-white/5 mt-auto relative z-10">
+<footer class="bg-slate-50 dark:bg-slate-900 border-t border-slate-200/50 dark:border-white/5 mt-auto relative z-10">
     <div class="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div class="flex flex-col md:flex-row justify-between items-center gap-6">
             <div class="flex items-center gap-3 group cursor-pointer">

@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-<main class="w-full relative bg-white dark:bg-[#000000] overflow-hidden">
+<main class="w-full relative bg-white dark:bg-slate-900 overflow-hidden">
     <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-[500px] bg-orange-500/10 dark:bg-orange-500/5 blur-[120px] rounded-full pointer-events-none"></div>
 
     <section class="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 mt-12 md:mt-20 mb-16 flex flex-col items-center justify-center text-center relative z-10">
@@ -139,15 +139,15 @@
         {% if request.user.is_authenticated %}
             <div class="flex items-center gap-3 overflow-x-auto pb-6 mb-4 no-scrollbar [-ms-overflow-style:none] [scrollbar-width:none]">
                 <button class="whitespace-nowrap px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-xs sm:text-sm shadow-md transition-transform hover:scale-105">All Recipes</button>
-                <button class="whitespace-nowrap px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-white dark:bg-[#121212] border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 font-bold text-xs sm:text-sm hover:border-orange-500 hover:text-orange-500 dark:hover:border-orange-500 dark:hover:text-orange-400 transition-all shadow-sm">Breakfast</button>
-                <button class="whitespace-nowrap px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-white dark:bg-[#121212] border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 font-bold text-xs sm:text-sm hover:border-orange-500 hover:text-orange-500 dark:hover:border-orange-500 dark:hover:text-orange-400 transition-all shadow-sm">Healthy</button>
-                <button class="whitespace-nowrap px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-white dark:bg-[#121212] border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 font-bold text-xs sm:text-sm hover:border-orange-500 hover:text-orange-500 dark:hover:border-orange-500 dark:hover:text-orange-400 transition-all shadow-sm">Quick & Easy</button>
-                <button class="whitespace-nowrap px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-white dark:bg-[#121212] border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 font-bold text-xs sm:text-sm hover:border-orange-500 hover:text-orange-500 dark:hover:border-orange-500 dark:hover:text-orange-400 transition-all shadow-sm">Vegan</button>
+                <button class="whitespace-nowrap px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 font-bold text-xs sm:text-sm hover:border-orange-500 hover:text-orange-500 dark:hover:border-orange-500 dark:hover:text-orange-400 transition-all shadow-sm">Breakfast</button>
+                <button class="whitespace-nowrap px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 font-bold text-xs sm:text-sm hover:border-orange-500 hover:text-orange-500 dark:hover:border-orange-500 dark:hover:text-orange-400 transition-all shadow-sm">Healthy</button>
+                <button class="whitespace-nowrap px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 font-bold text-xs sm:text-sm hover:border-orange-500 hover:text-orange-500 dark:hover:border-orange-500 dark:hover:text-orange-400 transition-all shadow-sm">Quick & Easy</button>
+                <button class="whitespace-nowrap px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 font-bold text-xs sm:text-sm hover:border-orange-500 hover:text-orange-500 dark:hover:border-orange-500 dark:hover:text-orange-400 transition-all shadow-sm">Vegan</button>
             </div>
             
             <div id="all-recipes" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
                 {% for i in "12345678" %}
-                <div class="bg-white/80 dark:bg-[#111111]/80 backdrop-blur-md rounded-[2rem] overflow-hidden border border-slate-200/60 dark:border-white/5 shadow-sm hover:shadow-md transition-shadow flex flex-col h-[350px] sm:h-[400px]">
+                <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-[2rem] overflow-hidden border border-slate-200/60 dark:border-white/5 shadow-sm hover:shadow-md transition-shadow flex flex-col h-[350px] sm:h-[400px]">
                     <div class="h-48 sm:h-64 w-full bg-slate-100 dark:bg-white/5 relative overflow-hidden">
                         <div class="absolute inset-0 -translate-x-full animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/40 dark:via-white/5 to-transparent"></div>
                     </div>
@@ -174,7 +174,7 @@
                 <p class="max-w-lg text-slate-500 dark:text-slate-400 text-sm sm:text-base lg:text-lg mb-8 sm:mb-12 relative z-10 leading-relaxed font-medium px-4 sm:px-0">Join our creative platform to explore a highly curated, visually stunning feed of high-protein and diet-friendly recipes.</p>
                 
                 <div class="flex flex-col sm:flex-row gap-4 sm:gap-5 w-full sm:w-auto relative z-10">
-                    <a href="{% url 'users:login' %}" class="w-full sm:w-auto inline-flex justify-center items-center px-8 py-4 rounded-xl sm:rounded-2xl bg-white dark:bg-[#111] text-slate-900 dark:text-white border border-slate-200 dark:border-white/10 font-bold text-sm hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
+                    <a href="{% url 'users:login' %}" class="w-full sm:w-auto inline-flex justify-center items-center px-8 py-4 rounded-xl sm:rounded-2xl bg-white dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-white/10 font-bold text-sm hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
                         Sign In
                     </a>
                     <a href="{% url 'users:register' %}" class="w-full sm:w-auto inline-flex justify-center items-center px-8 py-4 rounded-xl sm:rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-sm hover:-translate-y-1 hover:shadow-[0_10px_20px_-10px_rgba(0,0,0,0.5)] dark:hover:shadow-[0_10px_20px_-10px_rgba(255,255,255,0.3)] transition-all duration-300">

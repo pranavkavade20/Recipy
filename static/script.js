@@ -39,7 +39,7 @@ window.toggleHeart = function(btn) {
     if (icon.getAttribute('fill') === 'none') {
         icon.setAttribute('fill', 'currentColor');
         icon.classList.add('text-orange-500', 'scale-110');
-        btn.classList.add('bg-white/90', 'dark:bg-[#111111]/90', 'border-slate-200', 'dark:border-white/20', 'shadow-md');
+        btn.classList.add('bg-white/90', 'dark:bg-bg-slate-800 /90', 'border-slate-200', 'dark:border-white/20', 'shadow-md');
         btn.classList.remove('bg-black/20', 'text-white', 'border-white/30');
         
         // Premium Apple-style Notification
@@ -67,7 +67,7 @@ window.toggleHeart = function(btn) {
     } else {
         icon.setAttribute('fill', 'none');
         icon.classList.remove('text-orange-500', 'scale-110');
-        btn.classList.remove('bg-white/90', 'dark:bg-[#111111]/90', 'border-slate-200', 'dark:border-white/20', 'shadow-md');
+        btn.classList.remove('bg-white/90', 'dark:bg-bg-slate-800 /90', 'border-slate-200', 'dark:border-white/20', 'shadow-md');
         btn.classList.add('bg-black/20', 'text-white', 'border-white/30');
     }
 };
@@ -77,7 +77,6 @@ function fetchRecipes() {
         .then(response => response.json())
         .then(data => {
             const allRecipes = data.all_recipes || [];
-            const similarRecipes = data.similar_recipes || [];
 
             function createRecipeCard(recipe) {
                 // Null-guard every optional field — avoids showing literal "null" text
@@ -94,7 +93,7 @@ function fetchRecipes() {
                             loading="lazy"
                             class="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
                         />`
-                    : `<div class="w-full h-full flex flex-col items-center justify-center bg-slate-100 dark:bg-[#111111] text-slate-400">
+                    : `<div class="w-full h-full flex flex-col items-center justify-center bg-slate-100 dark:bg-bg-slate-800  text-slate-400">
                             <svg class="w-10 h-10 mb-2 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                     d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
@@ -104,7 +103,7 @@ function fetchRecipes() {
 
                 return `
                     <a href="/detail/${recipe.id}/" target="_blank" onclick="handleRecipeClick('${recipe.id}')" class="group block outline-none h-full">
-                        <div class="relative bg-white/60 dark:bg-[#111111]/60 backdrop-blur-xl rounded-[2rem] overflow-hidden transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.5)] border border-slate-200/60 dark:border-white/5 h-full flex flex-col group-hover:border-slate-300 dark:group-hover:border-white/10">
+                        <div class="relative dark:bg-bg-slate-800 backdrop-blur-xl rounded-[2rem] overflow-hidden transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.5)] border border-slate-200/60 dark:border-white/5 h-full flex flex-col group-hover:border-slate-300 dark:group-hover:border-white/10">
 
                             <div class="relative h-64 sm:h-72 w-full overflow-hidden bg-slate-200 dark:bg-slate-800 rounded-t-[2rem]">
                                 ${imageHTML}
@@ -155,17 +154,12 @@ function fetchRecipes() {
                 // Remove skeleton and inject elements
                 allRecipesContainer.innerHTML = allRecipes.map(recipe => createRecipeCard(recipe)).join('');
             }
-
-            const similarRecipesContainer = document.getElementById('similar-recipes');
-            if (similarRecipesContainer) {
-                similarRecipesContainer.innerHTML = similarRecipes.map(recipe => createRecipeCard(recipe)).join('');
-            }
         })
         .catch(error => {
             console.error('Error fetching data:', error);
             const allRecipesContainer = document.getElementById('all-recipes');
             if (allRecipesContainer) {
-                allRecipesContainer.innerHTML = '<div class="col-span-full text-center py-12 text-sm font-medium text-slate-500 bg-white/50 dark:bg-[#111111]/50 backdrop-blur-xl rounded-[2rem] border border-slate-200 dark:border-white/5">Failed to load recommendations. Please try again.</div>';
+                allRecipesContainer.innerHTML = '<div class="col-span-full text-center py-12 text-sm font-medium text-slate-500 bg-white/50 dark:bg-bg-slate-800 /50 backdrop-blur-xl rounded-[2rem] border border-slate-200 dark:border-white/5">Failed to load recommendations. Please try again.</div>';
             }
         });
 }
