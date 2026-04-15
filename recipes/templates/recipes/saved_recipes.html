@@ -18,7 +18,7 @@
             {% if saved_recipes %}
                 {% for recipe in saved_recipes %}
                 <div id="recipe-{{ recipe.id }}" class="group h-full flex flex-col transition-all duration-500 ease-in-out">
-                    <div class="relative bg-white dark:bg-[#121212] rounded-[2rem] shadow-sm border border-slate-100 dark:border-white/5 overflow-hidden hover:shadow-[0_20px_40px_-20px_rgba(249,115,22,0.4)] hover:-translate-y-2 transition-all duration-500 h-full flex flex-col">
+                    <div class="relative bg-slate-900  rounded-[2rem] shadow-sm border border-slate-100 dark:border-white/5 overflow-hidden hover:shadow-[0_20px_40px_-20px_rgba(249,115,22,0.4)] hover:-translate-y-2 transition-all duration-500 h-full flex flex-col">
                         
                         <a href="{% url 'recipes:recipe_detail' recipe.id %}" class="relative h-72 overflow-hidden block">
                             {% if recipe.image %}
