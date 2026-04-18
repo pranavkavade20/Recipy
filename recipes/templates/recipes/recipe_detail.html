@@ -15,7 +15,7 @@
      <div id="video-section" class="mt-16 md:mt-24 hidden space-y-16">
             
             <div id="long-videos-container" class="hidden">
-                <div class="flex items-center gap-3 mb-8 border-b border-slate-200 dark:border-white/10 pb-4">
+                <div class="flex items-center gap-3 mb-8 border-b border-slate-200 dark:border-slate-800 pb-4">
                     <div class="p-2 bg-red-100 dark:bg-red-900/30 rounded-xl text-red-600">
                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
                     </div>
@@ -25,7 +25,7 @@
             </div>
 
             <div id="shorts-container" class="hidden">
-                <div class="flex items-center gap-3 mb-8 border-b border-slate-200 dark:border-white/10 pb-4">
+                <div class="flex items-center gap-3 mb-8 border-b border-slate-200 dark:border-slate-800 pb-4">
                     <div class="p-2 bg-primary/20 rounded-xl text-primary">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     </div>
@@ -37,7 +37,7 @@
             </div>
 
             <div id="youtube-recommended-container" class="hidden">
-                <div class="flex items-center gap-3 mb-8 border-b border-slate-200 dark:border-white/10 pb-4">
+                <div class="flex items-center gap-3 mb-8 border-b border-slate-200 dark:border-slate-800 pb-4">
                     <div class="p-2 bg-red-100 dark:bg-red-900/30 rounded-xl text-red-600">
                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
                     </div>
@@ -50,7 +50,7 @@
         </div>
 
         <div class="mt-16 md:mt-24">
-            <div class="flex items-center justify-between mb-8 border-b border-slate-200 dark:border-white/10 pb-4">
+            <div class="flex items-center justify-between mb-8 border-b border-slate-200 dark:border-slate-800 pb-4">
                 <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                     You Might Also <span class="text-primary">Love</span>
                 </h2>
@@ -72,7 +72,7 @@
             const isSuccess = type === 'success';
             
             const toast = document.createElement('div');
-            toast.className = `pointer-events-auto flex items-center w-full max-w-sm p-4 rounded-2xl shadow-2xl transform transition-all duration-300 translate-y-10 opacity-0 border bg-white dark:bg-gray-800 text-slate-800 dark:text-white border-slate-200 dark:border-white/10`;
+            toast.className = `pointer-events-auto flex items-center w-full max-w-sm p-4 rounded-2xl shadow-2xl transform transition-all duration-300 translate-y-10 opacity-0 border bg-white dark:bg-slate-900 text-slate-800 dark:text-white border-slate-200 dark:border-slate-800`;
             
             const icon = isSuccess 
                 ? `<div class="flex-shrink-0 w-10 h-10 bg-success/20 rounded-full flex items-center justify-center text-success"><svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div>`
@@ -144,10 +144,10 @@
                                 ></iframe>
                             </div>
                             ${watchUrl ? `<a href="${watchUrl}" target="_blank" rel="noopener noreferrer"
-                                class="w-full py-2 bg-white dark:bg-gray-800 rounded-xl text-xs font-bold
-                                       text-gray-600 dark:text-gray-300 hover:bg-red-50 hover:text-red-600
+                                class="w-full py-2 bg-white dark:bg-slate-900 rounded-xl text-xs font-bold
+                                       text-gray-600 dark:text-slate-300 hover:bg-red-50 hover:text-red-600
                                        transition-colors flex items-center justify-center gap-1 shadow-sm
-                                       border border-gray-100 dark:border-gray-700">
+                                       border border-gray-100 dark:border-slate-700">
                                 Open in YouTube
                             </a>` : ''}
                         </div>`;
@@ -159,7 +159,7 @@
                         <div class="flex flex-col gap-4 w-full">
                             <p class="text-sm font-bold text-slate-700 dark:text-slate-200">${title}</p>
                             <div class="bg-black rounded-3xl overflow-hidden shadow-2xl border border-gray-200
-                                        dark:border-gray-800 w-full" style="aspect-ratio:16/9;">
+                                        dark:border-slate-800 w-full" style="aspect-ratio:16/9;">
                                 <video
                                     class="w-full h-full object-contain"
                                     controls
@@ -179,7 +179,7 @@
                         <div class="flex flex-col gap-4 w-full">
                             <p class="text-sm font-bold text-slate-700 dark:text-slate-200">${title}</p>
                             <div class="bg-black rounded-3xl overflow-hidden shadow-2xl border border-gray-200
-                                        dark:border-gray-800 relative w-full" style="aspect-ratio:16/9;">
+                                        dark:border-slate-800 relative w-full" style="aspect-ratio:16/9;">
                                 <iframe
                                     class="absolute inset-0 w-full h-full"
                                     src="${embedUrl}"
@@ -219,7 +219,7 @@
                         <div class="flex flex-col gap-4 w-full">
                             <p class="text-sm font-bold text-slate-700 dark:text-slate-200 line-clamp-2" title="${title}">${title}</p>
                             <div class="bg-black rounded-3xl overflow-hidden shadow-2xl border border-gray-200
-                                        dark:border-gray-800 relative w-full" style="aspect-ratio:16/9;">
+                                        dark:border-slate-800 relative w-full" style="aspect-ratio:16/9;">
                                 <iframe
                                     class="absolute inset-0 w-full h-full"
                                     src="${embedUrl}"
@@ -272,7 +272,7 @@
                         <div class="inline-block p-4 rounded-full bg-red-50 dark:bg-red-900/20 mb-4">
                             <svg class="w-10 h-10 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         </div>
-                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Failed to load recipe</h2>
+                        <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Failed to load recipe</h2>
                         <button onclick="location.reload()" class="mt-6 px-6 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition">Retry</button>
                     </div>`;
             }
@@ -318,7 +318,7 @@
                         <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed mb-6 sm:mb-8 border-l-4 border-primary pl-4 bg-primary/10 py-3 rounded-r-lg shadow-sm">${recipe.description}</p>
                         
                         <div class="grid grid-cols-2 gap-4">
-                            <div class="bg-white dark:bg-white/5 p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-white/10 flex items-center gap-3 transition-transform hover:-translate-y-1">
+                            <div class="bg-white dark:bg-slate-900/30 p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 flex items-center gap-3 transition-transform hover:-translate-y-1">
                                 <div class="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-500">
                                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                 </div>
@@ -327,7 +327,7 @@
                                     <p class="font-bold text-slate-900 dark:text-white">${recipe.prep_time || '30 mins'}</p>
                                 </div>
                             </div>
-                            <div class="bg-white dark:bg-white/5 p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-white/10 flex items-center gap-3 transition-transform hover:-translate-y-1">
+                            <div class="bg-white dark:bg-slate-900/30 p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 flex items-center gap-3 transition-transform hover:-translate-y-1">
                                 <div class="w-10 h-10 rounded-full bg-success/20 flex items-center justify-center text-success">
                                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
                                 </div>
@@ -342,7 +342,7 @@
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
                     <div class="lg:col-span-2">
-                        <div class="dark:bg-bg-slate-900 rounded-2xl sm:rounded-[2rem] shadow-sm border border-slate-100 dark:border-white/10 p-6 sm:p-8 md:p-10 mb-8">
+                        <div class="dark:bg-bg-slate-900 rounded-2xl sm:rounded-[2rem] shadow-sm border border-slate-100 dark:border-slate-800 p-6 sm:p-8 md:p-10 mb-8">
                             <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
                                 <span class="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-primary/20 text-primary">
                                     <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
@@ -367,7 +367,7 @@
                 else if (recipe.diet && recipe.diet.includes("Veg")) badgeClass = "bg-success/90 text-white";
                 return `
                 <a href="/detail/${recipe.id}" class="block group h-full">
-                    <div class="dark:bg-bg-slate-900 rounded-[2rem] border border-slate-100 dark:border-white/5 overflow-hidden hover:-translate-y-2 hover:shadow-[0_20px_40px_-20px_rgba(249,115,22,0.4)] transition-all duration-500 h-full flex flex-col">
+                    <div class="dark:bg-bg-slate-900 rounded-[2rem] border border-slate-100 dark:border-slate-800 overflow-hidden hover:-translate-y-2 hover:shadow-[0_20px_40px_-20px_var(--tw-shadow-color)] hover:shadow-primary/40 transition-all duration-500 h-full flex flex-col">
                         <div class="relative h-72 overflow-hidden">
                             <img src="${recipe.image}" alt="${recipe.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-70 group-hover:opacity-90">
@@ -375,7 +375,7 @@
                             <span class="absolute top-4 left-4 px-3 py-1 rounded-full text-[10px] uppercase tracking-widest font-black backdrop-blur-md shadow-sm border border-white/20 text-white ${badgeClass}">${recipe.diet || 'Recipe'}</span></div>
                             <div class="p-6 flex flex-col flex-grow relative z-10">
                                 <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2 leading-snug group-hover:text-primary transition-colors line-clamp-2">${recipe.name}</h3>
-                                <div class="mt-auto pt-4 border-t border-slate-100 dark:border-white/5 flex items-center justify-between">
+                                <div class="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
                                     <div class="flex items-center text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                                         <svg class="w-4 h-4 mr-1.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
                                         ${recipe.cuisine || 'Global'}</div><span class="font-bold text-xs uppercase text-accent bg-accent/10 px-3 py-1 rounded-full">${recipe.course || 'Dish'}</span>

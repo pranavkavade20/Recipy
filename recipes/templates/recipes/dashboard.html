@@ -6,85 +6,85 @@
 {% block content %}
 <div class="py-12 px-4 sm:px-6 lg:px-8">
     
-    <div class="max-w-7xl mx-auto bg-white dark:bg-gray-900 shadow-2xl rounded-[2rem] overflow-hidden border border-stone-100 dark:border-gray-800">
+    <div class="max-w-7xl mx-auto bg-white dark:bg-slate-950 shadow-2xl rounded-[2rem] overflow-hidden border border-stone-100 dark:border-slate-800">
 
-        <div class="relative bg-gradient-to-r from-orange-50 to-orange-100 dark:from-gray-800 dark:to-gray-750 px-6 py-10 md:px-10 border-b border-orange-100 dark:border-gray-700">
+        <div class="relative bg-gradient-to-r from-primary/10 to-primary/20 dark:from-slate-900 dark:to-slate-950 px-6 py-10 md:px-10 border-b border-primary/20 dark:border-slate-700">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
                 <div class="flex items-center gap-5">
-                    <div class="p-3 bg-white dark:bg-gray-700 rounded-2xl shadow-sm text-orange-500 ring-1 ring-orange-100 dark:ring-gray-600">
+                    <div class="p-3 bg-white dark:bg-slate-900 rounded-2xl shadow-sm text-primary ring-1 ring-primary/20 dark:ring-slate-600">
                         <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                         </svg>
                     </div>
                     <div>
-                        <h1 class="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">Your RecipeBoard</h1>
-                        <p class="text-gray-600 dark:text-gray-400 mt-1">Manage, edit, and track the recipes you've shared.</p>
+                        <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Your RecipeBoard</h1>
+                        <p class="text-gray-600 dark:text-slate-400 mt-1">Manage, edit, and track the recipes you've shared.</p>
                     </div>
                 </div>
                 
-                <a href="{% url 'recipes:add_recipe' %}" class="group inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white text-sm font-bold rounded-xl hover:shadow-lg hover:shadow-orange-500/30 hover:-translate-y-0.5 transition-all duration-300">
+                <a href="{% url 'recipes:add_recipe' %}" class="group inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-primary to-accent text-white text-sm font-bold rounded-xl hover:shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5 transition-all duration-300">
                     <svg class="w-5 h-5 mr-2 transition-transform group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                     Add New Recipe
                 </a>
             </div>
-            <div class="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-orange-200/20 to-transparent pointer-events-none"></div>
+            <div class="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-primary/20 to-transparent pointer-events-none"></div>
         </div>
         
         <div class="p-6 md:p-10">
             <div class="flex items-center justify-between mb-6">
                 <h4 class="text-xl font-bold text-gray-800 dark:text-gray-200 flex items-center gap-2">
-                    <span class="w-2 h-8 bg-orange-500 rounded-full"></span>
+                    <span class="w-2 h-8 bg-primary rounded-full"></span>
                     Contributed Recipes
                 </h4>
-                <div class="text-sm font-medium px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-lg text-gray-600 dark:text-gray-300">
-                    Total: <span class="text-orange-600 dark:text-orange-400 font-bold">{{ user.recipes.count }}</span>
+                <div class="text-sm font-medium px-3 py-1 bg-gray-100 dark:bg-slate-900 rounded-lg text-gray-600 dark:text-slate-300">
+                    Total: <span class="text-primary font-bold">{{ user.recipes.count }}</span>
                 </div>
             </div>
             
-            <div class="relative overflow-hidden rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
+            <div class="relative overflow-hidden rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm">
                 <div class="overflow-x-auto custom-scrollbar max-h-[60vh]">
                     <table class="w-full text-left border-collapse">
-                        <thead class="bg-gray-50 dark:bg-gray-800/80 text-gray-500 dark:text-gray-400 text-xs uppercase font-bold tracking-wider sticky top-0 z-10 backdrop-blur-md">
+                        <thead class="bg-gray-50 dark:bg-slate-900/80 text-gray-500 dark:text-slate-400 text-xs uppercase font-bold tracking-wider sticky top-0 z-10 backdrop-blur-md">
                             <tr>
-                                <th class="px-6 py-4 border-b border-gray-100 dark:border-gray-700">Preview</th>
-                                <th class="px-6 py-4 border-b border-gray-100 dark:border-gray-700">Recipe Name</th>
-                                <th class="px-6 py-4 border-b border-gray-100 dark:border-gray-700">Type</th>
-                                <th class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 w-1/3">Description</th>
-                                <th class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 text-center">Actions</th>
+                                <th class="px-6 py-4 border-b border-gray-100 dark:border-slate-700">Preview</th>
+                                <th class="px-6 py-4 border-b border-gray-100 dark:border-slate-700">Recipe Name</th>
+                                <th class="px-6 py-4 border-b border-gray-100 dark:border-slate-700">Type</th>
+                                <th class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 w-1/3">Description</th>
+                                <th class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 text-center">Actions</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-100 dark:divide-gray-700 bg-white dark:bg-gray-800">
+                        <tbody class="divide-y divide-gray-100 dark:divide-gray-700 bg-white dark:bg-slate-900">
                             {% for recipe in user.recipes.all %}
-                            <tr class="group hover:bg-orange-50/50 dark:hover:bg-gray-700/50 transition-colors duration-200">
+                            <tr class="group hover:bg-primary/5 dark:hover:bg-slate-700/50 transition-colors duration-200">
                                 
                                 <td class="px-6 py-4">
                                     {% if recipe.image %}
-                                    <div class="h-14 w-14 rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-600 group-hover:scale-110 transition-transform duration-300">
+                                    <div class="h-14 w-14 rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-slate-700 group-hover:scale-110 transition-transform duration-300">
                                         <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" class="h-full w-full object-cover">
                                     </div>
                                     {% else %}
-                                    <div class="h-14 w-14 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-400">
+                                    <div class="h-14 w-14 rounded-xl bg-gray-100 dark:bg-slate-900 flex items-center justify-center text-gray-400">
                                         <span class="text-[10px] font-bold">NO IMG</span>
                                     </div>
                                     {% endif %}
                                 </td>
                                 
                                 <td class="px-6 py-4">
-                                    <div class="text-sm font-bold text-gray-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">{{ recipe.name }}</div>
+                                    <div class="text-sm font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">{{ recipe.name }}</div>
                                 </td>
                                 
                                 <td class="px-6 py-4">
                                     <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border
                                         {% if recipe.recipe_type == 'Veg' %} bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800
                                         {% elif recipe.recipe_type == 'Non-veg' %} bg-rose-50 text-rose-700 border-rose-100 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800
-                                        {% else %} bg-gray-50 text-gray-600 border-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600
+                                        {% else %} bg-gray-50 text-gray-600 border-gray-200 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700
                                         {% endif %}">
                                         {{ recipe.recipe_type }}
                                     </span>
                                 </td>
                                 
                                 <td class="px-6 py-4">
-                                    <div class="text-sm text-gray-600 dark:text-gray-400 truncate max-w-[200px] cursor-help border-b border-dotted border-gray-300"
+                                    <div class="text-sm text-gray-600 dark:text-slate-400 truncate max-w-[200px] cursor-help border-b border-dotted border-gray-300"
                                          onmouseenter="showTooltip(this, `{{ recipe.description|escapejs }}`)"
                                          onmouseleave="hideTooltip()">
                                         {{ recipe.description }}
@@ -92,10 +92,10 @@
                                 </td>
 
                                 <td class="px-6 py-4 text-center">
-                                    <a href="{% url 'recipes:update_recipe' recipe.id %}" class="text-gray-400 hover:text-blue-500 transition-colors p-1.5 rounded-full hover:bg-blue-50 dark:hover:bg-gray-700 mx-1" title="Edit Recipe">
+                                    <a href="{% url 'recipes:update_recipe' recipe.id %}" class="text-gray-400 hover:text-blue-500 transition-colors p-1.5 rounded-full hover:bg-blue-50 dark:hover:bg-slate-700 mx-1" title="Edit Recipe">
                                         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                                     </a>
-                                    <a href="{% url 'recipes:delete_recipe' recipe.id %}" class="text-gray-400 hover:text-red-500 transition-colors p-1.5 rounded-full hover:bg-red-50 dark:hover:bg-gray-700 mx-1" title="Delete Recipe">
+                                    <a href="{% url 'recipes:delete_recipe' recipe.id %}" class="text-gray-400 hover:text-red-500 transition-colors p-1.5 rounded-full hover:bg-red-50 dark:hover:bg-slate-700 mx-1" title="Delete Recipe">
                                         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                     </a>
                                 </td>
@@ -104,11 +104,11 @@
                             <tr>
                                 <td colspan="5" class="px-6 py-16 text-center">
                                     <div class="flex flex-col items-center justify-center">
-                                        <div class="w-20 h-20 bg-orange-50 dark:bg-gray-800 rounded-full flex items-center justify-center text-orange-200 dark:text-orange-900/40 mb-4">
+                                        <div class="w-20 h-20 bg-primary/10 dark:bg-slate-900 rounded-full flex items-center justify-center text-primary/40 dark:text-primary/40 mb-4">
                                             <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
                                         </div>
-                                        <h3 class="text-lg font-bold text-gray-900 dark:text-white">Your board is empty</h3>
-                                        <a href="{% url 'recipes:add_recipe' %}" class="mt-4 px-6 py-2.5 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-sm font-bold shadow-lg shadow-orange-500/30">
+                                        <h3 class="text-lg font-bold text-slate-900 dark:text-white">Your board is empty</h3>
+                                        <a href="{% url 'recipes:add_recipe' %}" class="mt-4 px-6 py-2.5 bg-primary hover:bg-primary/90 text-white rounded-lg text-sm font-bold shadow-lg shadow-primary/30">
                                             Create First Recipe
                                         </a>
                                     </div>
@@ -121,7 +121,7 @@
             </div>
             
             <div class="mt-8 flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-4">
-                <a href="{% url 'recipes:home' %}" class="inline-flex items-center justify-center px-6 py-3 border border-gray-200 dark:border-gray-600 shadow-sm text-base font-medium rounded-xl text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200">
+                <a href="{% url 'recipes:home' %}" class="inline-flex items-center justify-center px-6 py-3 border border-gray-200 dark:border-slate-700 shadow-sm text-base font-medium rounded-xl text-gray-700 dark:text-gray-200 bg-white dark:bg-slate-900 hover:bg-gray-50 dark:hover:bg-slate-700 transition-all duration-200">
                     Back to Home
                 </a>
             </div>
@@ -130,7 +130,7 @@
     </div>
 </div>
 
-<div id="global-tooltip" class="fixed invisible z-[9999] max-w-xs w-auto bg-gray-900 dark:bg-gray-700 text-white text-xs rounded-xl p-3 shadow-xl pointer-events-none transition-opacity duration-200 opacity-0 transform -translate-x-1/2">
+<div id="global-tooltip" class="fixed invisible z-[9999] max-w-xs w-auto bg-gray-900 dark:bg-slate-900 text-white text-xs rounded-xl p-3 shadow-xl pointer-events-none transition-opacity duration-200 opacity-0 transform -translate-x-1/2">
     </div>
 
 <script>

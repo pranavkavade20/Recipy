@@ -14,7 +14,7 @@
             </p>
         </div>
 
-        <div class="bg-white dark:bg-[#121212] shadow-2xl rounded-[2.5rem] p-8 md:p-12 border border-slate-100 dark:border-white/5 relative overflow-hidden">
+        <div class="bg-white dark:bg-slate-950 shadow-2xl rounded-[2.5rem] p-8 md:p-12 border border-slate-100 dark:border-slate-800 relative overflow-hidden">
             
             <div class="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-primary/10 dark:bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -24,11 +24,23 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 relative z-10">
                     {% for field in recipe_form %}
                     <div class="form-group {% if field.name == 'description' or field.name == 'image' or field.name == 'instructions' %}md:col-span-2{% endif %}">
-                        <label for="{{ field.id_for_label }}" class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 uppercase tracking-wide">
+                        <label for="{{ field.id_for_label }}" class="block text-sm font-bold text-gray-700 dark:text-slate-300 mb-2 uppercase tracking-wide">
                             {{ field.label }}
                         </label>
                         <div class="relative">
-                            {{ field }}
+                            {% if field.name == 'description' or field.name == 'instructions' %}
+                                <textarea name="{{ field.html_name }}" id="{{ field.id_for_label }}" rows="4" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none">{{ field.value|default:'' }}</textarea>
+                            {% elif field.name == 'recipe_type' %}
+                                <select name="{{ field.html_name }}" id="{{ field.id_for_label }}" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none">
+                                    {% for choice in field.field.choices %}
+                                        <option value="{{ choice.0 }}" {% if field.value|stringformat:"s" == choice.0|stringformat:"s" %}selected{% endif %}>{{ choice.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                            {% elif field.name == 'image' %}
+                                <input type="file" name="{{ field.html_name }}" id="{{ field.id_for_label }}" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:font-bold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 dark:file:bg-primary/10 dark:file:text-primary">
+                            {% else %}
+                                <input type="text" name="{{ field.html_name }}" id="{{ field.id_for_label }}" value="{{ field.value|default:'' }}" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none">
+                            {% endif %}
                         </div>
                         {% if field.help_text %}
                             <p class="text-xs text-gray-400 mt-2">{{ field.help_text }}</p>
@@ -43,7 +55,7 @@
                     {% endfor %}
                 </div>
 
-                <div class="border-t border-slate-100 dark:border-white/5 pt-10 mb-10">
+                <div class="border-t border-slate-100 dark:border-slate-800 pt-10 mb-10">
                     <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
                         <span class="flex items-center justify-center w-8 h-8 rounded-full bg-success/20 text-success">
                             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
@@ -54,13 +66,15 @@
                     <div id="ingredient-form-container" class="space-y-4">
                         {{ ingredient_formset.management_form }}
                         {% for form in ingredient_formset %}
-                        <div class="formset-row ingredient-field group relative p-5 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 transition-all hover:border-primary/30 dark:hover:border-primary/30 animate-fade-in-up">
+                        <div class="formset-row ingredient-field group relative p-5 rounded-2xl bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800 transition-all hover:border-primary/30 dark:hover:border-primary/30 animate-fade-in-up">
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 {% for field in form %}
-                                    {% if field.label != 'Id' and field.label != 'DELETE' %}
+                                    {% if field.name == 'id' or field.name == 'DELETE' %}
+                                        {{ field }} <!-- Keep hidden fields unmodified -->
+                                    {% else %}
                                     <div class="{% if forloop.counter == 1 %}md:col-span-3{% endif %}"> 
                                         <label class="text-xs font-bold text-gray-500 uppercase mb-1 block">{{ field.label }}</label>
-                                        {{ field }}
+                                        <input type="text" name="{{ field.html_name }}" id="{{ field.id_for_label }}" value="{{ field.value|default:'' }}" class="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none">
                                         {% for error in field.errors %}<p class="text-xs text-red-500 mt-1">{{ error }}</p>{% endfor %}
                                     </div>
                                     {% endif %}
@@ -70,13 +84,13 @@
                         {% endfor %}
                     </div>
                     
-                    <button type="button" onclick="addFormsetRow('ingredients', 'ingredient-form-container')" class="mt-6 flex items-center justify-center w-full md:w-auto px-6 py-3 border-2 border-dashed border-slate-300 dark:border-white/10 rounded-xl text-slate-500 hover:text-success hover:border-success/40 hover:bg-success/5 dark:hover:bg-white/5 transition-all font-bold text-sm">
+                    <button type="button" onclick="addFormsetRow('ingredients', 'ingredient-form-container')" class="mt-6 flex items-center justify-center w-full md:w-auto px-6 py-3 border-2 border-dashed border-slate-300 dark:border-slate-800 rounded-xl text-slate-500 hover:text-success hover:border-success/40 hover:bg-success/5 dark:hover:bg-white/5 transition-all font-bold text-sm">
                         <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                         Add Another Ingredient
                     </button>
                 </div>
 
-                <div class="border-t border-slate-100 dark:border-white/5 pt-10">
+                <div class="border-t border-slate-100 dark:border-slate-800 pt-10">
                     <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
                         <span class="flex items-center justify-center w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
@@ -87,13 +101,21 @@
                     <div id="video-form-container" class="space-y-4">
                         {{ video_formset.management_form }}
                         {% for form in video_formset %}
-                        <div class="formset-row video-field group relative p-5 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 transition-all hover:border-red-500/30 dark:hover:border-red-500/30 animate-fade-in-up">
+                        <div class="formset-row video-field group relative p-5 rounded-2xl bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800 transition-all hover:border-red-500/30 dark:hover:border-red-500/30 animate-fade-in-up">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {% for field in form %}
-                                    {% if field.label != 'Id' and field.label != 'DELETE' %}
+                                    {% if field.name == 'id' or field.name == 'DELETE' %}
+                                        {{ field }} <!-- Keep hidden fields unmodified -->
+                                    {% else %}
                                     <div class="{% if field.name == 'title' %}md:col-span-2{% endif %}"> 
                                         <label class="text-xs font-bold text-gray-500 uppercase mb-1 block">{{ field.label }}</label>
-                                        {{ field }}
+                                        {% if field.name == 'raw_video_file' %}
+                                            <input type="file" name="{{ field.html_name }}" id="{{ field.id_for_label }}" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:font-bold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 dark:file:bg-primary/10 dark:file:text-primary">
+                                        {% elif field.name == 'external_url' %}
+                                            <input type="url" name="{{ field.html_name }}" id="{{ field.id_for_label }}" value="{{ field.value|default:'' }}" class="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none">
+                                        {% else %}
+                                            <input type="text" name="{{ field.html_name }}" id="{{ field.id_for_label }}" value="{{ field.value|default:'' }}" class="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none">
+                                        {% endif %}
                                         {% if field.help_text %}<p class="text-[10px] text-gray-400 mt-1">{{ field.help_text }}</p>{% endif %}
                                         {% for error in field.errors %}<p class="text-xs text-red-500 mt-1">{{ error }}</p>{% endfor %}
                                     </div>
@@ -104,13 +126,13 @@
                         {% endfor %}
                     </div>
                     
-                    <button type="button" onclick="addFormsetRow('videos', 'video-form-container')" class="mt-6 flex items-center justify-center w-full md:w-auto px-6 py-3 border-2 border-dashed border-slate-300 dark:border-white/10 rounded-xl text-slate-500 hover:text-red-500 hover:border-red-500/40 hover:bg-red-50 dark:hover:bg-red-900/10 transition-all font-bold text-sm">
+                    <button type="button" onclick="addFormsetRow('videos', 'video-form-container')" class="mt-6 flex items-center justify-center w-full md:w-auto px-6 py-3 border-2 border-dashed border-slate-300 dark:border-slate-800 rounded-xl text-slate-500 hover:text-red-500 hover:border-red-500/40 hover:bg-red-50 dark:hover:bg-red-900/10 transition-all font-bold text-sm">
                         <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                         Add Another Video
                     </button>
                 </div>
                 
-                <div class="mt-12 pt-8 border-t border-slate-100 dark:border-white/5 flex justify-center md:justify-end">
+                <div class="mt-12 pt-8 border-t border-slate-100 dark:border-slate-800 flex justify-center md:justify-end">
                     <button type="submit" 
                         class="w-full md:w-auto px-10 py-4 bg-primary hover:bg-primary/90 text-white text-lg font-bold rounded-xl shadow-lg shadow-primary/30 outline-none focus:ring-4 focus:ring-primary/50 transform hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2">
                         <span>Publish Recipe</span>
@@ -124,19 +146,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Auto-style Django inputs
-        const inputs = document.querySelectorAll('input[type="text"], input[type="number"], input[type="url"], textarea, select');
-        inputs.forEach(input => {
-            if (!input.classList.contains('styled-input')) {
-                input.classList.add('w-full', 'px-4', 'py-3', 'rounded-xl', 'bg-slate-50', 'dark:bg-[#1f1f1f]', 'border', 'border-slate-200', 'dark:border-white/10', 'text-slate-900', 'dark:text-white', 'focus:ring-2', 'focus:ring-primary', 'focus:border-transparent', 'transition-all', 'outline-none');
-                input.classList.add('styled-input');
-            }
-        });
-        
-        const fileInputs = document.querySelectorAll('input[type="file"]');
-        fileInputs.forEach(input => {
-            input.classList.add('block', 'w-full', 'text-sm', 'text-slate-500', 'file:mr-4', 'file:py-2', 'file:px-4', 'file:rounded-full', 'file:border-0', 'file:text-sm', 'file:font-bold', 'file:bg-primary/10', 'file:text-primary', 'hover:file:bg-primary/20', 'dark:file:bg-primary/10', 'dark:file:text-primary');
-        });
+        // Form styling has been moved to direct HTML templating (frontend design independence)
     });
 
     // Dynamic Formset Handler for both Ingredients and Videos

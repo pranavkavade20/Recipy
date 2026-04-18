@@ -5,17 +5,17 @@
 {% block content %}
 <main class="flex items-center justify-center p-4 relative overflow-hidden">
 
-    <div class="absolute top-1/4 left-10 w-64 h-64 bg-purple-200 dark:bg-purple-900/20 rounded-full blur-3xl opacity-40 pointer-events-none"></div>
-    <div class="absolute bottom-1/4 right-10 w-64 h-64 bg-orange-200 dark:bg-orange-900/20 rounded-full blur-3xl opacity-40 pointer-events-none"></div>
+    <div class="absolute top-1/4 left-10 w-64 h-64 bg-accent/20 dark:bg-accent/10 rounded-full blur-3xl opacity-40 pointer-events-none"></div>
+    <div class="absolute bottom-1/4 right-10 w-64 h-64 bg-primary/20 dark:bg-primary/10 rounded-full blur-3xl opacity-40 pointer-events-none"></div>
 
     <div class="w-full max-w-2xl relative z-10">
-        <div class="bg-white dark:bg-gray-900 shadow-2xl rounded-[2.5rem] p-8 md:p-12 border border-stone-100 dark:border-gray-800">
+        <div class="bg-white dark:bg-slate-950 shadow-2xl rounded-[2.5rem] p-8 md:p-12 border border-stone-100 dark:border-slate-800">
             
             <div class="text-center mb-10">
-                <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-2">
-                    Create <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">Account</span>
+                <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-2">
+                    Create <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Account</span>
                 </h1>
-                <p class="text-gray-500 dark:text-gray-400">Join our community of food lovers today.</p>
+                <p class="text-gray-500 dark:text-slate-400">Join our community of food lovers today.</p>
             </div>
 
             <form action="{% url 'users:register' %}" method="POST" class="space-y-6">
@@ -23,53 +23,53 @@
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2">
-                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide">First Name</label>
+                        <label class="block text-sm font-bold text-gray-700 dark:text-slate-300 uppercase tracking-wide">First Name</label>
                         <input type="text" name="first_name" placeholder="John" 
-                            class="w-full px-4 py-3.5 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none placeholder-gray-400" required />
+                            class="w-full px-4 py-3.5 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none placeholder-gray-400" required />
                     </div>
                     <div class="space-y-2">
-                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide">Last Name</label>
+                        <label class="block text-sm font-bold text-gray-700 dark:text-slate-300 uppercase tracking-wide">Last Name</label>
                         <input type="text" name="last_name" placeholder="Doe" 
-                            class="w-full px-4 py-3.5 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none placeholder-gray-400" required />
+                            class="w-full px-4 py-3.5 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none placeholder-gray-400" required />
                     </div>
                 </div>
 
                 <div class="space-y-2">
-                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide">Username</label>
+                    <label class="block text-sm font-bold text-gray-700 dark:text-slate-300 uppercase tracking-wide">Username</label>
                     <input type="text" name="username" placeholder="johndoe123" autocomplete="off"
-                        class="w-full px-4 py-3.5 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none placeholder-gray-400" required />
+                        class="w-full px-4 py-3.5 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none placeholder-gray-400" required />
                 </div>
 
                 <div class="space-y-2">
-                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide">Email Address</label>
+                    <label class="block text-sm font-bold text-gray-700 dark:text-slate-300 uppercase tracking-wide">Email Address</label>
                     <input type="email" name="email" placeholder="john@example.com" 
-                        class="w-full px-4 py-3.5 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none placeholder-gray-400" required />
+                        class="w-full px-4 py-3.5 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none placeholder-gray-400" required />
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2">
-                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide">Password</label>
+                        <label class="block text-sm font-bold text-gray-700 dark:text-slate-300 uppercase tracking-wide">Password</label>
                         <input type="password" name="password" placeholder="••••••••" 
-                            class="w-full px-4 py-3.5 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none placeholder-gray-400" required />
+                            class="w-full px-4 py-3.5 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none placeholder-gray-400" required />
                     </div>
                     <div class="space-y-2">
-                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide">Confirm Password</label>
+                        <label class="block text-sm font-bold text-gray-700 dark:text-slate-300 uppercase tracking-wide">Confirm Password</label>
                         <input type="password" name="password2" placeholder="••••••••" 
-                            class="w-full px-4 py-3.5 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none placeholder-gray-400" required />
+                            class="w-full px-4 py-3.5 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none placeholder-gray-400" required />
                     </div>
                 </div>
 
                 <button type="submit" 
-                    class="w-full mt-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white text-lg font-bold py-3.5 rounded-xl shadow-lg shadow-orange-500/30 transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2">
+                    class="w-full mt-4 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white text-lg font-bold py-3.5 rounded-xl shadow-lg shadow-primary/30 transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2">
                     Create Account
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                 </button>
             </form>
 
             <div class="mt-8 text-center">
-                <p class="text-gray-500 dark:text-gray-400">
+                <p class="text-gray-500 dark:text-slate-400">
                     Already have an account? 
-                    <a href="{% url 'users:login' %}" class="font-bold text-orange-600 dark:text-orange-400 hover:underline transition-colors">Login Here</a>
+                    <a href="{% url 'users:login' %}" class="font-bold text-primary hover:underline transition-colors">Login Here</a>
                 </p>
             </div>
         </div>

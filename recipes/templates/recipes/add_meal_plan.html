@@ -12,54 +12,75 @@
             <p class="text-slate-500 dark:text-slate-400">Organize your week for healthier eating.</p>
         </div>
 
-        <div class="bg-white dark:bg-[#121212] shadow-2xl rounded-[2.5rem] p-8 md:p-10 border border-slate-100 dark:border-white/5 relative overflow-hidden">
+        <div class="bg-white dark:bg-slate-950 shadow-2xl rounded-[2.5rem] p-8 md:p-10 border border-slate-100 dark:border-slate-800 relative overflow-hidden">
             
             <div class="absolute -top-10 -right-10 w-40 h-40 bg-primary/10 dark:bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
 
             <form method="post" class="space-y-6 relative z-10">
                 {% csrf_token %}
                 
-                {% for field in form %}
-                    {% if field.is_hidden %}
-                        {{ field }}
-                    {% else %}
-                        
-                        {% if field.name == 'meal_date' %}
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="space-y-2">
-                                    <label for="{{ field.id_for_label }}" class="block text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">
-                                        {{ field.label }}
-                                    </label>
-                                    {{ field }}
-                                    {% for error in field.errors %}
-                                        <p class="text-xs text-red-500 mt-1 font-bold">{{ error }}</p>
-                                    {% endfor %}
-                                </div>
-                        {% elif field.name == 'meal_time' %}
-                                <div class="space-y-2">
-                                    <label for="{{ field.id_for_label }}" class="block text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">
-                                        {{ field.label }}
-                                    </label>
-                                    {{ field }}
-                                    {% for error in field.errors %}
-                                        <p class="text-xs text-red-500 mt-1 font-bold">{{ error }}</p>
-                                    {% endfor %}
-                                </div>
-                            </div> 
-                        {% else %}
-                            <div class="space-y-2">
-                                <label for="{{ field.id_for_label }}" class="block text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">
-                                    {{ field.label }}
-                                </label>
-                                {{ field }}
-                                
-                                {% for error in field.errors %}
-                                    <p class="text-xs text-red-500 mt-1 font-bold">{{ error }}</p>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    {% endif %}
-                {% endfor %}
+                <!-- Manually render form to keep design entirely in frontend HTML -->
+                {{ form.id }}
+
+                <div class="space-y-2">
+                    <label for="{{ form.recipe.id_for_label }}" class="block text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">
+                        {{ form.recipe.label }}
+                    </label>
+                    <select name="{{ form.recipe.html_name }}" id="{{ form.recipe.id_for_label }}" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                        {% for choice in form.recipe.field.choices %}
+                            <option value="{{ choice.0 }}" {% if form.recipe.value|stringformat:"s" == choice.0|stringformat:"s" %}selected{% endif %}>{{ choice.1 }}</option>
+                        {% endfor %}
+                    </select>
+                    {% for error in form.recipe.errors %}
+                        <p class="text-xs text-red-500 mt-1 font-bold">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <label for="{{ form.meal_date.id_for_label }}" class="block text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">
+                            {{ form.meal_date.label }}
+                        </label>
+                        <input type="date" name="{{ form.meal_date.html_name }}" id="{{ form.meal_date.id_for_label }}" value="{{ form.meal_date.value|date:'Y-m-d'|default:'' }}" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                        {% for error in form.meal_date.errors %}
+                            <p class="text-xs text-red-500 mt-1 font-bold">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="{{ form.meal_time.id_for_label }}" class="block text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">
+                            {{ form.meal_time.label }}
+                        </label>
+                        <input type="time" name="{{ form.meal_time.html_name }}" id="{{ form.meal_time.id_for_label }}" value="{{ form.meal_time.value|time:'H:i'|default:'' }}" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                        {% for error in form.meal_time.errors %}
+                            <p class="text-xs text-red-500 mt-1 font-bold">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label for="{{ form.meal_type.id_for_label }}" class="block text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">
+                        {{ form.meal_type.label }}
+                    </label>
+                    <select name="{{ form.meal_type.html_name }}" id="{{ form.meal_type.id_for_label }}" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                        {% for choice in form.meal_type.field.choices %}
+                            <option value="{{ choice.0 }}" {% if form.meal_type.value|stringformat:"s" == choice.0|stringformat:"s" %}selected{% endif %}>{{ choice.1 }}</option>
+                        {% endfor %}
+                    </select>
+                    {% for error in form.meal_type.errors %}
+                        <p class="text-xs text-red-500 mt-1 font-bold">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <div class="space-y-2">
+                    <label for="{{ form.notes.id_for_label }}" class="block text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">
+                        {{ form.notes.label }}
+                    </label>
+                    <textarea name="{{ form.notes.html_name }}" id="{{ form.notes.id_for_label }}" rows="3" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">{{ form.notes.value|default:'' }}</textarea>
+                    {% for error in form.notes.errors %}
+                        <p class="text-xs text-red-500 mt-1 font-bold">{{ error }}</p>
+                    {% endfor %}
+                </div>
                 
                 <div class="pt-6">
                     <button type="submit" class="w-full bg-primary hover:bg-primary/90 text-white text-lg font-bold py-3.5 rounded-xl shadow-lg shadow-primary/30 transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2">
@@ -69,7 +90,7 @@
                 </div>
             </form> 
             
-            <div class="text-center mt-8 pt-6 border-t border-slate-100 dark:border-white/5">
+            <div class="text-center mt-8 pt-6 border-t border-slate-100 dark:border-slate-800">
                 <a href="{% url 'recipes:view_meal_plans' %}" class="inline-flex items-center text-sm font-bold text-slate-500 hover:text-primary transition-colors group">
                     <svg class="w-4 h-4 mr-1 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                     View Schedule

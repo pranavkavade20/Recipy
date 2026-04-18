@@ -1,0 +1,71 @@
+{% load static %}
+<nav class="fixed top-0 z-[100] w-full transition-all duration-300 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-b border-slate-200/60 dark:border-slate-800/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16 sm:h-20">
+            
+            <div class="flex items-center gap-4">
+                <button id="mobile-menu-button" class="md:hidden p-2 -ml-2 text-slate-600 dark:text-slate-300 hover:text-primary transition-colors rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 focus:ring-2 focus:ring-primary outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
+                </button>
+                <a href="{% url 'recipes:home' %}" class="flex items-center gap-3 group focus:outline-none">
+                    <div class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center transform group-hover:scale-105 transition-transform duration-300">
+                        <img src="{% static 'images/logo.png' %}" alt="Recipy Logo" class="h-5 w-auto object-contain">
+                    </div>
+                    <span class="text-xl font-[Poppins] font-black tracking-tight text-slate-900 dark:text-white hidden sm:block">
+                        Recipy
+                    </span>
+                </a>
+            </div>
+
+            <div class="hidden md:flex items-center space-x-1 lg:space-x-2">
+                <a href="{% url 'recipes:home' %}" class="px-4 py-2 rounded-lg text-sm font-semibold text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Feed</a>
+                {% if request.user.is_authenticated %}
+                <a href="{% url 'recipes:search_page' %}" class="px-4 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Explore</a>
+                <a href="{% url 'recipes:dashboard' %}" class="px-4 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Add Recipes</a>
+                {% endif %}
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button id="theme-toggle" class="theme-toggle-btn p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">
+                    <svg id="theme-toggle-dark-icon" class="theme-toggle-dark-icon hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                    <svg id="theme-toggle-light-icon" class="theme-toggle-light-icon hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                </button>
+
+                {% if request.user.is_authenticated %}
+                <a href="{% url 'recipes:get_saved_recipes' %}" class="relative p-2 text-slate-500 dark:text-slate-400 hover:text-primary transition-colors rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                </a>
+
+                <div class="relative group ml-1">
+                    <button class="flex items-center justify-center w-9 h-9 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-sm shadow-sm transition-transform group-hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-slate-950 focus:ring-primary">
+                        {{ request.user.username|slice:":1"|upper }}
+                    </button>
+                    <div class="absolute right-0 mt-2 w-60 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 transform origin-top-right scale-95 group-hover:scale-100">
+                        <div class="px-4 py-3 border-b border-slate-100 dark:border-slate-800">
+                            <p class="text-sm font-semibold text-slate-900 dark:text-white truncate">{{ request.user.username }}</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">{{ request.user.email }}</p>
+                        </div>
+                        <div class="p-2 space-y-1">
+                            <a href="{% url 'recipes:get_saved_recipes' %}" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition-colors">Favorites</a>
+                            <a href="{% url 'recipes:view_meal_plans' %}" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition-colors">Meal Plans</a>
+                            <a href="{% url 'recipes:my_recipes' %}" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition-colors">Uploads</a>
+                            <a href="{% url 'users:password_change' %}" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition-colors">Settings</a>
+                        </div>
+                        <div class="p-2 border-t border-slate-100 dark:border-slate-800">
+                            <form method="post" action="{% url 'users:logout' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors">Sign out</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <a href="{% url 'users:login' %}" class="ml-2 inline-flex items-center justify-center px-5 py-2 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-semibold text-sm transition-all hover:bg-slate-800 dark:hover:bg-slate-100 shadow-sm">
+                    Sign In
+                </a>
+                {% endif %}
+            </div>
+            
+        </div>
+    </div>
+</nav>

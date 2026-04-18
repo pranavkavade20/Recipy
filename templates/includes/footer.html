@@ -1,0 +1,16 @@
+{% load static %}
+<footer class="bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-3">
+                <img src="{% static 'images/logo.png' %}" alt="Recipy" class="h-5 w-auto grayscale opacity-50">
+                <span class="text-sm font-semibold text-slate-500 dark:text-slate-400">© 2026 Recipy Inc.</span>
+            </div>
+            <div class="flex gap-6 text-sm font-medium text-slate-500 dark:text-slate-400">
+                <a href="{% url 'recipes:home' %}" class="hover:text-primary transition-colors">Home</a>
+                <a href="{% url 'recipes:about' %}" class="hover:text-primary transition-colors">About</a>
+                <a href="#" class="hover:text-primary transition-colors">Privacy</a>
+            </div>
+        </div>
+    </div>
+</footer>

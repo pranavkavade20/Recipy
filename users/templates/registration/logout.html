@@ -5,31 +5,31 @@
 {% block content %}
 <main class="flex items-center justify-center p-4 relative overflow-hidden">
     
-    <div class="absolute top-1/3 left-1/4 w-64 h-64 bg-emerald-200 dark:bg-emerald-900/20 rounded-full blur-3xl opacity-40 pointer-events-none"></div>
-    <div class="absolute bottom-1/3 right-1/4 w-64 h-64 bg-orange-200 dark:bg-orange-900/20 rounded-full blur-3xl opacity-40 pointer-events-none"></div>
+    <div class="absolute top-1/3 left-1/4 w-64 h-64 bg-success/20 dark:bg-success/10 rounded-full blur-3xl opacity-40 pointer-events-none"></div>
+    <div class="absolute bottom-1/3 right-1/4 w-64 h-64 bg-primary/20 dark:bg-primary/10 rounded-full blur-3xl opacity-40 pointer-events-none"></div>
 
     <div class="w-full max-w-sm relative z-10 text-center">
-        <div class="bg-white dark:bg-gray-900 shadow-2xl rounded-[2.5rem] p-8 md:p-10 border border-stone-100 dark:border-gray-800 transform transition-all hover:scale-[1.02] duration-500">
+        <div class="bg-white dark:bg-slate-950 shadow-2xl rounded-[2.5rem] p-8 md:p-10 border border-stone-100 dark:border-slate-800 transform transition-all hover:scale-[1.02] duration-500">
             
-            <div class="flex justify-center items-center w-20 h-20 bg-emerald-100 dark:bg-emerald-900/30 rounded-full mx-auto mb-6 shadow-inner">
-                <svg class="w-10 h-10 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <div class="flex justify-center items-center w-20 h-20 bg-success/10 rounded-full mx-auto mb-6 shadow-inner">
+                <svg class="w-10 h-10 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
             </div>
 
-            <h1 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-3">See You Soon!</h1>
-            <p class="text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">
+            <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white mb-3">See You Soon!</h1>
+            <p class="text-gray-500 dark:text-slate-400 mb-8 leading-relaxed">
                 You have been successfully logged out. Your recipes are safe with us.
             </p>
 
             <div class="space-y-4">
                 <a href="{% url 'users:login' %}" 
-                   class="block w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white text-lg font-bold py-3.5 rounded-xl shadow-lg shadow-orange-500/30 transform hover:-translate-y-0.5 transition-all duration-200">
+                   class="block w-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white text-lg font-bold py-3.5 rounded-xl shadow-lg shadow-primary/30 transform hover:-translate-y-0.5 transition-all duration-200">
                     Login Again
                 </a>
                 
                 <a href="{% url 'recipes:home' %}" 
-                   class="block w-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-bold py-3.5 rounded-xl transition-colors">
+                   class="block w-full bg-gray-100 dark:bg-slate-900 hover:bg-gray-200 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-300 font-bold py-3.5 rounded-xl transition-colors">
                     Browse Recipes
                 </a>
             </div>

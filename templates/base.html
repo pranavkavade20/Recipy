@@ -6,275 +6,36 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page | Recipe@pp</title>
+    <title>{% block title %}Home Page | Recipe@pp{% endblock %}</title>
     <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
     {% tailwind_css %}
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Poppins', system-ui, sans-serif; }
-        
-        /* Ultra-premium scrollbar */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        /* Sleek, unobtrusive scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.3); border-radius: 10px; border: 2px solid transparent; background-clip: padding-box; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.5); border: 2px solid transparent; background-clip: padding-box;}
-        .dark ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border: 2px solid transparent; background-clip: padding-box;}
-        .dark ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.25); border: 2px solid transparent; background-clip: padding-box;}
-        
-        /* Hide scrollbar for clean carousels */
+        ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.4); border-radius: 8px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(100, 116, 139, 0.6); }
+        .dark ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); }
+        .dark ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
+    {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-50 transition-colors duration-500 selection:bg-orange-500/30 selection:text-orange-600 dark:selection:text-orange-400 min-h-screen flex flex-col">
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50 font-[Inter] transition-colors duration-300 selection:bg-primary/30 selection:text-primary dark:selection:text-primary-300 min-h-screen flex flex-col">
 
-<nav class="fixed top-0 z-[100] w-full transition-all duration-300 bg-white/70 dark:bg-slate-900/70 backdrop-blur-2xl border-b border-slate-200/50 dark:border-white/5">
-    <div class="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-20 sm:h-24">
-            
-            <div class="flex items-center gap-4">
-                <button id="mobile-menu-button" class="md:hidden p-2 -ml-2 text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors rounded-full hover:bg-slate-100 dark:hover:bg-white/5">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16m-7 6h7"/></svg>
-                </button>
-                <a href="{% url 'recipes:home' %}" class="flex items-center gap-3 group outline-none">
-                    <div class="w-10 h-10 rounded-xl bg-white dark:bg-white/5 shadow-sm border border-slate-100 dark:border-white/10 flex items-center justify-center transform group-hover:scale-105 group-hover:rotate-3 transition-all duration-300">
-                        <img src="{% static 'images/logo.png' %}" alt="Recipy Logo" class="h-6 w-auto object-contain drop-shadow-sm">
-                    </div>
-                    <span class="text-xl font-black tracking-tighter text-[#00012A] dark:text-white uppercase hidden sm:block">
-                        Recipy
-                    </span>
-                </a>
-            </div>
+{% include 'includes/navbar.html' %}
+{% include 'includes/alerts.html' %}
 
-            <div class="hidden md:flex items-center space-x-1 pl-8">
-                <a href="{% url 'recipes:home' %}" class="px-4 py-2 rounded-full text-sm font-bold text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-all">Feed</a>
-                {% if request.user.is_authenticated %}
-                <a href="{% url 'recipes:search_page' %}" class="px-4 py-2 rounded-full text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-all">Explore</a>
-                <a href="{% url 'recipes:dashboard' %}" class="px-4 py-2 rounded-full text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-all">Add Recipes</a>
-                {% endif %}
-            </div>
-
-            <div class="flex items-center gap-2 sm:gap-4">
-                <button id="theme-toggle" class="theme-toggle-btn p-2.5 text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors rounded-full hover:bg-slate-100 dark:hover:bg-white/5">
-                    <svg id="theme-toggle-dark-icon" class="theme-toggle-dark-icon hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
-                    <svg id="theme-toggle-light-icon" class="theme-toggle-light-icon hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
-                </button>
-
-                {% if request.user.is_authenticated %}
-                <a href="{% url 'recipes:get_saved_recipes' %}" id="nav-favorites-btn" title="My Saved Recipes" class="relative p-2.5 text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors rounded-full hover:bg-slate-100 dark:hover:bg-white/5 focus:outline-none">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-                    <span id="fav-count-badge" class="absolute top-1 right-1 hidden min-w-[16px] h-[16px] text-[9px] font-black text-white bg-orange-500 rounded-full flex items-center justify-center shadow-sm ring-2 ring-white dark:ring-black animate-pulse"></span>
-                </a>
-
-                <div class="relative group ml-2">
-                    <button class="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-tr from-slate-800 to-slate-900 dark:from-slate-100 dark:to-white text-white dark:text-slate-900 shadow-md hover:scale-105 transition-all duration-300 focus:outline-none ring-2 ring-transparent group-hover:ring-orange-500/50">
-                        <span class="text-sm font-black">{{ request.user.username|slice:":1"|upper }}</span>
-                    </button>
-                    <div class="absolute right-0 mt-3 w-64 bg-white/90 dark:bg-slate-800/90 backdrop-blur-2xl border border-slate-200 dark:border-white/10 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 py-2 translate-y-2 group-hover:translate-y-0 transform origin-top-right">
-                        <div class="px-5 py-4 border-b border-slate-100 dark:border-white/5">
-                            <p class="text-sm font-black text-slate-900 dark:text-white tracking-tight">{{ request.user.username }}</p>
-                            <p class="text-xs font-medium text-slate-500 dark:text-slate-400 truncate mt-0.5">{{ request.user.email }}</p>
-                        </div>
-                        <div class="py-2 px-2">
-                            <a href="{% url 'recipes:get_saved_recipes' %}" class="flex items-center px-3 py-2.5 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-orange-500 transition-all group/item">
-                                <svg class="w-4 h-4 mr-3 text-slate-400 group-hover/item:text-orange-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-                                My Favorites
-                            </a>
-                            <a href="{% url 'recipes:view_meal_plans' %}" class="flex items-center px-3 py-2.5 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-orange-500 transition-all group/item">
-                                <svg class="w-4 h-4 mr-3 text-slate-400 group-hover/item:text-orange-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-                                My Meal Plans
-                            </a>
-                            <a href="{% url 'recipes:my_recipes' %}" class="flex items-center px-3 py-2.5 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-orange-500 transition-all group/item">
-                                <svg class="w-4 h-4 mr-3 text-slate-400 group-hover/item:text-orange-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
-                                My Uploads
-                            </a>
-                            <a href="{% url 'users:password_change' %}" class="flex items-center px-3 py-2.5 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-orange-500 transition-all group/item">
-                                <svg class="w-4 h-4 mr-3 text-slate-400 group-hover/item:text-orange-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                                Account Settings
-                            </a>
-                        </div>
-                        <div class="px-2 pb-2">
-                            <form method="post" action="{% url 'users:logout' %}" class="mt-1 border-t border-slate-100 dark:border-white/5 pt-2">
-                                {% csrf_token %}
-                                <button type="submit" class="flex items-center w-full text-left px-3 py-2.5 rounded-xl text-sm font-bold text-orange-600 dark:text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-500/10 transition-all group/item">
-                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                                    Sign out
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                {% else %}
-                <a href="{% url 'users:login' %}" class="ml-2 inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-slate-900 font-bold text-sm transition-all shadow-[0_4px_14px_0_rgba(0,0,0,0.1)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.15)] hover:-translate-y-0.5">
-                    Sign In
-                </a>
-                {% endif %}
-            </div>
-            
-        </div>
-    </div>
-</nav>
-
-<main class="w-full mt-24 flex-grow">
-{% block content %}
-{% endblock %}
+<main class="w-full mt-16 sm:mt-20 flex-grow">
+{% block content %}{% endblock %}
 </main>
 
-<div class="relative z-[110] hidden" id="slide-over" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
-    <div class="fixed inset-0 dark:bg-slate-900/60 backdrop-blur-sm transition-opacity opacity-0" id="backdrop" aria-hidden="true"></div>
-    
-    <div class="fixed inset-0 overflow-hidden">
-        <div class="absolute inset-0 overflow-hidden">
-            <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
-                <div class="pointer-events-auto w-screen max-w-md transform translate-x-full transition ease-out duration-500 shadow-2xl" id="panel">
-                    <div class="flex h-full flex-col bg-white/80 dark:bg-slate-900/80 backdrop-blur-3xl border-l border-white/40 dark:border-white/10">
-                        <div class="px-6 py-6 border-b border-slate-200/50 dark:border-white/5 flex items-center justify-between">
-                            <h2 class="text-lg font-black text-slate-900 dark:text-white tracking-tight" id="slide-over-title">Recommended For You</h2>
-                            <button type="button" id="close-button" class="rounded-full p-2 text-slate-400 hover:bg-slate-200/50 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-white focus:outline-none transition-all hover:rotate-90 duration-300">
-                                <span class="sr-only">Close panel</span>
-                                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-                            </button>
-                        </div>
-
-                        <div class="flex-1 overflow-y-auto no-scrollbar p-6">
-                            <div class="space-y-3">
-                                {% for recipe in recommended_recipes %}
-                                <a href="{% url 'recipes:recipe_detail' recipe.id %}" class="flex gap-4 group p-3 -mx-3 rounded-2xl hover:bg-slate-100/80 dark:hover:bg-white/5 border border-transparent hover:border-slate-200/50 dark:hover:border-white/5 transition-all duration-300">
-                                    <div class="h-20 w-20 flex-shrink-0 rounded-xl overflow-hidden border border-slate-200 dark:border-white/10 shadow-sm">
-                                        {% if recipe.image %}
-                                        <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" class="h-full w-full object-cover transform group-hover:scale-110 transition-transform duration-500">
-                                        {% else %}
-                                        <div class="w-full h-full bg-slate-100 dark:bg-white/5 flex items-center justify-center text-[10px] uppercase font-bold text-slate-400">No Image</div>
-                                        {% endif %}
-                                    </div>
-                                    <div class="flex-1 min-w-0 flex flex-col justify-center">
-                                        <p class="text-sm font-bold text-slate-900 dark:text-white truncate group-hover:text-orange-500 transition-colors">{{ recipe.name }}</p>
-                                        <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-1 mt-1 font-medium">{{ recipe.description|default:"Curated for your taste profile." }}</p>
-                                        <span class="inline-flex mt-2 items-center gap-1.5 px-2 py-0.5 rounded-md bg-slate-100 dark:bg-white/10 text-[10px] font-bold text-slate-600 dark:text-slate-300 uppercase tracking-widest w-max">
-                                            {{ recipe.cuisine }}
-                                        </span>
-                                    </div>
-                                </a>
-                                {% empty %}
-                                <div class="text-center py-16 flex flex-col items-center">
-                                    <div class="w-16 h-16 rounded-3xl bg-slate-100 dark:bg-white/5 flex items-center justify-center mb-4 shadow-inner">
-                                        <svg class="w-8 h-8 text-slate-300 dark:text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
-                                    </div>
-                                    <p class="text-sm font-semibold text-slate-900 dark:text-white mb-1">More data needed</p>
-                                    <p class="text-xs text-slate-500 dark:text-slate-400 max-w-[200px]">Interact with more recipes to train your personal AI chef.</p>
-                                </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="mobile-menu" class="fixed inset-0 z-[110] hidden overflow-hidden" role="dialog" aria-modal="true">
-    <div class="fixed inset-0 bg-slate-900/40 dark:bg-slate-900/60 backdrop-blur-sm transition-opacity" id="mobile-menu-backdrop"></div>
-    <div class="fixed inset-y-0 left-0 flex max-w-full">
-        <div id="mobile-menu-panel" class="w-screen max-w-xs transform -translate-x-full transition-transform duration-500 ease-out bg-white/90 dark:bg-slate-900/90 backdrop-blur-3xl border-r border-white/40 dark:border-white/10 shadow-2xl">
-            <div class="flex h-full flex-col py-6 px-6">
-                <div class="flex items-center justify-between mb-8 pb-4 border-b border-slate-200/50 dark:border-white/5">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-lg bg-white dark:bg-white/5 shadow-sm border border-slate-100 dark:border-white/10 flex items-center justify-center">
-                            <img src="{% static 'images/logo.png' %}" alt="Logo" class="h-5 w-auto drop-shadow-sm">
-                        </div>
-                        <span class="text-lg font-black tracking-tighter text-[#00012A] dark:text-white">RECIPY</span>
-                    </div>
-                    <div class="flex items-center gap-1">
-                        <button class="theme-toggle-btn p-2 text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors rounded-full hover:bg-slate-100 dark:hover:bg-white/10">
-                            <svg class="theme-toggle-dark-icon hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
-                            <svg class="theme-toggle-light-icon hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
-                        </button>
-                        <button id="mobile-menu-close" class="p-2 text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-full hover:bg-slate-100 dark:hover:bg-white/10 transition-colors">
-                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-                        </button>
-                    </div>
-                </div>
-                <nav class="space-y-2 flex-grow">
-                    <a href="{% url 'recipes:home' %}" class="block px-4 py-3 rounded-xl text-lg font-bold text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">Feed</a>
-                    {% if request.user.is_authenticated %}
-                    <a href="{% url 'recipes:search_page' %}" class="block px-4 py-3 rounded-xl text-lg font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">Explore</a>
-                    <a href="{% url 'recipes:dashboard' %}" class="block px-4 py-3 rounded-xl text-lg font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">Meal Plans</a>
-                    <div class="pt-6 pb-2 mt-6 border-t border-slate-200/50 dark:border-white/5">
-                        <p class="px-4 text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Account</p>
-                        <a href="{% url 'recipes:get_saved_recipes' %}" class="flex items-center px-4 py-3 rounded-xl text-sm font-bold text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-500/10 transition-colors">
-                            <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-                            My Favorites
-                        </a>
-                        <a href="{% url 'recipes:view_meal_plans' %}" class="block px-4 py-3 rounded-xl text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">My Meal Plans</a>
-                        <a href="{% url 'recipes:my_recipes' %}" class="block px-4 py-3 rounded-xl text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">My Uploads</a>
-                        <a href="{% url 'users:password_change' %}" class="block px-4 py-3 rounded-xl text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">Settings</a>
-                        <form method="post" action="{% url 'users:logout' %}" class="mt-2">
-                            {% csrf_token %}
-                            <button type="submit" class="w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-orange-600 dark:text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-500/10 transition-colors">Sign out</button>
-                        </form>
-                    </div>
-                    {% else %}
-                    <div class="pt-6 mt-6 border-t border-slate-200/50 dark:border-white/5">
-                        <a href="{% url 'users:login' %}" class="flex items-center justify-center w-full py-3 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-sm transition-all shadow-md">Sign In</a>
-                    </div>
-                    {% endif %}
-                </nav>
-            </div>
-        </div>
-    </div>
-</div>
-
-<footer class="bg-slate-50 dark:bg-slate-900 border-t border-slate-200/50 dark:border-white/5 mt-auto relative z-10">
-    <div class="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-            <div class="flex items-center gap-3 group cursor-pointer">
-                <div class="w-8 h-8 rounded-lg bg-white dark:bg-white/5 shadow-sm border border-slate-200 dark:border-white/10 flex items-center justify-center">
-                    <img src="{% static 'images/logo.png' %}" alt="Recipy Logo" class="h-4 w-auto object-contain drop-shadow-sm grayscale group-hover:grayscale-0 transition-all duration-300">
-                </div>
-                <span class="text-sm font-black tracking-tight text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors duration-300 uppercase">Recipy Inc.</span>
-            </div>
-            
-            <div class="flex gap-8 text-sm font-semibold text-slate-500 dark:text-slate-500">
-                <a href="{% url 'recipes:home' %}" class="hover:text-slate-900 dark:hover:text-white transition-colors">Home</a>
-                <a href="{% url 'recipes:about' %}" class="hover:text-slate-900 dark:hover:text-white transition-colors">About</a>
-                <a href="#" class="hover:text-slate-900 dark:hover:text-white transition-colors">Privacy</a>
-                <a href="#" class="hover:text-slate-900 dark:hover:text-white transition-colors">Terms</a>
-            </div>
-        </div>
-    </div>
-</footer>
+{% include 'includes/footer.html' %}
 
 <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
-<script>
-    // Mobile Menu Logic
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenuClose = document.getElementById('mobile-menu-close');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const mobileMenuPanel = document.getElementById('mobile-menu-panel');
-    const mobileMenuBackdrop = document.getElementById('mobile-menu-backdrop');
-
-    function toggleMobileMenu(show) {
-        if (show) {
-            mobileMenu.classList.remove('hidden');
-            // Small delay to allow display block to apply before animating transform
-            requestAnimationFrame(() => {
-                mobileMenuPanel.classList.remove('-translate-x-full');
-                mobileMenuBackdrop.classList.remove('opacity-0');
-            });
-        } else {
-            mobileMenuPanel.classList.add('-translate-x-full');
-            mobileMenuBackdrop.classList.add('opacity-0');
-            setTimeout(() => {
-                mobileMenu.classList.add('hidden');
-            }, 500); // matches duration-500
-        }
-    }
-
-    mobileMenuButton?.addEventListener('click', () => toggleMobileMenu(true));
-    mobileMenuClose?.addEventListener('click', () => toggleMobileMenu(false));
-    mobileMenuBackdrop?.addEventListener('click', () => toggleMobileMenu(false));
-</script>
 <script type="module" src="{% static 'script.js' %}"></script>
+{% block extra_scripts %}{% endblock %}
 </body>
 </html>
