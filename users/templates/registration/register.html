@@ -3,13 +3,13 @@
 {% block title %}Create Account | Recipy{% endblock %}
 
 {% block content %}
-<main class="flex items-center justify-center p-4 relative overflow-hidden">
+<main class="flex items-center justify-center p-4 min-h-[calc(100vh-5rem)] relative overflow-hidden">
 
     <div class="absolute top-1/4 left-10 w-64 h-64 bg-accent/20 dark:bg-accent/10 rounded-full blur-3xl opacity-40 pointer-events-none"></div>
     <div class="absolute bottom-1/4 right-10 w-64 h-64 bg-primary/20 dark:bg-primary/10 rounded-full blur-3xl opacity-40 pointer-events-none"></div>
 
     <div class="w-full max-w-2xl relative z-10">
-        <div class="bg-white dark:bg-slate-950 shadow-2xl rounded-[2.5rem] p-8 md:p-12 border border-stone-100 dark:border-slate-800">
+        <div class="bg-white dark:bg-slate-900 shadow-2xl rounded-[2.5rem] p-8 md:p-12 border border-stone-100 dark:border-slate-800">
             
             <div class="text-center mb-10">
                 <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-2">
@@ -60,7 +60,7 @@
                 </div>
 
                 <button type="submit" 
-                    class="w-full mt-4 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white text-lg font-bold py-3.5 rounded-xl shadow-lg shadow-primary/30 transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2">
+                    class="w-full mt-4 bg-primary text-white text-lg font-bold py-3.5 rounded-xl shadow-[0_8px_30px_rgba(249,115,22,0.35)] hover:shadow-[0_12px_30px_rgba(249,115,22,0.5)] hover:bg-orange-600 hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2 focus:outline-none focus:ring-4 focus:ring-primary/40">
                     Create Account
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                 </button>

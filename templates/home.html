@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-<main class="w-full relative bg-slate-50 dark:bg-slate-950 overflow-hidden">
+<main class="w-full relative bg-slate-50 dark:bg-slate-900 overflow-hidden">
     
     <section class="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 min-h-[90vh] flex flex-col justify-center">
         
@@ -107,11 +107,12 @@
         </div>
 
         {% if request.user.is_authenticated %}
-        <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-6 no-scrollbar snap-x">
-            <button class="snap-start whitespace-nowrap px-4 py-2 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-semibold text-sm transition-colors">All Recipes</button>
-            <button class="snap-start whitespace-nowrap px-4 py-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 font-medium text-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors">Breakfast</button>
-            <button class="snap-start whitespace-nowrap px-4 py-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 font-medium text-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors">Healthy</button>
-            <button class="snap-start whitespace-nowrap px-4 py-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 font-medium text-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors">Quick & Easy</button>
+        <div id="category-filters" class="flex items-center gap-2 overflow-x-auto pb-4 mb-6 no-scrollbar snap-x">
+            <button data-category="All" class="category-btn active snap-start whitespace-nowrap px-4 py-2 rounded-lg bg-primary text-white font-semibold text-sm shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-slate-900">All</button>
+            <button data-category="Breakfast" class="category-btn snap-start whitespace-nowrap px-4 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-medium text-sm hover:border-primary/50 hover:text-primary dark:hover:text-primary dark:hover:border-primary/50 transition-all focus:outline-none">Breakfast</button>
+            <button data-category="Vegetarian" class="category-btn snap-start whitespace-nowrap px-4 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-medium text-sm hover:border-primary/50 hover:text-primary dark:hover:text-primary dark:hover:border-primary/50 transition-all focus:outline-none">Vegetarian</button>
+            <button data-category="Healthy" class="category-btn snap-start whitespace-nowrap px-4 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-medium text-sm hover:border-primary/50 hover:text-primary dark:hover:text-primary dark:hover:border-primary/50 transition-all focus:outline-none">Healthy</button>
+            <button data-category="Dessert" class="category-btn snap-start whitespace-nowrap px-4 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-medium text-sm hover:border-primary/50 hover:text-primary dark:hover:text-primary dark:hover:border-primary/50 transition-all focus:outline-none">Dessert</button>
         </div>
 
         <div id="all-recipes" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

@@ -15,15 +15,15 @@
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.4); border-radius: 8px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(100, 116, 139, 0.6); }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(249, 115, 22, 0.8); }
         .dark ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); }
-        .dark ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
+        .dark ::-webkit-scrollbar-thumb:hover { background: rgba(249, 115, 22, 0.8); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
     {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50 font-[Inter] transition-colors duration-300 selection:bg-primary/30 selection:text-primary dark:selection:text-primary-300 min-h-screen flex flex-col">
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-50 font-[Inter] transition-colors duration-300 selection:bg-primary/30 selection:text-primary dark:selection:text-primary-300 min-h-screen flex flex-col">
 
 {% include 'includes/navbar.html' %}
 {% include 'includes/alerts.html' %}

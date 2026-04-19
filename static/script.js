@@ -51,26 +51,51 @@ document.addEventListener('DOMContentLoaded', () => {
                            </div>`;
 
                     return `
-                        <a href="/detail/${recipe.id}/" target="_blank" onclick="window.handleRecipeClick('${recipe.id}')" class="group block h-full outline-none focus:ring-2 focus:ring-orange-500 rounded-2xl">
-                            <div class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg border border-slate-200 dark:border-slate-800 h-full flex flex-col">
-                                <div class="relative h-48 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
+                       <a href="/detail/${recipe.id}/" target="_blank" onclick="window.handleRecipeClick('${recipe.id}')" class="group block h-full outline-none focus:ring-2 focus:ring-orange-500 rounded-2xl">
+                        <div class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl border border-slate-100 dark:border-slate-800 h-full flex flex-col relative">
+                                
+                                <div class="relative h-48 sm:h-52 w-full overflow-hidden bg-slate-100 dark:bg-slate-800 shrink-0">
                                     ${imageHTML}
-                                    ${diet ? `<div class="absolute top-3 left-3">
-                                        <span class="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md bg-white/90 dark:bg-slate-900/90 text-slate-900 dark:text-white backdrop-blur shadow-sm border border-slate-200 dark:border-slate-700">
-                                            ${diet}
-                                        </span>
-                                    </div>` : ''}
-                                </div>
-                                <div class="p-5 flex flex-col flex-grow">
-                                    <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-2 line-clamp-2 leading-snug group-hover:text-orange-500 transition-colors">
-                                        ${recipe.name}
-                                    </h3>
-                                    <div class="mt-auto pt-4 flex items-center justify-between border-t border-slate-100 dark:border-slate-800">
-                                        <span class="text-xs font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                            ${prepTime}
+                                    
+                                    <div class="absolute top-3 left-3 flex flex-col gap-2">
+                                        <span class="px-2.5 py-1 text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-md bg-white/95 dark:bg-slate-900/95 text-slate-900 dark:text-white shadow-sm border border-slate-200/50 dark:border-slate-700/50 backdrop-blur-sm">
+                                            ${recipe.diet}
                                         </span>
                                     </div>
+
+                                    <div class="absolute top-3 right-3 flex flex-col gap-2">
+                                        <span class="px-2.5 py-1 text-[10px] sm:text-xs font-semibold tracking-wide rounded-md bg-orange-500 text-white shadow-sm backdrop-blur-sm">
+                                            ${recipe.type}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="p-4 sm:p-5 flex flex-col flex-grow">
+                                    
+                                    <h3 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-2 line-clamp-2 leading-snug group-hover:text-orange-500 transition-colors">
+                                        ${recipe.name}
+                                    </h3>
+                                    <div class="flex items-center flex-wrap gap-2 text-[11px] sm:text-xs mb-4 font-medium tracking-wide">
+                                        <span class="px-3 py-1.5 rounded-xl bg-slate-50/50 dark:bg-slate-800/40 backdrop-blur-md border border-slate-200/60 dark:border-slate-700/50 shadow-[inset_0_1px_1px_rgba(255,255,255,0.8),0_2px_6px_rgba(0,0,0,0.04)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.05),0_2px_6px_rgba(0,0,0,0.2)] text-slate-700 dark:text-slate-200 transition-all hover:bg-slate-100/60 dark:hover:bg-slate-700/50">
+                                            ${recipe.cuisine}
+                                        </span>
+                                        
+                                        <span class="px-3 py-1.5 rounded-xl bg-slate-50/50 dark:bg-slate-800/40 backdrop-blur-md border border-slate-200/60 dark:border-slate-700/50 shadow-[inset_0_1px_1px_rgba(255,255,255,0.8),0_2px_6px_rgba(0,0,0,0.04)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.05),0_2px_6px_rgba(0,0,0,0.2)] text-slate-700 dark:text-slate-200 transition-all hover:bg-slate-100/60 dark:hover:bg-slate-700/50">
+                                            ${recipe.course}
+                                        </span>
+                                    </div>
+
+                                    <div class="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                                        <div class="flex items-center gap-1.5 text-slate-700 dark:text-slate-200 font-semibold text-sm">
+                                            <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                              ${ prepTime}
+                                        </div>
+                                        
+                                        <span class="text-xs font-bold text-orange-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-1">
+                                            View <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                        </span>
+                                    </div>
+                                    
                                 </div>
                             </div>
                         </a>
