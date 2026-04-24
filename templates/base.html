@@ -2,40 +2,72 @@
 {% load static tailwind_tags %}
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth antialiased">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Home Page | Recipe@pp{% endblock %}</title>
+    <title>{% block title %}Recipy{% endblock %}</title>
     <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
     {% tailwind_css %}
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;700;900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;700;900&display=swap"
+        rel="stylesheet">
     <style>
         /* Sleek, unobtrusive scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.4); border-radius: 8px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(249, 115, 22, 0.8); }
-        .dark ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); }
-        .dark ::-webkit-scrollbar-thumb:hover { background: rgba(249, 115, 22, 0.8); }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.4);
+            border-radius: 8px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(249, 115, 22, 0.8);
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: rgba(249, 115, 22, 0.8);
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     </style>
     {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-50 font-[Inter] transition-colors duration-300 selection:bg-primary/30 selection:text-primary dark:selection:text-primary-300 min-h-screen flex flex-col">
 
-{% include 'includes/navbar.html' %}
-{% include 'includes/alerts.html' %}
+<body
+    class="bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-50 font-[Inter] transition-colors duration-300 selection:bg-primary/30 selection:text-primary dark:selection:text-primary-300 min-h-screen flex flex-col">
 
-<main class="w-full mt-16 sm:mt-20 flex-grow">
-{% block content %}{% endblock %}
-</main>
+    {% include 'includes/navbar.html' %}
+    {% include 'includes/alerts.html' %}
 
-{% include 'includes/footer.html' %}
+    <main class="w-full mt-16 sm:mt-20 flex-grow">
+        {% block content %}{% endblock %}
+    </main>
 
-<script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
-<script type="module" src="{% static 'script.js' %}"></script>
-{% block extra_scripts %}{% endblock %}
+    {% include 'includes/footer.html' %}
+
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+    <script type="module" src="{% static 'script.js' %}"></script>
+    {% block extra_scripts %}{% endblock %}
 </body>
+
 </html>
