@@ -126,9 +126,10 @@
     </div>
 
     <section
-        class="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32 min-h-[95vh] flex flex-col justify-center perspective-1200">
+        class="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-32 min-h-[100svh] lg:min-h-[95vh] flex flex-col justify-center perspective-1200">
 
-        <div class="flex flex-col lg:flex-row items-center justify-between gap-16 lg:gap-12 relative z-10">
+        <div
+            class="flex flex-col lg:flex-row items-center justify-between gap-12 sm:gap-16 lg:gap-12 relative z-10 mt-12 lg:mt-0">
 
             <!-- Left Text Content -->
             <div
@@ -146,22 +147,22 @@
                 </div>
 
                 <h1
-                    class="font-[Inter] text-[4rem] sm:text-[5rem] lg:text-[6rem] font-black text-slate-900 dark:text-white leading-[1.05] tracking-tight mb-8">
+                    class="font-[Inter] text-5xl sm:text-6xl lg:text-[6rem] font-black text-slate-900 dark:text-white leading-[1.1] sm:leading-[1.05] tracking-tight mb-6 sm:mb-8">
                     The future of <br>
                     <span class="text-gradient bg-gradient-to-r from-primary via-accent to-primary">smart
                         cooking.</span>
                 </h1>
 
                 <p
-                    class="text-lg sm:text-xl text-slate-600 dark:text-slate-400 font-medium mb-12 max-w-lg leading-relaxed">
+                    class="text-base sm:text-lg lg:text-xl text-slate-600 dark:text-slate-400 font-medium mb-8 sm:mb-12 max-w-lg leading-relaxed">
                     Elevate your culinary journey. Discover tailored recipe recommendations, search instantly by
                     ingredients, and find the perfect meal for your needs using our fast ML-powered search.
                 </p>
 
-                <div class="flex flex-col sm:flex-row gap-5 w-full sm:w-auto">
+                <div class="flex flex-col sm:flex-row gap-4 sm:gap-5 w-full sm:w-auto">
                     {% if request.user.is_authenticated %}
                     <a href="#feed"
-                        class="group relative px-8 py-4 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-sm shadow-[0_0_40px_rgba(0,0,0,0.1)] dark:shadow-[0_0_40px_rgba(255,255,255,0.1)] hover:-translate-y-1 transition-all duration-300 text-center overflow-hidden">
+                        class="group relative px-6 py-3.5 sm:px-8 sm:py-4 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-sm shadow-[0_0_40px_rgba(0,0,0,0.1)] dark:shadow-[0_0_40px_rgba(255,255,255,0.1)] hover:-translate-y-1 transition-all duration-300 text-center overflow-hidden">
                         <div
                             class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out">
                         </div>
@@ -176,7 +177,7 @@
                     </a>
                     {% else %}
                     <a href="{% url 'users:register' %}"
-                        class="group relative px-8 py-4 rounded-2xl bg-primary text-white font-bold text-sm glow-effect hover:-translate-y-1 transition-all duration-300 text-center overflow-hidden">
+                        class="group relative px-6 py-3.5 sm:px-8 sm:py-4 rounded-2xl bg-primary text-white font-bold text-sm glow-effect hover:-translate-y-1 transition-all duration-300 text-center overflow-hidden">
                         <div
                             class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out">
                         </div>
@@ -192,7 +193,7 @@
                     {% endif %}
 
                     <a href="{% url 'recipes:about' %}"
-                        class="px-8 py-4 rounded-2xl bg-white/50 dark:bg-white/5 backdrop-blur-md border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 font-bold text-sm hover:bg-white dark:hover:bg-white/10 hover:-translate-y-1 transition-all duration-300 text-center flex items-center justify-center gap-2">
+                        class="px-6 py-3.5 sm:px-8 sm:py-4 rounded-2xl bg-white/50 dark:bg-white/5 backdrop-blur-md border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 font-bold text-sm hover:bg-white dark:hover:bg-white/10 hover:-translate-y-1 transition-all duration-300 text-center flex items-center justify-center gap-2">
                         <svg class="w-5 h-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
@@ -223,7 +224,7 @@
                         </div>
 
                         <!-- Screen UI Elements (Translated Z) -->
-                        <div class="absolute bottom-8 left-8 right-8 translate-z-30">
+                        <div class="absolute bottom-6 left-6 right-6 sm:bottom-8 sm:left-8 sm:right-8 translate-z-30">
                             <div class="flex items-center gap-3 mb-4">
                                 <div
                                     class="w-12 h-12 rounded-full border-2 border-white/20 overflow-hidden backdrop-blur-md">
@@ -246,31 +247,33 @@
 
                     <!-- Floating Badge 1 -->
                     <div
-                        class="absolute -top-6 -right-6 sm:-right-10 bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-2xl p-4 shadow-2xl border border-white dark:border-white/10 flex items-center gap-4 translate-z-30 animate-float-delayed">
+                        class="absolute -top-4 -right-4 sm:-top-6 sm:-right-10 scale-90 sm:scale-100 origin-top-right bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-2xl p-3 sm:p-4 shadow-2xl border border-white dark:border-white/10 flex items-center gap-3 sm:gap-4 translate-z-30 animate-float-delayed">
                         <div
-                            class="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-500/20 flex items-center justify-center text-green-500 border border-green-200 dark:border-green-500/30">
-                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-green-100 dark:bg-green-500/20 flex items-center justify-center text-green-500 border border-green-200 dark:border-green-500/30">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                     d="M13 10V3L4 14h7v7l9-11h-7z" />
                             </svg>
                         </div>
                         <div>
-                            <p class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">
+                            <p
+                                class="text-xs sm:text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">
                                 ML Search</p>
-                            <p class="text-xs font-medium text-slate-500 dark:text-slate-400"><span
+                            <p class="text-[10px] sm:text-xs font-medium text-slate-500 dark:text-slate-400"><span
                                     class="text-green-500 font-bold">0.8s</span> results</p>
                         </div>
                     </div>
 
                     <!-- Floating Badge 2 -->
                     <div
-                        class="absolute -bottom-8 -left-6 sm:-left-12 bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-2xl p-4 shadow-2xl border border-white dark:border-white/10 flex items-center gap-4 translate-z-20 animate-float">
+                        class="absolute -bottom-6 -left-4 sm:-bottom-8 sm:-left-12 scale-90 sm:scale-100 origin-bottom-left bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-2xl p-3 sm:p-4 shadow-2xl border border-white dark:border-white/10 flex items-center gap-3 sm:gap-4 translate-z-20 animate-float">
                         <div
-                            class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20">
-                            <img src="{% static 'images/logo.png' %}" alt="AI" class="w-8 h-8 object-contain">
+                            class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20">
+                            <img src="{% static 'images/logo.png' %}" alt="AI"
+                                class="w-6 h-6 sm:w-8 sm:h-8 object-contain">
                         </div>
                         <div>
-                            <p class="text-sm font-bold text-slate-900 dark:text-white">Neural Engine</p>
+                            <p class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">Neural Engine</p>
                             <div class="flex gap-1 mt-1">
                                 <span class="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
                                 <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>

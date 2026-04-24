@@ -28,6 +28,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     themeToggleBtns.forEach(btn => btn.addEventListener('click', toggleTheme));
 
+    // --- Mobile Menu Logic ---
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            const isOpen = !mobileMenu.classList.contains('hidden');
+            if (isOpen) {
+                mobileMenuButton.innerHTML = '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>';
+            } else {
+                mobileMenuButton.innerHTML = '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>';
+            }
+        });
+    }
+
     // --- Dynamic Feed Loading ---
     function fetchRecipes() {
         const allRecipesContainer = document.getElementById('all-recipes');
@@ -88,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <div class="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
                                         <div class="flex items-center gap-1.5 text-slate-700 dark:text-slate-200 font-semibold text-sm">
                                             <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                              ${ prepTime}
+                                              ${prepTime}
                                         </div>
                                         
                                         <span class="text-xs font-bold text-orange-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-1">
@@ -114,13 +130,13 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // --- Global Functions (Attached to window for inline HTML onclicks) ---
-window.handleRecipeClick = function(recipeId) {
+window.handleRecipeClick = function (recipeId) {
     if (typeof Toastify !== 'undefined') {
         Toastify({
             text: "Loading recipe...",
             duration: 2000,
-            gravity: "bottom", 
-            position: "right", 
+            gravity: "bottom",
+            position: "right",
             style: {
                 background: "#0f172a",
                 color: "#fff",
