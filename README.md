@@ -3,7 +3,7 @@
   <p align="center">
     An intelligent meal planning and recipe discovery platform powered by Machine Learning.
     <br />
-    <a href="https://drive.google.com/file/d/11ir8zZiosqaJmlcg60Uft2iT2djzGUlA/preview"><strong>View Demo Video »</strong></a>
+    <a href="https://drive.google.com/file/d/1rlf-xgKbEMMMWZFg2BYI3VVFOyMeRH9b/preview"><strong>View Demo Video »</strong></a>
   </p>
 </div>
 
@@ -155,7 +155,7 @@ Recipy/
 ## 🎥 Demo
 
 Experience Recipy in action:
-* [▶️ Full Video Demonstration (Google Drive)](https://drive.google.com/file/d/11ir8zZiosqaJmlcg60Uft2iT2djzGUlA/preview)
+* [▶️ Full Video Demonstration (Google Drive)](https://drive.google.com/file/d/1rlf-xgKbEMMMWZFg2BYI3VVFOyMeRH9b/preview)
 
 ---
 
